@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+	<ui:define name="content">
+		<h:form id="listagemUsuarioForm">
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+
+			<h:panelGrid columns="1" id="listaUsuarios">
+				<h:panelGroup width="100%">
+
+					<p:dataTable id="usuarios" value="#{usuarioController.usuarios}"
+						var="usu" width="100%" emptyMessage="Sem Usuários"
+						paginator="true" rows="10"
+						rowStyleClass="#{usu.pessoa.ativo == true ? null : 'inativo'}">
+						<f:facet name="header">
+							<h:outputText value="#{bundle['tit.usuarios']}" />
+						</f:facet>
+
+						<p:column sortBy="login" filterBy="login">
+							<f:facet name="header">
+								<h:outputText value="#{bundle['lbl.login']}:" />
+							</f:facet>
+							<h:outputText value="#{usu.login}" />
+						</p:column>
+						<p:column sortBy="pessoa.nome"
+							filterBy="pessoa.nome">
+							<f:facet name="header">
+								<h:outputText value="#{bundle['lbl.nome']}:" />
+							</f:facet>
+							<h:outputText value="#{usu.pessoa.nome}" />
+						</p:column>
+						<p:column sortBy="pessoa.cpf" filterBy="pessoa.cpf">
+							<f:facet name="header">
+								<h:outputText value="#{bundle['lbl.cpf']}:" />
+							</f:facet>
+							<h:outputText value="#{usu.pessoa.cpf}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="#{bundle['lbl.modulo']}" />
+							</f:facet>
+							<p:rowToggler />
+						</p:column>
+						<!-- BOTAO EDITAR USUARIO -->
+						<p:column
+							rendered="#{sec:areAnyGranted('ROLE_EDITAR_USUARIO, ROLE_ROOT')}">
+							<f:facet name="header"></f:facet>
+							<h:commandLink action="#{usuarioController.editarUsuario}"
+								update=":cadastroUsuarioForm" onclick="pageLoading.show();"
+								oncomplete="pageLoading.hide();">
+								<p:graphicImage id="editarUsuario"
+									value="../../resources/images/edit.png" width="20px"
+									height="20px" style="text-align:center;" />
+								<p:tooltip for="editarUsuario" hideEffect="fade"
+									showEffect="fade" value="Editar Usuário"></p:tooltip>
+								<f:setPropertyActionListener
+									target="#{usuarioController.usuario}" value="#{usu}" />
+							</h:commandLink>
+						</p:column>
+
+						<!-- BOTAO ALTERAR STATUS DO USUARIO -->
+						<p:column
+							rendered="#{sec:areAnyGranted('ROLE_ALTERAR_STATUS_USUARIO, ROLE_ROOT')}">
+							<f:facet name="header"></f:facet>
+							<p:commandLink onclick="mostrarDglInativar(#{usu.pessoa.ativo})">
+								<p:graphicImage id="ativarDesativar"
+									value="../../resources/images/ativo_#{usu.pessoa.ativo == true ? 'false' : 'true'}.png"
+									width="20px" height="20px" style="text-align:center;" />
+								<p:tooltip for="ativarDesativar" hideEffect="fade"
+									showEffect="fade"
+									value="#{usu.pessoa.ativo == true ? 'Desativar' : 'Ativar'}"></p:tooltip>
+								<f:setPropertyActionListener
+									target="#{usuarioController.usuario}" value="#{usu}" />
+							</p:commandLink>
+						</p:column>
+
+						<p:rowExpansion>
+							<div style="text-align: center;">
+								<h:outputText value="#{usu.moduloAcesso.nome}" />
+								-
+								<h:outputText value="#{usu.moduloAcesso.descricao}" />
+							</div>
+						</p:rowExpansion>
+					</p:dataTable>
+				</h:panelGroup>
+			</h:panelGrid>
+		</h:form>
+
+		<p:confirmDialog message="Confirma ativação/desativação do registro?"
+			header="Inativar" severity="alert" widgetVar="dglInativar"
+			modal="true" closable="false">
+			<h:form>
+				<p:commandButton id="confirm" value="Sim"
+					update=":listagemUsuarioForm:growlGeral"
+					oncomplete="dglInativar.hide()"
+					actionListener="#{usuarioController.inativarUsuario}" />
+				<p:commandButton id="decline" value="Não"
+					oncomplete="dglInativar.hide()"
+					update=":listagemUsuarioForm:growlGeral"
+					actionListener="#{usuarioController.limparUsaurio}" />
+			</h:form>
+		</p:confirmDialog>
+		<script>
+			function mostrarDglInativar(usuarioEnable){
+				var men = '';
+				if(usuarioEnable == true){
+					men = 'Desativar';
+				}else {
+					men = 'Ativar';
+				}
+				jQuery('#dglInativar p').html('Deseja <strong>'+men+'</strong> este usuário ?');
+				
+				jQuery('#ui-dialog-title-dglInativar').html(men);
+				
+				dglInativar.show();	
+			}
+		</script>
+		<h:panelGroup rendered="#{usuarioController.sistemaIsDemo}">
+			<script type="text/javascript">disponivelNosPlanos(1,1,1,1);</script>
+		</h:panelGroup>
+	</ui:define>
+</ui:composition>

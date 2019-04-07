@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<ui:define name="content">
+		<h3>
+			<h:outputText value="#{bundle['tit.lancamento.cadastro.pagar']}" />
+		</h3>
+
+		<h:form id="cadastroForm" prependId="false">
+
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+
+			<h:panelGroup>
+				<div style="width: 600px">
+					<p:dataTable id="pessoas" var="prestador"
+						filteredValue="#{lancamentoPagarController.pessoasSelecionadas}" paginator="true"
+						rows="5" value="#{lancamentoPagarController.pessoas}">
+						
+						<p:column headerText="#{bundle['tit.cpfcnpj']}"
+							filterBy="documento" sortBy="documento">  
+				            #{prestador.documento}
+				        </p:column>
+
+						<p:column headerText="#{bundle['lbl.nome']}"
+							filterBy="pessoa.nome"
+							sortBy="pessoa.nome">
+				            #{prestador.pessoa.nome}
+				        </p:column>
+					</p:dataTable>
+				</div>
+				<h:panelGrid columns="2">
+					<p:outputLabel value="#{bundle['lbl.lancamento.nome']}: "
+						for="nomeLancamento" styleClass="label_obr" />
+					<p:inputText id="nomeLancamento"
+						value="#{lancamentoPagarController.entity.nome}" />
+
+					<p:outputLabel value="#{bundle['lbl.lancamento.data']}: "
+						for="dataLancamento" styleClass="label_obr" />
+					<p:calendar id="dataLancamento"
+						value="#{lancamentoPagarController.entity.data}" navigator="true"
+						mindate="1/1/1930" maxdate="1/1/2030" locale="pt"
+						pattern="dd/MM/yyyy" readonlyInput="true" />
+
+					<p:outputLabel value="#{bundle['lbl.lancamento.valor']}: "
+						for="valorLancamento" styleClass="label_obr" />
+					<p:inputText id="valorLancamento" converter="moneyConverter"
+						value="#{lancamentoPagarController.entity.valor}" />
+
+					<p:outputLabel value="#{bundle['lbl.lancamento.observacao']}: "
+						for="obsLancamento" styleClass="label_obr" />
+					<p:inputTextarea id="obsLancamento" rows="5" cols="30"
+						counter="counter" value="#{lancamentoPagarController.entity.obs}"
+						maxlength="200" counterTemplate="{0} caracteres restantes."
+						autoResize="false" />
+
+					<h:outputText id="nada" />
+					<h:outputText id="counter" />
+
+					<h:outputText value="#{bundle['lbl.centro.custo']}: "
+						styleClass="label_obr"
+						rendered="#{lancamentoPagarController.existeCentroCustoLancavel}" />
+					<p:tree id="centro" var="node"
+						value="#{lancamentoPagarController.treeRootCentrosCusto}"
+						rendered="#{lancamentoController.existeCentroCustoLancavel}"
+						selectionMode="single"
+						selection="#{lancamentoPagarController.nodeCentroCustoSelecionado}">
+						<p:treeNode>
+							<h:outputText value="#{node}" id="lblNode" />
+						</p:treeNode>
+					</p:tree>
+					
+					<p:outputLabel value="#{bundle['lbl.carteira']}: " for="carteira"
+						styleClass="label_obr" />
+					<p:selectOneMenu id="carteira"
+						value="#{lancamentoPagarController.entity.carteira}"
+						converter="carteiraConverter" style="width: 166px;">
+						<f:selectItem itemLabel="#{bundle['select.selecione']}"
+							itemValue="" />
+						<f:selectItems value="#{lancamentoPagarController.carteiras}"
+							var="carteira" itemLabel="#{carteira.nome}"
+							itemValue="#{carteira}" />
+					</p:selectOneMenu>
+				</h:panelGrid>
+
+				<h:panelGrid styleClass="layoutCadMorador" columns="2">
+					<p:commandButton value="#{bundle['btn.gravar']}" id="btnGravar"
+						action="#{lancamentoPagarController.gravarLancamentoPagar}"
+						ajax="false" update="growlGeral"
+						rendered="#{lancamentoPagarController.entity.id == null || lancamentoPagarController.entity.id == 0}"
+						onclick="pageLoading.show();" oncomplete="pageLoading.hide();" />
+
+					<p:commandButton value="#{bundle['btn.alterar']}"
+						action="#{lancamentoPagarController.alterar}" ajax="false"
+						rendered="#{lancamentoPagarController.entity.id > 0}"
+						update=":cadastroForm" onclick="pageLoading.show();"
+						oncomplete="pageLoading.hide();" />
+
+					<p:commandButton value="#{bundle['btn.limpar']}"
+						action="#{lancamentoPagarController.limparObjetoLancamento}"
+						ajax="false" process="@this" onclick="pageLoading.show();"
+						update=":cadastroForm" oncomplete="pageLoading.hide();" />
+				</h:panelGrid>
+			</h:panelGroup>
+		</h:form>
+
+		<script>
+			jQuery(document).ready(function() {
+				aplicaMascaraMonetaria("#valorLancamento");
+			});
+		</script>
+
+	</ui:define>
+</ui:composition>

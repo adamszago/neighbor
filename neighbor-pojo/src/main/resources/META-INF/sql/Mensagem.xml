@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings version="2.0"
+	xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_1_0.xsd">
+
+	<named-query name="Mensagem.buscaPorCondominio">
+		<query>
+			<![CDATA[
+				SELECT m 
+				FROM Mensagem as m 
+				WHERE m.destinatario.condominio = :condominio 
+				order by m.dataEnvio DESC
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Mensagem.listarMensagemPorMorador">
+		<query>
+			<![CDATA[
+				SELECT m 
+				FROM Mensagem m 
+				WHERE m.destinatario.idPessoa = :idPessoa 
+				order by dataEnvio DESC
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Mensagem.listarMensagemPorMoradorUsuario">
+		<query>
+			<![CDATA[
+				SELECT m 
+				FROM Mensagem m 
+				WHERE m.remetente.idPessoa = :idPessoa 
+				order by dataEnvio DESC
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Mensagem.listarMensagensRecebidasUsuario">
+		<query>
+			<![CDATA[
+				SELECT m 
+				FROM Mensagem m 
+				WHERE m.destinatario.idPessoa = :idPessoa
+				order by dataEnvio DESC
+			]]>
+		</query>
+	</named-query>
+
+</entity-mappings>

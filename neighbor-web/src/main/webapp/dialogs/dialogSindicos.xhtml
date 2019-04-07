@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<body>
+	<ui:composition>
+		<p:dialog header="Síndicos" widgetVar="dlgSindicos" modal="true"
+			resizable="false" width="500" height="400">
+			<h:form id="formSindicoMorador">
+				<p:dataTable id="sindicos" var="sindico"
+					value="#{sindicoController.sindicos}" rowKey="#{sindico.nome}"
+					paginator="true" rows="10"
+					selection="#{condominioController.condominio.sindico}"
+					selectionMode="single" emptyMessage="Sem Síndicos Cadastrados">
+
+					<f:facet name="header">  
+				    	Síndicos Cadastrados  
+				    </f:facet>
+					<p:column sortBy="nome" filterBy="nome">
+						<f:facet name="header">  
+                    		Nome  
+            			</f:facet>
+						<h:outputText value="#{sindico.nome}" />
+					</p:column>
+					<p:column sortBy="email" filterBy="email">
+						<f:facet name="header">  
+                    		E-mail  
+            			</f:facet>
+						<h:outputText value="#{sindico.email}" />
+					</p:column>
+					<p:column>
+						<p:commandLink action="#{condominioController.selecionarSindico}"
+							id="selecSindico" ajax="true" update=":cadastroCondominioForm"
+							oncomplete="dlgSindicos.hide()">
+							<p:graphicImage value="../../resources/images/btns/add.png"
+								width="20px" height="20px" style="text-align:center;" />
+							<f:setPropertyActionListener
+								target="#{condominioController.sindicoSelecionado}"
+								value="#{sindico}" />
+						</p:commandLink>
+						<p:tooltip for="selecSindico"
+							value="Selecionar síndico para condomínio" showEffect="slide"
+							hideEffect="slide" />
+					</p:column>
+				</p:dataTable>
+			</h:form>
+		</p:dialog>
+	</ui:composition>
+</body>
+</html>

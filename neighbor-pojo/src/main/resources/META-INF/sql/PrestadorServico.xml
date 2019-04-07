@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings version="2.0"
+	xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_1_0.xsd">
+
+	<named-query name="PrestadorServico.buscarConfirmadosPorCondominio">
+		<query>
+			<![CDATA[
+				SELECT DISTINCT ps 
+				FROM PrestadorServico ps 
+				INNER JOIN FETCH ps.servicosPrestados servico 
+				WHERE (:idCondominio IS NULL OR ps.pessoa.condominio.idPessoa = :idCondominio) 
+				AND servico.dataServico >= CURRENT_DATE 
+				AND servico.confirmado = true 
+				AND servico.ativo = true 
+				ORDER BY servico.dataServico DESC, ps.pessoa.dataCadastro DESC
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="PrestadorServico.buscarPorCondominio">
+		<query>
+			<![CDATA[
+				SELECT DISTINCT ps 
+				FROM PrestadorServico ps 
+				LEFT JOIN FETCH ps.servicosPrestados servico
+				WHERE (:idCondominio IS NULL OR ps.condominio.idPessoa = :idCondominio) 
+				AND (servico.id IS NULL OR servico.dataServico IS NOT NULL)
+				ORDER BY servico.dataServico DESC, ps.pessoa.dataCadastro DESC 
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="PrestadorServico.findByDocumentoPf">
+		<query>
+			<![CDATA[
+				SELECT DISTINCT p 
+				FROM PrestadorServico p, PessoaFisica pf 
+				WHERE p.pessoa = pf AND pf.cpf = :documento 
+				AND (:idCondominio IS NULL OR p.condominio.idPessoa = :idCondominio ) 
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="PrestadorServico.findByDocumentoPj">
+		<query>
+			<![CDATA[
+				SELECT DISTINCT p 
+				FROM PrestadorServico p, PessoaJuridica pj 
+				WHERE p.pessoa = pj AND pj.cnpj = :documento 
+				AND (:idCondominio IS NULL OR p.condominio.idPessoa = :idCondominio )
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="PrestadorServico.findByIdPf">
+		<query>
+			<![CDATA[
+				SELECT DISTINCT p 
+				FROM PrestadorServico p, PessoaFisica pf 
+				WHERE p.pessoa = pf 
+				AND ( :idPrestador IS NULL OR p.idPrestador = :idPrestador )
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="PrestadorServico.findByIdPj">
+		<query>
+			<![CDATA[
+				SELECT DISTINCT p 
+				FROM PrestadorServico p, PessoaJuridica pj 
+				WHERE p.pessoa = pj 
+				AND ( :idPrestador IS NULL OR p.idPrestador = :idPrestador )
+			]]>
+		</query>
+	</named-query>
+
+</entity-mappings>

@@ -1,0 +1,91 @@
+<?xml version="1.0"  encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+	<ui:define name="content">
+		<h3>
+			<h:outputText value="#{bundle['tit.cadastro.item.reserva']}" />
+		</h3>
+		<h:form id="cadastroItemReserva">
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+			<h:inputHidden id="id"
+				value="#{itemReservaController.itemReserva.id}" />
+			<h:panelGrid columns="2">
+				<h:outputLabel value="#{bundle['tit.nome']}: " for="nome" />
+				<p:inputText id="nome"
+					value="#{itemReservaController.itemReserva.nome}" required="true"
+					label="nome" size="30" maxlength="30"
+					requiredMessage="#{bundle['msg.informe.nome.item']}"
+					styleClass="toCapitalize campo-onload" />
+
+				<h:outputLabel value="#{bundle['tit.carencia.dias']}: "
+					for="carencia" />
+				<p:inputText id="carencia"
+					value="#{itemReservaController.itemReserva.carenciaDiasReserva}"
+					onblur="if(this.value=='')this.value='0'"
+					onfocus="if(this.value=='0')this.value=''" required="true"
+					label="carencia" size="3" maxlength="3"
+					requiredMessage="#{bundle['msg.informe.valor']}" />
+
+				<h:outputLabel value="#{bundle['tit.ativo']}: " for="itemAtivo" />
+				<h:selectBooleanCheckbox id="itemAtivo"
+					value="#{itemReservaController.itemReserva.ativo}" />
+
+				<h:outputLabel value="#{bundle['tit.necessita.pagamento']}: "
+					for="itemPagamento" />
+				<h:selectBooleanCheckbox id="itemPagamento"
+					value="#{itemReservaController.itemReserva.necessitaPagamento}">
+					<p:ajax event="change" update="pnlPrecoItem" />
+				</h:selectBooleanCheckbox>
+				
+				<h:outputLabel value="#{bundle['tit.necessita.aprovar']}: "
+					for="itemAprovacao" />
+				<h:selectBooleanCheckbox id="itemAprovacao"
+					value="#{itemReservaController.itemReserva.necessitaAprovar}">
+					<p:ajax event="change" update="pnlPrecoItem" />
+				</h:selectBooleanCheckbox>
+
+			</h:panelGrid>
+			<h:panelGrid id="pnlPrecoItem" columns="2">
+				<h:outputLabel value="#{bundle['tit.preco']}: " for="preco"
+					rendered="#{itemReservaController.itemReserva.necessitaPagamento}" />
+				<p:inputText id="preco"
+					value="#{itemReservaController.itemReserva.preco}" required="false"
+					label="preco" size="10" maxlength="10"
+					rendered="#{itemReservaController.itemReserva.necessitaPagamento}"
+					onkeyup="mascara(this,valor)">
+					<!-- onkeyup="return(MascaraMoeda(this,',','.',event))" -->
+				</p:inputText>
+			</h:panelGrid>
+
+			<p:commandButton value="#{bundle['btn.gravar']}"
+				actionListener="#{itemReservaController.gravarItemReserva}"
+				ajax="true" update=":cadastroItemReserva"
+				rendered="#{itemReservaController.itemReserva.id == null || itemReservaController.itemReserva.id == 0}"
+				onclick="pageLoading.show();" oncomplete="pageLoading.hide();" />
+			<p:commandButton value="#{bundle['btn.alterar']}"
+				actionListener="#{itemReservaController.alterarItemReserva}"
+				ajax="true" update=":cadastroItemReserva"
+				rendered="#{itemReservaController.itemReserva.id > 0}"
+				onclick="pageLoading.show();" oncomplete="pageLoading.hide();" />
+
+			<p:commandButton value="#{bundle['btn.limpar']}"
+				action="#{itemReservaController.novoItemReserva}" ajax="true"
+				process="@this" update=":cadastroItemReserva"
+				onclick="pageLoading.show();" oncomplete="pageLoading.hide();" />
+
+		</h:form>
+		<h:panelGroup rendered="#{usuarioController.sistemaIsDemo}">
+			<script type="text/javascript">
+				disponivelNosPlanos(0, 1, 1, 1);
+			</script>
+		</h:panelGroup>
+	</ui:define>
+</ui:composition>

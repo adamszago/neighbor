@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<ui:define name="content">
+		<style>
+			.calendarFilter .ui-inputfield {
+				width: 70px; ! important;
+				margin: 0 0.2em;
+				!
+				important;
+			}
+		</style>
+
+		<h:form id="historicoForm" styleClass="innerContentFix">
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+			<p:dataTable id="tableHistorico" var="registroHistorico"
+				value="#{historicoController.historico}" paginator="true" rows="20"
+				emptyMessage="#{bundle['msg.sem.historico']}">
+
+				<f:facet name="header">
+					<h:outputText value="#{bundle['tit.historico']}" />
+				</f:facet>
+
+				<p:column sortBy="#{registroHistorico.dataHoraAcao}" style="">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.data']}" />
+						<div style="display: block; margin: auto;">
+							<p:calendar id="minDate" styleClass="calendarFilter"
+								pattern="dd/MM/yy" onSelectUpdate=":historicoForm">
+								<p:ajax event="dateSelect"
+									listener="#{historicoController.filtrarHistoricoByDataInicial}"
+									update=":historicoForm" />
+							</p:calendar>
+							-
+							<p:calendar id="maxDate" styleClass="calendarFilter"
+								pattern="dd/MM/yy" onSelectUpdate=":historicoForm">
+								<p:ajax event="dateSelect"
+									listener="#{historicoController.filtrarHistoricoByDataFim}"
+									update=":historicoForm" />
+							</p:calendar>
+						</div>
+					</f:facet>
+					<h:outputText value="#{registroHistorico.dataHoraAcao}">
+						<f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="GMT-3" />
+					</h:outputText>
+				</p:column>
+
+				<p:column sortBy="usuario"
+					filterBy="usuario" filterMatchMode="contains"
+					style="width: 100px;">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.usuario']}" />
+					</f:facet>
+					<h:outputText value="#{registroHistorico.usuario}" />
+				</p:column>
+
+				<p:column sortBy="acaoExecutada"
+					filterBy="acaoExecutada"
+					filterMatchMode="contains">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.acao.executada']}" />
+					</f:facet>
+					<div style="height: 19px; overflow: hidden;">
+						<h:outputText value="#{registroHistorico.acaoExecutada}" />
+					</div>
+				</p:column>
+
+				<p:column style="width: 26px;">
+					<f:facet name="header">
+						<h:outputText escape="false" value="#{bundle['tit.ver.br.mais']}" />
+					</f:facet>
+					<p:rowToggler />
+				</p:column>
+
+				<p:rowExpansion>
+					<div class="acaoExecutadaTextoCompleto" style="font-weight: bold;">
+						<h:outputText value="#{registroHistorico.acaoExecutada}" />
+					</div>
+				</p:rowExpansion>
+			</p:dataTable>
+		</h:form>
+
+		<h:panelGroup rendered="#{usuarioController.sistemaIsDemo}">
+			<script type="text/javascript">
+				disponivelNosPlanos(0, 1, 1, 1);
+			</script>
+		</h:panelGroup>
+	</ui:define>
+</ui:composition>

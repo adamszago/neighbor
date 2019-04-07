@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings version="2.0"
+	xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_1_0.xsd">
+
+	<named-query name="MarcaVeiculo.findAtivos">
+		<query>
+			<![CDATA[
+				SELECT marca 
+				FROM MarcaVeiculo marca 
+				WHERE marca.ativo = true
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="MarcaVeiculo.existeNome">
+		<query>
+			<![CDATA[
+				SELECT m 
+				FROM MarcaVeiculo m 
+				INNER JOIN m.condominio condominio 
+				WHERE m.marca = :nome 
+				AND condominio.idPessoa = :idCondominio
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="MarcaVeiculo.buscarPorCondominio">
+		<query>
+			<![CDATA[
+				SELECT m 
+				FROM MarcaVeiculo m 
+				INNER JOIN m.condominio condominio 
+				WHERE (:idCondominio IS NULL OR condominio.idPessoa = :idCondominio)
+			]]>
+		</query>
+	</named-query>
+
+</entity-mappings>

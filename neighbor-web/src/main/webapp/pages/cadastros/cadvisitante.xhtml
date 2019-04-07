@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+
+	<ui:define name="content">
+		<h3>
+			<h:outputLabel value="#{bundle['tit.cadastro.visitante']}" />
+		</h3>
+
+		<h:form id="cadastroForm">
+			<!-- ************* ABA VISITANTE ************* -->
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+
+			<p:panel id="fotoCapturadaContainer1" style="border: none;">
+				<p:graphicImage cache="false"
+					rendered="#{visitanteController.bytesFotoCapturada != null}"
+					style="cursor: pointer"
+					value="#{visitanteController.fotoTelaCadastro}" width="200"
+					height="150" onclick="dialogCaptureCam.show()" />
+
+				<p:graphicImage cache="false"
+					rendered="#{visitanteController.bytesFotoCapturada == null and visitanteController.fotoCadastrada == null}"
+					style="cursor: pointer" url="../../resources/images/sem_imagem.png"
+					width="200" height="150" onclick="dialogCaptureCam.show()" />
+
+				<p:graphicImage cache="false"
+					rendered="#{visitanteController.fotoCadastrada != null}"
+					style="cursor: pointer"
+					value="#{visitanteController.fotoCadastrada}" width="200"
+					height="150" onclick="dialogCaptureCam.show()" />
+			</p:panel>
+
+			<p:panelGrid id="dadosPanel" styleClass="gridPadrao1">
+				<p:row>
+					<p:column>
+						<h:outputLabel value="#{bundle['lbl.nome']}: " for="nome"
+							styleClass="label_obr" />
+					</p:column>
+					<p:column>
+						<p:inputText id="nome"
+							value="#{visitanteController.visitante.pessoa.nome}"
+							required="true" label="#{bundle['lbl.nome']}" size="33"
+							maxlength="40" styleClass="toCapitalize campo-onload"
+							requiredMessage="#{bundle['msg.nome.visitante']}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<h:outputLabel value="#{bundle['lbl.cpf']}: " for="cpf"
+							styleClass="label_obr" />
+					</p:column>
+					<p:column>
+						<h:panelGroup rendered="#{usuarioController.sistemaIsDemo}">
+							<p:inputMask value="#{visitanteController.visitante.pessoa.cpf}"
+								required="true" label="#{bundle['lbl.cpf']}"
+								mask="999.999.999-99"
+								requiredMessage="#{bundle['msg.informe.cpf']}">
+								<f:validator
+									validatorId="br.com.lphantus.neighbor.component.validator.ValidatorCPF" />
+							</p:inputMask>
+						</h:panelGroup>
+						<h:panelGroup rendered="#{!usuarioController.sistemaIsDemo}">
+							<p:inputMask id="cpf"
+								value="#{visitanteController.visitante.pessoa.cpf}"
+								required="true" label="#{bundle['lbl.cpf']}"
+								mask="999.999.999-99"
+								requiredMessage="#{bundle['msg.informe.cpf']}">
+								<f:validator
+									validatorId="br.com.lphantus.neighbor.component.validator.ValidatorCPF" />
+							</p:inputMask>
+						</h:panelGroup>
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<h:outputLabel value="#{bundle['lbl.rg']}: " for="rg" />
+					</p:column>
+					<p:column>
+						<p:inputText id="rg"
+							value="#{visitanteController.visitante.pessoa.rg}"
+							required="false" label="#{bundle['lbl.rg']}" size="15"
+							maxlength="15" styleClass="toUppercase" />
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+
+			<h:panelGrid columns="2">
+				<p:commandButton value="#{bundle['btn.gravar']}"
+					action="#{visitanteController.gravar}" ajax="true"
+					update=":cadastroForm"
+					rendered="#{visitanteController.visitante.pessoa.idPessoa == null || visitanteController.visitante.pessoa.idPessoa == 0}"
+					onclick="pageLoading.show();" oncomplete="pageLoading.hide();">
+
+				</p:commandButton>
+
+				<p:commandButton value="#{bundle['btn.alterar']}"
+					action="#{visitanteController.alterar}" ajax="true"
+					update=":cadastroForm"
+					rendered="#{visitanteController.visitante.pessoa.idPessoa > 0 and visitanteController.visitante.visitaAgendada == null}"
+					onclick="pageLoading.show();" oncomplete="pageLoading.hide();">
+
+				</p:commandButton>
+
+				<p:commandButton value="#{bundle['btn.confirmar.visita']}"
+					action="#{visitanteController.confirmacaoVisita}" ajax="true"
+					update=":cadastroForm"
+					rendered="#{visitanteController.visitante.pessoa.idPessoa > 0 and visitanteController.visitante.visitaAgendada != null}"
+					onclick="pageLoading.show();" oncomplete="pageLoading.hide();">
+
+				</p:commandButton>
+
+				<p:commandButton value="#{bundle['btn.limpar']}"
+					action="#{visitanteController.limpar}" ajax="true" process="@this"
+					update=":cadastroForm" onclick="pageLoading.show();"
+					oncomplete="pageLoading.hide();" />
+
+			</h:panelGrid>
+		</h:form>
+
+		<p:dialog header="#{bundle['tit.registrar.foto']}"
+			widgetVar="dialogCaptureCam" modal="true" resizable="false"
+			styleClass="dialogCaptureCam"
+			style="width: auto !important; height: auto !important;">
+
+			<h:form id="formDialogTirarFoto" enctype="multipart/form-data">
+				<table>
+					<tr>
+						<td>
+							<p:photoCam widgetVar="pc"
+								listener="#{visitanteController.onCapture}"
+								update=":formDialogTirarFoto:fotoCapturadaContainer2"
+								required="true" requiredMessage="#{bundle['msg.registre.foto']}" />
+						</td>
+						<td>
+							<p:panel id="fotoCapturadaContainer2"
+								style="border: none;">
+								<p:graphicImage id="fotoCapturada" cache="false" height="308" width="400"
+									rendered="#{visitanteController.bytesFotoCapturada != null}"
+									value="#{visitanteController.fotoCapturada}" />
+
+								<p:graphicImage id="semFoto" cache="false" height="308" width="400"
+									rendered="#{visitanteController.bytesFotoCapturada == null}"
+									url="../../resources/images/sem_imagem.png" />
+							</p:panel>
+						</td>
+					</tr>
+					<tr>
+						<td align="center">
+							<div style="display: inline-flex">
+								<p:commandButton type="button" icon="ui-icon-search"
+									value="Capturar" onclick="PF('pc').capture()" />
+								<p:fileUpload fileUploadListener="#{visitanteController.handleFileUpload}" mode="advanced"
+	                    			auto="true" sizeLimit="900000" allowTypes="/(\.|\/)(png)$/" label="Enviar" process="@form" 
+									update="@form" />
+							</div>
+						</td>
+						<td align="center">
+							<div style="display: inline-flex">
+								<p:commandButton value="#{bundle['btn.salvar']}"
+									icon="ui-icon-disk" ajax="false"
+									action="#{visitanteController.atualizarFotoTelaCadastro}"
+									update=":cadastroForm:fotoCapturadaContainer1"
+									oncomplete="dialogCaptureCam.hide()" />
+							</div>
+						</td>
+					</tr>
+				</table>
+			</h:form>
+		</p:dialog>
+		<h:panelGroup rendered="#{usuarioController.sistemaIsDemo}">
+			<script type="text/javascript">
+				disponivelNosPlanos(1, 1, 1, 1);
+			</script>
+		</h:panelGroup>
+	</ui:define>
+</ui:composition>

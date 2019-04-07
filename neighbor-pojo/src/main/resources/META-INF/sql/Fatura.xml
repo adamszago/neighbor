@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings version="2.0"
+	xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_1_0.xsd">
+
+	<named-query name="Fatura.buscarPorParametros">
+		<query>
+			<![CDATA[
+				SELECT DISTINCT fatura 
+				FROM Fatura fatura 
+				INNER JOIN fatura.condominio condominio 
+				INNER JOIN fatura.lancamentos lancamentos 
+				INNER JOIN lancamentos.tipoLancamento tipo 
+				INNER JOIN lancamentos.pessoa pessoa 
+				WHERE (:status IS NULL OR fatura.ativo = :status) 
+				AND (:idCondominio IS NULL OR condominio.idPessoa = :idCondominio) 
+				AND (:tipoLancamento IS NULL OR tipo.id = :tipoLancamento) 
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Fatura.buscarEmAbertoPorPessoa">
+		<query>
+			<![CDATA[
+				SELECT DISTINCT fatura 
+				FROM Fatura fatura 
+				INNER JOIN fatura.condominio condominio 
+				INNER JOIN fatura.lancamentos lancamentos 
+				INNER JOIN lancamentos.pessoa pessoa 
+				LEFT JOIN fatura.duplicatas dupli 
+				WHERE fatura.ativo = true 
+				AND fatura.dataPagamento IS NULL 
+				AND dupli IS NULL 
+				AND (:idPessoa IS NULL OR :idPessoa = pessoa.idPessoa)
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Fatura.alterarStatus">
+		<query>
+			<![CDATA[
+				UPDATE Fatura fatura 
+				SET fatura.ativo = :status 
+				WHERE fatura.id = :idFatura 
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Fatura.buscarFaturasSemDuplicata">
+		<query>
+			<![CDATA[
+				SELECT DISTINCT fatura 
+				FROM Fatura fatura 
+				INNER JOIN fatura.condominio condominio 
+				INNER JOIN fatura.lancamentos lancamentos 
+				INNER JOIN lancamentos.pessoa pessoa 
+				WHERE fatura.ativo = true 
+				AND fatura.duplicatas IS EMPTY 
+				AND (:idCondominio IS NULL OR :idCondominio = condominio.idPessoa)
+			]]>
+		</query>
+	</named-query>
+
+</entity-mappings>

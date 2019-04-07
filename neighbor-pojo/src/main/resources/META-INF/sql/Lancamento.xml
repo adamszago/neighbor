@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings version="2.0"
+	xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_1_0.xsd">
+
+	<named-query name="Lancamento.buscarLancamentos">
+		<query>
+			<![CDATA[
+				SELECT lancamento 
+				FROM Lancamento lancamento 
+				INNER JOIN lancamento.pessoa pessoa 
+				INNER JOIN lancamento.condominio condominio 
+				INNER JOIN lancamento.tipoLancamento tipo 
+				WHERE tipo.id = :idTipoLancamento 
+				AND (:idCondominio IS NULL OR condominio.idPessoa = :idCondominio) 
+				AND (:status IS NULL or lancamento.ativo = :status) 
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Lancamento.buscarLancamentosNaoAssociados">
+		<query>
+			<![CDATA[
+				SELECT DISTINCT lancamento 
+				FROM Lancamento lancamento 
+				INNER JOIN lancamento.pessoa pessoa 
+				INNER JOIN lancamento.condominio condominio 
+				INNER JOIN lancamento.tipoLancamento tipo 
+				LEFT JOIN lancamento.fatura fatura 
+				WHERE lancamento.ativo = true 
+				AND (lancamento.fatura IS NULL OR fatura.ativo = false) 
+				AND (:idPessoa IS NULL OR pessoa.idPessoa = :idPessoa) 
+				AND (:tipoLancamento IS NULL OR tipo.id = :tipoLancamento) 
+				AND (:idCondominio IS NULL OR condominio.idPessoa = :idCondominio)
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Lancamento.alterarStatus">
+		<query>
+			<![CDATA[
+				UPDATE Lancamento 
+				SET ativo = :novoStatus 
+				WHERE id = :id
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Lancamento.buscarPorFatura">
+		<query>
+			<![CDATA[
+				SELECT DISTINCT lancamento 
+				FROM Fatura fatura 
+				INNER JOIN fatura.lancamentos lancamento 
+				INNER JOIN lancamento.pessoa pessoa 
+				INNER JOIN lancamento.condominio condominio 
+				INNER JOIN lancamento.tipoLancamento tipo 
+				LEFT JOIN lancamento.centroCusto centro 
+				WHERE 1 = 1 
+				AND fatura.id = :idFatura
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Lancamento.buscarPorDuplicata">
+		<query>
+			<![CDATA[
+				SELECT DISTINCT lancamento 
+				FROM Duplicata duplicata 
+				INNER JOIN duplicata.fatura fatura 
+				INNER JOIN fatura.lancamentos lancamento 
+				INNER JOIN lancamento.pessoa pessoa 
+				INNER JOIN lancamento.condominio condominio 
+				INNER JOIN lancamento.tipoLancamento tipo 
+				LEFT JOIN lancamento.centroCusto centro 
+				WHERE 1 = 1 
+				AND duplicata.ativo = true 
+				AND fatura.ativo = true 
+				AND fatura.excluido = false 
+				AND lancamento.ativo = true 
+				AND pessoa.ativo = true 
+				AND duplicata.id = :idDuplicata
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Lancamento.alteraFaturaLancamento">
+		<query>
+			<![CDATA[
+				UPDATE Lancamento lancamento 
+				SET lancamento.fatura = :fatura 
+				WHERE lancamento.id = :idLancamento 
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Lancamento.findLancamentoPagarSemMovimentacao">
+		<query>
+			<![CDATA[
+				SELECT lancamento
+				FROM Lancamento lancamento
+				WHERE lancamento.tipoLancamento.nome = 'Saida'
+				AND lancamento.ativo = true
+				AND lancamento.excluido = false
+				AND lancamento.data <= CURRENT_DATE
+				AND lancamento NOT IN (
+					SELECT movimento.lancamento
+					FROM Movimentacao movimento
+					WHERE NOT (movimento.lancamento IS NULL)
+				)
+			]]>
+		</query>
+	</named-query>
+
+</entity-mappings>

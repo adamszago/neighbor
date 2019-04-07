@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+
+	<ui:define name="content">
+		<h3>
+			<h:outputLabel value="#{bundle['tit.cadastro.prestador']}" />
+		</h3>
+
+		<h:form id="cadastroForm">
+			<!-- ************* ABA PRESTADOR SERVICO PRINCIPAL ************* -->
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+
+			<style>
+				.content form table td label {
+					float: left !important;
+				}
+				
+				.layoutCadMorador td {
+					padding: 7px;
+					border: none;
+				}
+				
+				.layoutCadMorador tr {
+					border: none;
+				}
+			</style>
+
+			<p:panel id="fotoCapturadaContainer1" style="border: none;">
+				<p:graphicImage cache="false"
+					rendered="#{prestadorServicoController.bytesFotoCapturada != null}"
+					style="cursor: pointer"
+					value="#{prestadorServicoController.fotoTelaCadastro}" width="200"
+					height="150" onclick="dialogCaptureCam.show()" />
+
+				<p:graphicImage cache="false"
+					rendered="#{prestadorServicoController.bytesFotoCapturada == null and prestadorServicoController.fotoCadastrada == null}"
+					style="cursor: pointer" url="../../resources/images/sem_imagem.png"
+					width="200" height="150" onclick="dialogCaptureCam.show()" />
+
+				<p:graphicImage cache="false"
+					rendered="#{prestadorServicoController.fotoCadastrada != null}"
+					style="cursor: pointer"
+					value="#{prestadorServicoController.fotoCadastrada}" width="200"
+					height="150" onclick="dialogCaptureCam.show()" />
+			</p:panel>
+
+			<p:panelGrid id="dadosPanel" styleClass="layoutCadMorador">
+				<p:row>
+					<p:column width="100">
+						<h:outputLabel value="#{bundle['lbl.nome']}: " for="nome"
+							styleClass="label_obr" />
+					</p:column>
+					<p:column width="400">
+						<p:inputText id="nome" styleClass="campo-onload"
+							value="#{prestadorServicoController.prestadorServico.pessoa.nome}"
+							required="true" label="Nome" size="33" maxlength="40"
+							requiredMessage="#{bundle['msg.informe.nome.prestador']}" />
+					</p:column>
+				</p:row>
+
+				<p:row>
+					<p:column width="100">
+						<h:outputLabel value="#{bundle['select.tipo.pessoa']}: "
+							for="cmbTipoPessoa" styleClass="label_obr" />
+					</p:column>
+					<p:column width="400">
+						<p:selectOneMenu value="#{prestadorServicoController.tipoPessoa}"
+							id="cmbTipoPessoa" style="width: 166px;" required="true"
+							requiredMessage="#{bundle['msg.sel.tipo.documento']}">
+							<f:selectItem itemLabel="#{bundle['select.selecione']}"
+								itemValue="" noSelectionOption="true" />
+							<f:selectItem itemLabel="#{bundle['select.tipo.pessoa.fisica']}"
+								itemValue="F" />
+							<f:selectItem
+								itemLabel="#{bundle['select.tipo.pessoa.juridica']}"
+								itemValue="J" />
+							<p:ajax update="pgDocumento"
+								listener="#{prestadorServicoController.trocaTipoPessoa}" />
+						</p:selectOneMenu>
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+
+			<p:panelGrid id="pgDocumento" styleClass="layoutCadMorador">
+				<p:row>
+					<p:column width="100">
+						<h:outputText value="#{bundle['lbl.documento']}: "
+							styleClass="label_obr" />
+					</p:column>
+					<p:column width="400">
+						<p:inputMask
+							rendered="#{prestadorServicoController.tipoPessoa eq 'F'}"
+							value="#{prestadorServicoController.prestadorServico.pessoa.cpf}"
+							required="true" label="CPF" mask="999.999.999-99"
+							requiredMessage="#{bundle['msg.informe.cpf']}">
+						</p:inputMask>
+						<p:inputMask
+							rendered="#{prestadorServicoController.tipoPessoa eq 'J'}"
+							value="#{prestadorServicoController.prestadorServico.pessoa.cnpj}"
+							required="true" label="CPF" mask="99.999.999/9999-99"
+							requiredMessage="#{bundle['msg.informe.cnpj']}">
+						</p:inputMask>
+						<p:inputMask value="" label="CPF" mask="999.999.999-99"
+							rendered="#{prestadorServicoController.tipoPessoa eq ''}">
+						</p:inputMask>
+					</p:column>
+				</p:row>
+
+				<p:row>
+					<p:column width="100">
+						<h:outputLabel value="#{bundle['lbl.rg']}: " for="rg"
+							styleClass="label_obr"
+							rendered="#{prestadorServicoController.tipoPessoa eq 'F'}" />
+					</p:column>
+					<p:column width="400">
+						<p:inputText id="rg"
+							rendered="#{prestadorServicoController.tipoPessoa eq 'F'}"
+							value="#{prestadorServicoController.prestadorServico.pessoa.rg}"
+							required="false" label="RG" size="15" maxlength="15"
+							styleClass="toUppercase" />
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+
+			<p:panelGrid id="gridTiposPrestadores" styleClass="gridPadrao1"
+				style="margin-top: 13px;">
+				<p:row>
+					<p:column>
+						<p:commandLink onclick="dlgTipoPrestador.show();"
+							id="adicionarTipoPrestador">
+							<p:graphicImage value="../../resources/images/btns/add.png"
+								id="imgAddTipoPrestador" />
+							<span
+								style="margin-left: 5px; margin-top: 5px; position: absolute"><h:outputLabel
+									value="#{bundle['btn.adicionar.tipo.prestador']}" /></span>
+						</p:commandLink>
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:dataTable id="tiposPrestadores" var="tipoPrestador"
+							styleClass="datatableHeaderPadrao2"
+							value="#{prestadorServicoController.tiposPrestadores}"
+							rowKey="#{tipoPrestador.id}" paginator="true" rows="6"
+							paginatorPosition="bottom"
+							selection="#{prestadorServicoController.prestadorServico.tipoPrestador}"
+							emptyMessage="#{bundle['msg.sem.tipo.prestador']}">
+							<f:facet name="header">
+								<h:outputLabel value="#{bundle['tit.tipo.prestador']}" />
+							</f:facet>
+							<p:column selectionMode="single" />
+
+							<p:column filterBy="tipoPrestador">
+								<h:outputText value="#{tipoPrestador.tipoPrestador}" />
+							</p:column>
+						</p:dataTable>
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+
+
+			<h:panelGrid columns="2" style="margin-top: 10px;">
+				<p:commandButton value="#{bundle['btn.gravar']}"
+					action="#{prestadorServicoController.gravar}" ajax="true"
+					update=":cadastroForm"
+					rendered="#{prestadorServicoController.prestadorServico.pessoa.idPessoa == null || prestadorServicoController.prestadorServico.pessoa.idPessoa == 0}"
+					onclick="pageLoading.show();" oncomplete="pageLoading.hide();">
+
+				</p:commandButton>
+
+				<p:commandButton value="#{bundle['btn.alterar']}"
+					action="#{prestadorServicoController.alterar}" ajax="true"
+					update=":cadastroForm"
+					rendered="#{prestadorServicoController.prestadorServico.pessoa.idPessoa > 0 }"
+					onclick="pageLoading.show();" oncomplete="pageLoading.hide();" />
+
+				<p:commandButton value="#{bundle['btn.limpar']}"
+					action="#{prestadorServicoController.limpar}" ajax="true"
+					process="@this" update=":cadastroForm"
+					onclick="pageLoading.show();" oncomplete="pageLoading.hide();" />
+			</h:panelGrid>
+
+		</h:form>
+
+		<ui:insert>
+			<ui:include src="../../dialogs/dialogCadastroTipoPrestador.xhtml" />
+		</ui:insert>
+
+		<p:dialog header="#{bundle['tit.registrar.foto']}"
+			widgetVar="dialogCaptureCam" modal="true" resizable="false"
+			styleClass="dialogCaptureCam"
+			style="width: auto !important; height: auto !important;">
+
+			<h:form id="formDialogTirarFoto" enctype="multipart/form-data">
+				<table>
+					<tr>
+						<td><p:photoCam widgetVar="pc"
+								listener="#{prestadorServicoController.onCapture}"
+								update=":formDialogTirarFoto:fotoCapturadaContainer2"
+								required="true" requiredMessage="#{bundle['msg.registre.foto']}" /></td>
+						<td><p:panel id="fotoCapturadaContainer2"
+								style="border: none;">
+								<p:graphicImage id="fotoCapturada" cache="false" height="308" width="400"
+									rendered="#{prestadorServicoController.bytesFotoCapturada != null}"
+									value="#{prestadorServicoController.fotoCapturada}" />
+
+								<p:graphicImage id="semFoto" cache="false" height="308" width="400"
+									rendered="#{prestadorServicoController.bytesFotoCapturada == null}"
+									url="../../resources/images/sem_imagem.png" />
+							</p:panel></td>
+					</tr>
+					<tr>
+						<td align="center">
+							<div style="display: inline-flex">
+								<p:commandButton type="button" icon="ui-icon-search"
+									value="#{bundle['btn.capturar']}" onclick="PF('pc').capture()" />
+								<p:fileUpload fileUploadListener="#{prestadorServicoController.handleFileUpload}" mode="advanced"
+	                     			auto="true" sizeLimit="900000" allowTypes="/(\.|\/)(png)$/" label="Enviar" process="@form" 
+									update="@form" />
+                     		</div>
+						</td>
+						<td>
+							<div align="center">
+								<div style="display: inline-flex">
+									<p:commandButton value="#{bundle['btn.salvar']}"
+										icon="ui-icon-disk" ajax="false"
+										action="#{prestadorServicoController.atualizarFotoTelaCadastro}"
+										update=":cadastroForm:fotoCapturadaContainer1"
+										oncomplete="dialogCaptureCam.hide()" />
+								</div>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</h:form>
+		</p:dialog>
+		<h:panelGroup rendered="#{usuarioController.sistemaIsDemo}">
+			<script type="text/javascript">
+				disponivelNosPlanos(1, 1, 1, 1);
+			</script>
+		</h:panelGroup>
+	</ui:define>
+</ui:composition>

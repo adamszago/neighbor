@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+	<ui:define name="content">
+		<h3>
+			<h:outputText value="#{bundle['tit.carteira.cadastro']}" />
+		</h3>
+
+		<h:form id="cadastroForm" prependId="false">
+
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+
+			<style>
+				.content form table td label {
+					float: left !important;
+				}
+				
+				.layoutCadMorador td {
+					padding: 7px;
+					border: none;
+				}
+				
+				.layoutCadMorador tr {
+					border: none;
+				}
+			</style>
+
+			<p:panelGrid styleClass="layoutCadMorador" columns="2"
+				id="regionGeral">
+				<p:outputLabel value="#{bundle['lbl.carteira.nome']}: "
+					for="nomeCarteira" styleClass="label_obr" />
+				<p:inputText id="nomeCarteira"
+					value="#{carteiraController.entity.nome}" />
+
+				<p:outputLabel value="#{bundle['lbl.carteira.saldo.inicial']}: "
+					rendered="#{carteiraController.entity.id == null || carteiraController.entity.id == 0}"
+					for="carteiraSaldo" styleClass="label_obr" />
+				<p:outputLabel value="#{bundle['lbl.carteira.saldo.atual']}: "
+					rendered="#{carteiraController.entity.id > 0}" for="carteiraSaldo"
+					styleClass="label_obr" />
+
+				<p:inputText id="carteiraSaldo" converter="moneyConverter"
+					disabled="#{carteiraController.entity.id > 0}"
+					value="#{carteiraController.entity.saldo}" />
+				<p:outputLabel value="#{bundle['lbl.carteira.descricao']}: "
+					for="descricaoCarteira" styleClass="label_obr" />
+				<p:column>
+					<p:inputTextarea id="descricaoCarteira" rows="5" cols="30"
+						counter="counter" value="#{carteiraController.entity.descricao}"
+						maxlength="200" counterTemplate="{0} caracteres restantes."
+						autoResize="false" />
+				</p:column>
+
+				<h:outputText value="" />
+				<h:outputText id="counter" />
+
+				<p:outputLabel value="#{bundle['lbl.carteira.bancaria']}: "
+					for="informacaoBancaria" styleClass="label_obr" />
+				<h:selectBooleanCheckbox id="informacaoBancaria" immediate="true"
+					value="#{carteiraController.informacaoBancaria}"
+					valueChangeListener="#{carteiraController.desmarcarBoleto}">
+					<p:ajax event="change" async="false" immediate="true"
+						update="regionGeral"
+						process="nomeCarteira,carteiraSaldo,descricaoCarteira,@this" />
+				</h:selectBooleanCheckbox>
+
+				<p:outputLabel value="#{bundle['lbl.carteira.banco']}: "
+					for="bancoCarteira" styleClass="label_obr" />
+				<p:selectOneMenu id="bancoCarteira"
+					disabled="#{!carteiraController.informacaoBancaria}"
+					value="#{carteiraController.entity.banco}">
+					<f:selectItem itemLabel="#{bundle['select.selecione']}"
+						itemValue="" />
+					<f:selectItems value="#{carteiraController.bancos}" var="banco"
+						itemLabel="#{banco.codigoDeCompensacao} - #{banco.instituicao}"
+						itemValue="#{banco.codigoDeCompensacao}" />
+				</p:selectOneMenu>
+				
+				<p:outputLabel value="#{bundle['lbl.carteira.agencia']}: "
+					for="agenciaCarteira" styleClass="label_obr" />
+				<p:column>
+					<p:inputText id="agenciaCarteira"
+						disabled="#{!carteiraController.informacaoBancaria}"
+						value="#{carteiraController.entity.numeroAgencia}" size="10" />
+					<p:inputText id="digitoAgenciaCarteira"
+						disabled="#{!carteiraController.informacaoBancaria}"
+						value="#{carteiraController.entity.digitoAgencia}" size="1" />
+				</p:column>
+
+				<p:outputLabel value="#{bundle['lbl.carteira.conta']}: "
+					for="contaCarteira" styleClass="label_obr" />
+				<p:column>
+					<p:inputText id="contaCarteira"
+						disabled="#{!carteiraController.informacaoBancaria}"
+						value="#{carteiraController.entity.numeroConta}" size="10" />
+					<p:inputText id="digitoContaCarteira"
+						disabled="#{!carteiraController.informacaoBancaria}"
+						value="#{carteiraController.entity.digitoConta}" size="1" />
+				</p:column>
+
+				<p:outputLabel value="#{bundle['lbl.carteira.gera.boleta']}: "
+					for="boletaBancaria" styleClass="label_obr" />
+				<h:selectBooleanCheckbox id="boletaBancaria"
+					disabled="#{!carteiraController.informacaoBancaria}"
+					value="#{carteiraController.boletaBancaria}"
+					valueChangeListener="#{carteiraController.atualizaCamposBancarios}">
+					<p:ajax event="change" async="false" immediate="true"
+						update="regionGeral"
+						process="nomeCarteira,carteiraSaldo,@this,informacaoBancaria,descricaoCarteira,bancoCarteira,contaCarteira,digitoContaCarteira,agenciaCarteira,digitoAgenciaCarteira" />
+				</h:selectBooleanCheckbox>
+
+				<p:outputLabel
+					value="#{bundle['lbl.carteira.num.carteira.bancaria']}: "
+					for="numeroCarteiraBancaria" styleClass="label_obr" />
+				<p:inputText id="numeroCarteiraBancaria"
+					disabled="#{!carteiraController.boletaBancaria}"
+					value="#{carteiraController.entity.numeroCarteira}"
+					size="#{carteiraController.sizeCarteira}">
+				</p:inputText>
+
+				<p:outputLabel value="#{bundle['lbl.carteira.nosso.numero']}: "
+					for="nossoNumero" styleClass="label_obr" />
+				<p:column>
+					<p:inputText id="nossoNumero"
+						disabled="#{!carteiraController.boletaBancaria}"
+						value="#{carteiraController.entity.nossoNumero}"
+						size="#{carteiraController.sizeNossoNumero}" />
+					<p:inputText id="digitoNossoNumero"
+						disabled="#{!carteiraController.boletaBancaria}"
+						value="#{carteiraController.entity.digitoNossoNumero}" size="1" />
+				</p:column>
+
+				<ui:remove>
+					<p:outputLabel value="#{bundle['lbl.duplicata.dias.vencimento']}: "
+						for="diasVencto" styleClass="label_obr" />
+					<p:inputText id="diasVencto"
+						disabled="#{!carteiraController.boletaBancaria}"
+						value="#{carteiraController.entity.limiteDias}" />
+
+					<p:outputLabel value="#{bundle['lbl.duplicata.mora.recbtos']}: "
+						for="moraRecbtos" styleClass="label_obr" />
+					<p:inputText id="moraRecbtos" converter="moneyConverter"
+						disabled="#{!carteiraController.boletaBancaria}"
+						value="#{carteiraController.entity.moraOutrosRecebimentos}" />
+				
+					<p:outputLabel value="#{bundle['lbl.duplicata.multa.vencto']}: "
+						for="multaVencto" styleClass="label_obr" />
+					<p:inputText id="multaVencto" converter="moneyConverter"
+						disabled="#{!carteiraController.boletaBancaria}"
+						value="#{carteiraController.entity.multaVencimento}" />
+	
+					<p:outputLabel value="#{bundle['lbl.duplicata.taxa.dia']}: "
+						for="taxaDia" styleClass="label_obr" />
+					<p:inputText id="taxaDia" converter="moneyConverter"
+						value="#{carteiraController.entity.taxaDia}"
+						disabled="#{!carteiraController.boletaBancaria}" />
+	
+					<p:outputLabel value="#{bundle['lbl.duplicata.desc']}: "
+						for="desconto" styleClass="label_obr" />
+					<p:inputText id="desconto" converter="moneyConverter"
+						value="#{carteiraController.entity.desconto}"
+						disabled="#{!carteiraController.boletaBancaria}" />
+	
+					<p:outputLabel value="#{bundle['lbl.duplicata.abat']}: "
+						for="abatimento" styleClass="label_obr" />
+					<p:inputText id="abatimento" converter="moneyConverter"
+						disabled="#{!carteiraController.boletaBancaria}"
+						value="#{carteiraController.entity.abatimento}" />
+				</ui:remove>
+
+			</p:panelGrid>
+
+			<p:panelGrid styleClass="layoutCadMorador" columns="2">
+				<p:commandButton value="#{bundle['btn.gravar']}" id="btnGravar"
+					action="#{carteiraController.gravarCarteira}" ajax="false"
+					update=":cadastroForm"
+					rendered="#{carteiraController.entity.id == null || carteiraController.entity.id == 0}"
+					onclick="pageLoading.show();" oncomplete="pageLoading.hide();" />
+
+				<p:commandButton value="#{bundle['btn.alterar']}"
+					action="#{carteiraController.alterar}" ajax="false"
+					rendered="#{carteiraController.entity.id > 0}"
+					update=":cadastroForm" onclick="pageLoading.show();"
+					oncomplete="pageLoading.hide();" />
+
+				<p:commandButton value="#{bundle['btn.limpar']}"
+					action="#{carteiraController.limparObjetoCarteira}" ajax="false"
+					process="@this" onclick="pageLoading.show();"
+					update=":cadastroForm" oncomplete="pageLoading.hide();" />
+			</p:panelGrid>
+		</h:form>
+
+		<script>
+			jQuery(document).ready(function() {
+				aplicaMascaraMonetaria("#carteiraSaldo");
+			});
+		</script>
+
+	</ui:define>
+</ui:composition>

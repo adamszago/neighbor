@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:sec="http://www.springframework.org/security/tags" >
+	<ui:define name="content">
+		<h:form id="frmReservaForm" styleClass="innerContentFix">
+			<p:growl id="growlReserva" showDetail="true" />
+
+			<h:panelGrid columns="2">
+				<h4>Antes de solicitar Reserva verifique o calendario</h4>
+				<p:commandLink onclick="eventDialog.show()">
+					<p:graphicImage url="../resources/images/add.png" />
+				</p:commandLink>
+			</h:panelGrid>
+			<p:schedule value="Reserva" widgetVar="reservasCondominio"
+				locale="pt">
+
+			</p:schedule>
+
+			<p:dialog widgetVar="eventDialog" header="Event Details"  modal="true"
+				showEffect="clip" hideEffect="clip">
+				<h:form id="frmcadReserva">
+					<h:inputHidden id="idReserva"
+						value="#{reservaController.reserva.id}" />
+					<h:panelGrid id="eventDetails" columns="2">
+						<h:outputLabel value="Local da Reserva" />
+						<h:selectOneMenu id="itensReserva"
+							value="reservaController.itemReservaSelecionado"
+							valueChangeListener="#{reservaController.valueChangeListener}">
+							<f:selectItem itemLabel=":: Selecione ::" itemValue="-1" />
+							<f:selectItems value="#{reservaController.listaSelectItem}" />
+						</h:selectOneMenu>
+
+						<h:outputLabel value="Data Solicitacao: " for="dataSolicitacao" />
+						<p:calendar id="dataSolicitacao"
+							value="#{reservaController.reserva.dataSolicitacao}" />
+
+						<h:outputLabel value="Data Reserva: " for="dataReserva" />
+						<p:calendar id="dataReserva"
+							value="#{reservaController.reserva.dataReserva}" />
+
+						<h:outputLabel value="Pago: " />
+						<h:selectBooleanCheckbox id="pago"
+							value="#{reservaController.reserva.pago}" />
+
+						<h:outputLabel value="Aprovado: " />
+						<h:selectBooleanCheckbox id="aprovado"
+							value="#{reservaController.reserva.aprovado}" />
+
+						
+						<p:commandButton value="Gravar"	 actionListener="#{reservaController.gravar}" ajax="true" 
+							update=":cfrmReservaForm" />
+						<p:commandButton value="Limpar"
+							action="#{reservaController.limpar}" immediate="true" ajax="true" />
+					</h:panelGrid>
+				</h:form>
+			</p:dialog>
+
+		</h:form>
+	</ui:define>
+</ui:composition>
+

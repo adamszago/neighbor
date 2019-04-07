@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<ui:define name="content">
+
+		<style>
+			.selectStatus {
+				width: 76px;
+				text-align: left;
+			}
+			
+			.columnStatus .ui-sortable-column-icon {
+				vertical-align: top;
+			}
+		</style>
+
+		<h:form id="listagemForm" styleClass="innerContentFix">
+
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+
+			<p:treeTable value="#{centroCustoController.treeRootCentrosCusto}"
+				var="centroCusto" 
+				rowStyleClass="#{centroCusto.ativo == true ? null : 'inativo'}">
+				
+				<f:facet name="header">
+					<h:outputText value="#{bundle['tit.centro.custo']}" />
+				</f:facet>
+
+				<p:column headerText="#{bundle['tit.nome']}">
+					<!-- <div> -->
+						<h:outputText id="campoNome" value="#{centroCusto.nome}" />
+					<!-- </div> -->
+					<p:tooltip for="campoNome" value="#{centroCusto.descricao}"
+						style="max-width:200px" />
+				</p:column>
+
+				<p:column headerText="#{bundle['tit.lancavel']}"
+					style="width:100px;" styleClass="textoCentro">
+					<h:outputText value="#{centroCusto.lancavelText}" />
+				</p:column>
+
+				<!-- BOTAO EDITAR -->
+				<p:column style="width:50px;">
+					<h:commandLink id="btnEditar" immediate="true"
+						onclick="pageLoading.show();" oncomplete="pageLoading.hide();"
+						action="#{centroCustoController.editarCentroCusto}">
+						<p:graphicImage value="../../resources/images/edit.png"
+							style="text-align:center;" />
+						<f:setPropertyActionListener
+							target="#{centroCustoController.entity}" value="#{centroCusto}" />
+					</h:commandLink>
+					<p:tooltip for="btnEditar" value="Editar Centro de Custo" />
+				</p:column>
+
+				<!-- BOTAO ALTERAR STATUS -->
+				<p:column styleClass="gridTdIco"
+					rendered="#{sec:areAnyGranted('ROLE_EDITAR_CENTROCUSTO, ROLE_ROOT')}">
+					<f:facet name="header"></f:facet>
+					<p:commandLink onclick="pageLoading.show();"
+						oncomplete="pageLoading.hide();dglAtivarDesativar.show();"
+						update=":dialogAtivarDesativar" immediate="true">
+						<p:graphicImage id="ativarDesativar"
+							value="../../resources/images/ativo_#{centroCusto.ativo == true ? 'false' : 'true'}.png"
+							width="20px" height="20px" style="text-align:center;" />
+						<p:tooltip for="ativarDesativar" hideEffect="fade"
+							showEffect="fade"
+							value="#{centroCusto.ativo == true ? 'Desativar CentroCusto' : 'Ativar CentroCusto'}"></p:tooltip>
+						<f:setPropertyActionListener
+							target="#{centroCustoController.entity}" value="#{centroCusto}" />
+					</p:commandLink>
+				</p:column>
+			</p:treeTable>
+			
+			<p:toolbar>
+				<p:toolbarGroup align="left">
+					<p:commandButton value="#{bundle['btn.novo']}"
+						icon="ui-icon-document"
+						action="#{centroCustoController.pageCadastroCentroCusto}"
+						ajax="false" immediate="true">
+					</p:commandButton>
+				</p:toolbarGroup>
+			</p:toolbar>
+
+		</h:form>
+
+		<p:dialog id="dialogAtivarDesativar"
+			header="#{centroCustoController.entity.ativo ? 'Desativar' : 'Ativar'}"
+			widgetVar="dglAtivarDesativar" modal="true" closable="false">
+			<h:form id="formAtivarDesativar">
+
+				<div>Confirma #{centroCustoController.entity.ativo ?
+					'desativação' : 'ativação'} do centro de custo?</div>
+				<br />
+				<strong>#{centroCustoController.entity.nome}</strong>
+
+				<div class="botoesDialog" style="width: 115px;">
+					<p:commandButton id="confirm" value="#{bundle['btn.sim']}"
+						update=":listagemForm" onclick="pageLoading.show();"
+						oncomplete="dglAtivarDesativar.hide();pageLoading.hide();"
+						action="#{centroCustoController.ativarDesativar}" global="false" />
+					<p:commandButton id="decline" value="#{bundle['btn.nao']}"
+						onclick="dglAtivarDesativar.hide();" immediate="true"
+						global="false"
+						action="#{centroCustoController.limparObjetoCentroCusto}" />
+				</div>
+			</h:form>
+			<h:panelGroup rendered="#{usuarioController.sistemaIsDemo}">
+				<script type="text/javascript">
+					disponivelNosPlanos(0, 0, 0, 1);
+				</script>
+			</h:panelGroup>
+		</p:dialog>
+
+	</ui:define>
+</ui:composition>

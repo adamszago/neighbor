@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+<body>
+	<ui:composition>
+		<p:dialog header="Visitas" widgetVar="dlgVerVisitas" width="560"
+			modal="true" resizable="false">
+			<h:form id="formVisitas">
+				<h:panelGrid>
+					<p:dataTable id="listaVisitas" scrollable="true" height="330"
+						var="visita"
+						emptyMessage="Sem visitas cadastradas para este morador"
+						value="#{moradorController.visitas}" effectSpeed="fast">
+
+						<p:column filterBy="visitante.pessoa.nome"
+							sortBy="visitante.pessoa.nome" style="width: 281px">
+							<f:facet name="header">  
+              					Nome  
+      						</f:facet>
+							<h:outputText value="#{visita.visitante.pessoa.nome}" />
+						</p:column>
+						<p:column filterBy="inicioVisita"
+							sortBy="inicioVisita" style="width: 125px">
+							<f:facet name="header">  
+              					Data Visita  
+      						</f:facet>
+							<h:outputText value="#{visita.inicioVisita}">
+								<f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="GMT-3" />
+							</h:outputText>
+						</p:column>
+
+					</p:dataTable>
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+	</ui:composition>
+</body>
+</html>

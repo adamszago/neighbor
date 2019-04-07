@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+	<ui:define name="content">
+		<h3>
+			<h:outputText value="#{bundle['tit.configuracoes.cond.cadastro']}" />
+		</h3>
+
+		<h:form id="cadastroForm" prependId="false">
+
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+
+			<style>
+				.content form table td label {
+					float: left !important;
+				}
+				
+				.layoutCadMorador td {
+					padding: 7px;
+					border: none;
+				}
+				
+				.layoutCadMorador tr {
+					border: none;
+				}
+			</style>
+			
+			<h:panelGrid columns="1" id="listaCondominio">
+				<h:panelGroup width="100%">
+					<p:dataTable id="condominios" value="#{configuracaoCondominioController.condominios}" 
+							var="co" width="100%" 
+							rowKey="#{co.pessoa.idPessoa}" styleClass="datatableHeaderPadrao2"
+							emptyMessage="Sem Condomínios Cadastrados" selectionMode="single"
+							selection="#{configuracaoCondominioController.condominio}" rows="10">
+							
+						<f:facet name="header">  
+					    	Condomínios  
+					    </f:facet>
+					    
+					    <p:ajax event="rowSelect" listener="#{configuracaoCondominioController.condominioChange}" update="@form">
+					    </p:ajax>
+						
+						<p:column sortBy="pessoa.nome" filterBy="pessoa.nome">  
+				          	<f:facet name="header">Nome</f:facet>
+				          	<h:outputText value="#{co.pessoa.nome}"  />
+				      	</p:column>
+					</p:dataTable>
+				</h:panelGroup>
+			</h:panelGrid>
+
+			<p:panelGrid styleClass="layoutCadMorador" columns="2"
+				id="regionGeral">
+				
+				<p:outputLabel value="Conta Suspensa: " for="contaSuspensa"
+					styleClass="label_obr" />
+				<p:selectBooleanCheckbox id="contaSuspensa" 
+					value="#{configuracaoCondominioController.contaSuspensa}" />
+					
+				<h:outputLabel value="Usuário Avisado: "
+					for="avisado" />
+				<p:selectBooleanCheckbox id="avisado" 
+					value="#{configuracaoCondominioController.entity.avisado}" />
+				
+				<p:outputLabel value="Quantidade Maxima Dias Visita: "
+					for="qtdeDiasVisita" />
+				<p:inputText id="qtdeDiasVisita"
+					value="#{configuracaoCondominioController.entity.qtdeDiasVisita}" />
+
+				<p:outputLabel value="Quantidade Maxima Dias Servico: "
+					for="qtdeDiasServico" />
+				<p:inputText id="qtdeDiasServico"
+					value="#{configuracaoCondominioController.entity.qtdeDiasServico}" />
+			
+				<p:outputLabel value="Quantidade Entradas Livre Visitante: "
+					for="qtdeEntradaLivrePrestador" />
+				<p:inputText id="qtdeEntradaLivrePrestador"
+					value="#{configuracaoCondominioController.entity.qtdeEntradaLivrePrestador}" />
+
+				<p:outputLabel value="Quantidade Entradas Livre Visitante: "
+					for="qtdeEntradaLivreVisitante" />
+				<p:inputText id="qtdeEntradaLivreVisitante"
+					value="#{configuracaoCondominioController.entity.qtdeEntradaLivreVisitante}" />
+
+				<p:outputLabel value="Quantidade minima dias Reserva: "
+					for="qtdDiaMinimoReserva" />
+				<p:inputText id="qtdDiaMinimoReserva" 
+					value="#{configuracaoCondominioController.entity.qtdeDiasMinimoReserva}" />
+
+				<p:outputLabel value="Tamanho maximo arquivos (em MB): "
+					for="maxArquivos" />
+				<p:inputText id="maxArquivos"
+					value="#{configuracaoCondominioController.entity.tamanhoMaximoArquivos}" />
+
+				<p:outputLabel value="CPF Emissor: " for="cpf" />
+				<p:inputMask id="cpf"
+					value="#{configuracaoCondominioController.entity.cpfEmissorDocumentos}"
+					label="CPF" mask="999.999.999-99" size="25">
+				</p:inputMask>
+				
+				<p:outputLabel value="Emissor documentos: " for="nomeEmissor" />
+				<p:inputText id="nomeEmissor"
+					value="#{configuracaoCondominioController.entity.nomeEmissorDocumentos}">
+				</p:inputText>
+				
+				<p:outputLabel value="Exibe todas reservas: " for="exibeTodasReservas" />
+				<p:selectBooleanCheckbox id="exibeTodasReservas" 
+					value="#{configuracaoCondominioController.entity.exibeTodasReservas}" />
+
+			</p:panelGrid>
+
+			<p:panelGrid styleClass="layoutCadMorador" columns="1">
+				<p:commandButton value="#{bundle['btn.alterar']}"
+					action="#{configuracaoCondominioController.gravar}" ajax="false"
+					update=":cadastroForm" onclick="pageLoading.show();"
+					oncomplete="pageLoading.hide();" />
+			</p:panelGrid>
+		</h:form>
+
+	</ui:define>
+</ui:composition>

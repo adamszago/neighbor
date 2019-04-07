@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+	<ui:define name="content">
+		<h:form id="listagemReservaPendente">
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+			<h:panelGrid>
+				<p:row>
+					<p:column>
+						<p:dataTable id="tableReservasPendetes" rowKey="#{rsv.id}"
+							value="#{aprovacaoController.reservasTemp}" var="rsv"
+							emptyMessage="Reservas pendentes para aprovar" paginator="true"
+							rows="10">
+
+							<f:facet name="header">
+								<h:outputText value="#{bundle['tit.reservas.pendentes.ap']}" />
+							</f:facet>
+							<p:column sortBy="#{rsv.dataSolicitacao}">
+								<f:facet name="header">
+									<h:outputText value="#{bundle['tit.data.cadastro']}" />
+								</f:facet>
+								<h:outputText value="#{rsv.dataSolicitacao}">
+									<f:convertDateTime locale="pt" pattern="dd/MM/yyyy" />
+								</h:outputText>
+							</p:column>
+							<p:column sortBy="#{rsv.dataReserva}">
+								<f:facet name="header">
+									<h:outputText value="#{bundle['tit.data.reserva']}" />
+								</f:facet>
+								<h:outputText value="#{rsv.dataReserva}">
+									<f:convertDateTime locale="pt" pattern="dd/MM/yyyy" />
+								</h:outputText>
+							</p:column>
+							<p:column sortFunction="#{aprovacaoController.ordenacaoNumerica}"
+								sortBy="#{rsv.morador.unidadeHabitacional[0].unidadeHabitacional.identificacao}">
+								<f:facet name="header">
+									<h:outputText value="#{bundle['tit.casa']}" />
+								</f:facet>
+								<h:outputText
+									value="#{rsv.morador.unidadeHabitacional[0].unidadeHabitacional.identificacao}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="#{bundle['tit.morador']}" />
+								</f:facet>
+								<h:outputText value="#{rsv.morador.pessoa.nome}" />
+							</p:column>
+							<p:column sortBy="#{rsv.itemReserva.nome}}">
+								<f:facet name="header">
+									<h:outputText value="#{bundle['tit.item.reserva']}" />
+								</f:facet>
+								<h:outputText value="#{rsv.itemReserva.nome}" />
+							</p:column>
+							<p:column style="width: 43px;">
+
+								<!-- BOTAO APROVAR RESERVA -->
+								<p:commandLink action="#{aprovacaoController.aprovarReserva}"
+									update=":listagemReservaPendente">
+									<p:graphicImage id="aprovar"
+										value="../../resources/images/icons/aprovado_true.png"
+										style="margin-bottom: 10px;" />
+									<f:setPropertyActionListener
+										target="#{aprovacaoController.reservaTemp}" value="#{rsv}" />
+								</p:commandLink>
+								<p:tooltip for="aprovar" hideEffect="slide" showEffect="slide"
+									value="Aprovar Reserva"></p:tooltip>
+								<!-- FIM -->
+								<br />
+								<!-- BOTAO REPROVAR RESERVA -->
+								<p:commandLink action="#{aprovacaoController.reprovarReserva}"
+									update=":listagemReservaPendente">
+									<p:graphicImage id="reprovar"
+										value="../../resources/images/icons/aprovado_false.png" />
+									<f:setPropertyActionListener
+										target="#{aprovacaoController.reservaTemp}" value="#{rsv}" />
+								</p:commandLink>
+								<p:tooltip for="reprovar" hideEffect="slide" showEffect="slide"
+									value="Reprovar Reserva"></p:tooltip>
+								<!-- FIM -->
+
+							</p:column>
+						</p:dataTable>
+					</p:column>
+				</p:row>
+			</h:panelGrid>
+		</h:form>
+		<h:panelGroup rendered="#{usuarioController.sistemaIsDemo}">
+			<script type="text/javascript">
+				disponivelNosPlanos(0, 1, 1, 1);
+			</script>
+		</h:panelGroup>
+	</ui:define>
+</ui:composition>

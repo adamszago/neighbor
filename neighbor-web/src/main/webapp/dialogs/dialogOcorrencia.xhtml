@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+<body>
+	<ui:composition>
+		<p:dialog header="Ocorrência" widgetVar="dlgOcorrencia"
+			resizable="false" width="450" closable="false" modal="true"
+			onHide="pageLoading.hide();">
+			<h:form id="formOcorrencia" title="Ocorrencia">
+				<h:panelGrid columns="2" style="margin-bottom:10px">
+
+					<h:outputLabel value="Gravidade" for="gravidade"
+						style="float: left" />
+					<h:selectOneMenu
+						value="#{ocorrenciaController.ocorrencia.gravidade}"
+						id="gravidade">
+						<f:selectItem itemLabel="Alta" itemValue="Alta" />
+						<f:selectItem itemLabel="Média" itemValue="Média" />
+						<f:selectItem itemLabel="Baixa" itemValue="Baixa" />
+					</h:selectOneMenu>
+
+					<h:outputLabel value="Gerou Notificação: " for="gerouNotificacao"
+						style="float: left" />
+					<h:selectOneRadio id="gerouNotificacao"
+						value="#{ocorrenciaController.ocorrencia.gerouNotificacao}">
+						<f:selectItem itemLabel="Sim" itemValue="true" />
+						<f:selectItem itemLabel="Não" itemValue="false" />
+					</h:selectOneRadio>
+
+					<h:outputLabel value="Gerou Multa: " for="gerouMulta"
+						style="float: left" />
+					<h:selectOneRadio id="gerouMulta"
+						value="#{ocorrenciaController.ocorrencia.gerouMulta}">
+						<f:selectItem itemLabel="Sim" itemValue="true" />
+						<f:selectItem itemLabel="Não" itemValue="false" />
+					</h:selectOneRadio>
+
+
+
+					<h:outputLabel value="Data da Ocorrência" for="dataOcorrencia"
+						style="float: left" />
+					<p:calendar
+						value="#{ocorrenciaController.ocorrencia.dataOcorrencia}"
+						label="Data da Ocorrência" id="dataOcorrencia" navigator="true"
+						mindate="1/1/1930" locale="pt"
+						maxdate="#{ocorrenciaController.dataInicial}" readonlyInput="true"
+						pattern="dd/MM/yyyy" required="true"
+						requiredMessage="#{bundle['msg.informe.data.ocorrencia']}" />
+
+					<h:outputLabel value="Hora da Ocorrência" for="hora"
+						style="float: left" />
+					<p:inputText id="hora" onkeyup="mascara_hora(this)"
+						value="#{ocorrenciaController.horaOcorrencia}" label="Hora"
+						required="true" maxlength="5" size="10"
+						requiredMessage="#{bundle['msg.informe.hora.ocorrencia']}"></p:inputText>
+
+
+					<h:outputLabel value="Descrição: " for="descricao"
+						style="float: left" />
+					<p:inputTextarea id="descricao" rows="5" cols="40"
+						autoResize="true" required="true"
+						requiredMessage="#{bundle['msg.informe.desc.ocorrencia']}"
+						value="#{ocorrenciaController.ocorrencia.descricao}" />
+				</h:panelGrid>
+
+				<h:panelGrid columns="3">
+					<p:commandButton value="Gravar"
+						oncomplete="handleIncludeOcorrenciaRequest(args);"
+						actionListener="#{ocorrenciaController.gravar}" ajax="true"
+						update=":listagemForm :formOcorrencia"
+						rendered="#{ocorrenciaController.ocorrencia.id == null || ocorrenciaController.ocorrencia.id == 0}" />
+
+					<p:commandButton value="Alterar" oncomplete="dlgOcorrencia.hide()"
+						actionListener="#{ocorrenciaController.alterarOcorrencia}"
+						ajax="true" update=":listagemForm :formOcorrencia"
+						rendered="#{ocorrenciaController.ocorrencia.id > 0 }" />
+
+					<p:commandButton value="Limpar"
+						action="#{ocorrenciaController.novaOcorrencia}" ajax="true"
+						process="@this" update=":formOcorrencia" />
+
+					<p:commandButton value="Cancelar"
+						action="#{ocorrenciaController.novaOcorrencia}" ajax="true"
+						process="@this" update=":formOcorrencia"
+						oncomplete="dlgOcorrencia.hide(); pageLoading.hide();"
+						onclick="pageLoading.show();" />
+
+				</h:panelGrid>
+
+			</h:form>
+			<script type="text/javascript">
+				function handleIncludeOcorrenciaRequest(args) {
+					if (args.resultOk) {
+						dlgOcorrencia.hide();
+					} else {
+
+					}
+				}
+			</script>
+		</p:dialog>
+	</ui:composition>
+</body>
+</html>

@@ -1,0 +1,40 @@
+.innerContentFix {
+	width: 790px;
+	margin-left: 0;
+}
+
+div.boxintro_home {
+	left: 258px !important;
+}
+
+div.boxintro_moradores {
+	left: 318px !important;
+}
+
+div.boxintro_visitantes {
+	left: 428px !important;
+}
+
+div.boxintro_prestadores {
+	left: 426px !important;
+}
+
+div.boxintro_animais {
+	left: 517px !important;
+}
+
+div.boxintro_agenda {
+	left: 227px !important;
+}
+
+div.boxintro_ocorrencia {
+	left: 284px !important;
+}
+
+div.boxintro_email {
+	left: 335px !important;
+}
+
+div.boxintro_escreveremail {
+	left: 382px !important;
+}

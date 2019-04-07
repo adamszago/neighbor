@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<ui:define name="content">
+
+		<h3>
+			<h:outputText value="#{bundle['tit.faturas']}" />
+		</h3>
+
+		<h:form id="listagemForm" styleClass="innerContentFix">
+
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+
+
+			<p:dataTable var="fatura" value="#{faturaPagarController.entities}"
+				paginator="true" rows="10" emptyMessage="Sem Faturas Cadastradas">
+
+				<p:column sortBy="#{fatura.data}" filterBy="data"
+					style="text-align: right;">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.data']}" />
+					</f:facet>
+					<h:outputText id="campoData" value="#{fatura.data}">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.morador']}" />
+					</f:facet>
+					<h:outputText value="#{fatura.lancamentos[0].pessoa.nome}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.nome']}" />
+					</f:facet>
+					<h:outputText value="#{fatura.nome}" />
+				</p:column>
+				<p:column style="text-align: right;">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.valor']}" />
+					</f:facet>
+					<h:outputText id="campoValor" value="#{fatura.valor}">
+						<f:convertNumber pattern="R$ #,##0.00" />
+					</h:outputText>
+				</p:column>
+				<p:column style="text-align: right;">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.valor.pago']}" />
+					</f:facet>
+					<h:outputText id="campoValorPago" value="#{fatura.valorPago}">
+						<f:convertNumber pattern="R$ #,##0.00" />
+					</h:outputText>
+				</p:column>
+				<p:column style="text-align: right;">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.valor.pagar']}" />
+					</f:facet>
+					<h:outputText id="campoValoraPagar" value="#{fatura.valoraPagar}">
+						<f:convertNumber pattern="R$ #,##0.00" />
+					</h:outputText>
+				</p:column>
+
+				<p:column style="width:50px;">
+					<h:commandLink id="editarFatura" immediate="true"
+						onclick="pageLoading.show();" oncomplete="pageLoading.hide();"
+						action="#{faturaPagarController.editarFatura}">
+						<p:graphicImage value="../../resources/images/edit1.png"
+							style="text-align:center;" />
+						<f:setPropertyActionListener
+							target="#{faturaPagarController.entity}" value="#{fatura}" />
+					</h:commandLink>
+					<p:tooltip for="editarFatura" value="Editar Fatura" />
+				</p:column>
+			</p:dataTable>
+
+			<p:panelGrid styleClass="layoutCadMorador" columns="2">
+				<p:commandButton value="#{bundle['tit.faturas.gerar']}"
+					id="btnGerarFaturas" update=":listagemForm"
+					onclick="pageLoading.show();dlgGerar.show();"
+					oncomplete="pageLoading.hide();" />
+			</p:panelGrid>
+		</h:form>
+
+		<p:confirmDialog header="#{bundle['tit.faturas.gerar']}"
+			severity="alert" widgetVar="dlgGerar" modal="true" closable="false"
+			message="#{bundle['msg.fatura.gerar.aberto']}">
+			<h:form>
+				<p:commandButton id="confirm" value="#{bundle['btn.sim']}"
+					update=":listagemForm :listagemForm:growlGeral"
+					oncomplete="dlgGerar.hide()" ajax="false"
+					action="#{faturaPagarController.gerarFaturasAberto}" />
+				<p:commandButton id="decline" value="#{bundle['btn.nao']}"
+					oncomplete="dlgGerar.hide()" update=":listagemForm:growlGeral" />
+			</h:form>
+		</p:confirmDialog>
+
+		<h:panelGroup rendered="#{usuarioController.sistemaIsDemo}">
+			<script type="text/javascript">
+				disponivelNosPlanos(0, 0, 0, 1);
+			</script>
+		</h:panelGroup>
+	</ui:define>
+</ui:composition>

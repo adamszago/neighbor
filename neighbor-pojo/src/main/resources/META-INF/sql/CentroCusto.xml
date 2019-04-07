@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings version="2.0"
+	xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_1_0.xsd">
+
+	<named-query name="CentroCusto.buscarPorCondominio">
+		<query>
+			<![CDATA[
+				SELECT DISTINCT centro 
+				FROM CentroCusto centro 
+				INNER JOIN centro.condominio condominio 
+				WHERE 1 = 1 
+				AND (:ativo IS NULL OR centro.ativo = :ativo) 
+				AND (:idCondominio IS NULL OR condominio.idPessoa = :idCondominio)
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="CentroCusto.findCentrosCustoRaizByCondominio">
+		<query>
+			<![CDATA[
+				SELECT DISTINCT centro 
+				FROM CentroCusto centro 
+				LEFT JOIN centro.centroCustoPai pai 
+				INNER JOIN centro.condominio condominio 
+				WHERE pai IS NULL 
+				AND condominio.idPessoa = :idCondominio 
+				AND centro.excluido = false 
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="CentroCusto.findCentrosCustoFilhos">
+		<query>
+			<![CDATA[
+				SELECT DISTINCT centro 
+				FROM CentroCusto centro 
+				INNER JOIN centro.centroCustoPai pai 
+				WHERE pai.id = :idPai
+			]]>
+		</query>
+	</named-query>
+
+</entity-mappings>

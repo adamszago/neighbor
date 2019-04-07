@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<ui:define name="content">
+
+		<h:form id="listagemForm" styleClass="innerContentFix">
+
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+
+			<p:dataTable value="#{carteiraController.entities}" var="carteira"
+				rowStyleClass="#{carteira.ativo == true ? null : 'inativo'}"
+				emptyMessage="#{bundle['msg.sem.registros.cadastrados']}" paginator="true" rows="10">
+
+				<f:facet name="header">
+					<h:outputText value="#{bundle['tit.carteira.cadastro']}" />
+				</f:facet>
+
+				<p:column headerText="#{bundle['tit.nome']}">
+					<h:outputText id="campoNome" value="#{carteira.nome}" />
+					<p:tooltip for="campoNome" value="#{carteira.descricao}"
+						style="max-width:200px" />
+				</p:column>
+
+				<p:column headerText="#{bundle['tit.saldo']}" style="width: 100px;">
+					<h:outputText id="campoSaldo" value="#{carteira.saldo}">
+						<f:converter converterId="moneyConverter" />
+					</h:outputText>
+				</p:column>
+
+				<p:column style="width:50px;">
+					<h:commandLink id="btnEditar" onclick="pageLoading.show();"
+						oncomplete="pageLoading.hide();" immediate="true"
+						action="#{carteiraController.editarCarteira}">
+						<p:graphicImage value="../../resources/images/edit1.png"
+							style="text-align:center;" />
+						<f:setPropertyActionListener target="#{carteiraController.entity}"
+							value="#{carteira}" />
+					</h:commandLink>
+					<p:tooltip for="btnEditar" value="Editar Carteira" />
+				</p:column>
+
+				<!-- BOTAO ALTERAR STATUS -->
+				<p:column styleClass="gridTdIco"
+					rendered="#{sec:areAnyGranted('ROLE_EDITAR_CARTEIRA, ROLE_ROOT')}">
+					<f:facet name="header"></f:facet>
+					<p:commandLink onclick="pageLoading.show();"
+						oncomplete="pageLoading.hide();dglAtivarDesativar.show();"
+						update=":dialogAtivarDesativar" immediate="true">
+						<p:graphicImage id="ativarDesativar"
+							value="../../resources/images/ativo_#{carteira.ativo == true ? 'false' : 'true'}.png"
+							width="20px" height="20px" style="text-align:center;" />
+						<p:tooltip for="ativarDesativar" hideEffect="fade"
+							showEffect="fade"
+							value="#{carteira.ativo == true ? 'Desativar Carteira' : 'Ativar Carteira'}"></p:tooltip>
+						<f:setPropertyActionListener target="#{carteiraController.entity}"
+							value="#{carteira}" />
+					</p:commandLink>
+				</p:column>
+			</p:dataTable>
+
+			<p:toolbar>
+				<p:toolbarGroup align="left">
+					<p:commandButton value="#{bundle['btn.novo']}"
+						icon="ui-icon-document"
+						action="#{carteiraController.pageCadastroCarteira}" ajax="false"
+						immediate="true">
+					</p:commandButton>
+				</p:toolbarGroup>
+				<p:toolbarGroup align="right">
+					<p:selectOneMenu id="selectStatus"
+						value="#{carteiraController.valueSelectStatus}"
+						style="width: 133px;"
+						styleClass="selectStatus" onchange="pageLoading.show();">
+						<f:selectItem itemLabel="#{bundle['select.stt.todos']}"
+							itemValue="TODOS" />
+						<f:selectItem itemLabel="#{bundle['select.stt.ativos']}"
+							itemValue="ATIVOS" />
+						<f:selectItem itemLabel="#{bundle['select.stt.inativos']}"
+							itemValue="INATIVOS" />
+						<p:ajax update=":listagemForm"
+							listener="#{carteiraController.onSelectStatus}"
+							oncomplete="pageLoading.hide();" />
+					</p:selectOneMenu>
+				</p:toolbarGroup>
+			</p:toolbar>
+
+		</h:form>
+
+		<p:dialog id="dialogAtivarDesativar"
+			header="#{carteiraController.entity.ativo ? 'Desativar' : 'Ativar'}"
+			widgetVar="dglAtivarDesativar" modal="true" closable="false">
+			<h:form id="formAtivarDesativar">
+
+				<div>Confirma #{carteiraController.entity.ativo ?
+					'desativação' : 'ativação'} da carteira?</div>
+				<br />
+				<strong><h:outputText
+						value="#{carteiraController.entity.nome}" /></strong>
+
+				<div class="botoesDialog" style="width: 115px;">
+					<p:commandButton id="confirm" value="#{bundle['btn.sim']}"
+						update=":listagemForm" onclick="pageLoading.show();"
+						oncomplete="dglAtivarDesativar.hide();pageLoading.hide();"
+						action="#{carteiraController.ativarDesativar}" global="false" />
+					<p:commandButton id="decline" value="#{bundle['btn.nao']}"
+						onclick="dglAtivarDesativar.hide();" immediate="true"
+						global="false" action="#{carteiraController.limparObjetoCarteira}" />
+				</div>
+			</h:form>
+			<h:panelGroup rendered="#{usuarioController.sistemaIsDemo}">
+				<script type="text/javascript">
+					disponivelNosPlanos(0, 0, 0, 1);
+				</script>
+			</h:panelGroup>
+		</p:dialog>
+
+	</ui:define>
+</ui:composition>

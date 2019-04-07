@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+	<ui:define name="content">
+		<h:form id="listagemForm" styleClass="innerContentFix">
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+			<p:ajaxStatus onprestart="pageLoading.show()"
+				oncomplete="pageLoading.hide()" onerror="pageLoading.hide()" />
+			<p:tabView id="tabServicos" effect="slide" effectDuration="fast">
+				
+				<p:ajax event="tabChange" listener="#{prestadorServicoController.onTabChange}" update=":listagemForm:tabServicos" />
+				
+				<p:tab id="abaPrestadores" title="#{bundle['tit.serv.conf']}">
+					<p:dataTable id="prestadores" var="prestador"
+						value="#{prestadorServicoController.prestadoresServico}"
+						rowKey="#{prestador.pessoa.idPessoa}" paginator="true" rows="10"
+						selection="#{prestadorServicoController.prestadorServico}"
+						selectionMode="single"
+						emptyMessage="#{bundle['msg.sem.prestadores.cad']}">
+						<f:facet name="header">
+							<h:outputText value="#{bundle['tit.prestadores.cadastrados']}" />
+						</f:facet>
+						<p:column style="width:16px" exportable="false">
+							<p:rowToggler />
+						</p:column>
+						<p:column filterBy="documento" exportable="true">
+							<f:facet name="header">
+								<h:outputText value="#{bundle['tit.cpfcnpj']}" />
+							</f:facet>
+							<h:outputText value="#{prestador.documento}" />
+						</p:column>
+						<p:column sortBy="pessoa.nome"
+							filterBy="pessoa.nome" exportable="true">
+							<f:facet name="header">
+								<h:outputText value="#{bundle['tit.nome']}" />
+							</f:facet>
+							<h:outputText value="#{prestador.pessoa.nome}" />
+						</p:column>
+
+						<p:column sortBy="tipoPrestador.tipoPrestador"
+							filterBy="tipoPrestador.tipoPrestador"
+							exportable="true">
+							<f:facet name="header">
+								<h:outputText value="#{bundle['tit.tipo.prestador']}" />
+							</f:facet>
+							<h:outputText value="#{prestador.tipoPrestador.tipoPrestador}" />
+						</p:column>
+
+						<!-- BOTAO VER SERVICOS PRESTADOS -->
+						<p:column exportable="false">
+							<p:commandLink oncomplete="centerAndShowDialog('dlgPrestacaoServicos');"
+								id="verPrestacaoServicos" update=":formPrestacaoServicos"
+								ajax="true">
+								<p:graphicImage value="../../resources/images/ico_services.png"
+									style="text-align:center;" />
+								<f:setPropertyActionListener
+									target="#{prestadorServicoController.prestadorServico}"
+									value="#{prestador}" />
+							</p:commandLink>
+							<p:tooltip for="verPrestacaoServicos"
+								value="Ver serviços prestados" showEffect="slide"
+								hideEffect="slide" />
+						</p:column>
+
+						<!-- BOTAO REGISTRAR OCORRENCIA -->
+						<p:column
+							rendered="#{sec:areAnyGranted('ROLE_CADASTRO_OCORRENCIA, ROLE_ROOT')}"
+							exportable="false">
+							<p:commandLink onclick="dlgOcorrencia.show()"
+								id="registrarOcorrencia">
+								<p:graphicImage value="../../resources/images/ico_apito.png"
+									style="text-align:center;" />
+								<f:setPropertyActionListener
+									target="#{ocorrenciaController.ocorrencia.prestadorPenalizado}"
+									value="#{prestador}" />
+							</p:commandLink>
+							<p:tooltip for="registrarOcorrencia" value="Registrar Ocorrencia"
+								showEffect="slide" hideEffect="slide" />
+						</p:column>
+
+						<!-- BOTAO EDITAR PRESTADOR -->
+						<p:column
+							rendered="#{sec:areAnyGranted('ROLE_EDITAR_PRESTADOR, ROLE_ROOT')}"
+							exportable="false">
+							<f:facet name="header">
+							</f:facet>
+							<!-- p:commandLink action="morador.jsf?faces-redirect=true&amp;includeViewParams=true" update=":painelCadastro"-->
+							<h:commandLink id="editarPrestador"
+								action="#{prestadorServicoController.editarPrestador}"
+								onclick="pageLoading.show();" oncomplete="pageLoading.hide();">
+								<p:graphicImage value="../../resources/images/edit.png" width="20px"
+									height="20px" style="text-align:center;" />
+								<f:setPropertyActionListener
+									target="#{prestadorServicoController.prestadorServico}"
+									value="#{prestador}" />
+							</h:commandLink>
+							<p:tooltip for="editarPrestador" value="Editar Informações"
+								showEffect="slide" hideEffect="slide" />
+						</p:column>
+
+						<!-- BOTAO REGISTRAR PRESTACAO DE SERVICO -->
+						<p:column
+							rendered="#{sec:areAnyGranted('ROLE_REGISTRAR_PRESTACAO_SERVICO, ROLE_ROOT')}"
+							exportable="false">
+							<f:facet name="header">
+							</f:facet>
+							<p:commandLink onclick="dlgServico.show()" ajax="true"
+								id="prestadorVisita">
+								<p:graphicImage value="../../resources/images/btns/add.png" width="20px"
+									height="20px" style="text-align:center;" />
+								<f:setPropertyActionListener
+									target="#{prestadorServicoController.prestadorServico}"
+									value="#{prestador}" />
+							</p:commandLink>
+							<p:tooltip for="prestadorVisita"
+								value="Registrar Prestação de Serviço" showEffect="slide"
+								hideEffect="slide" />
+						</p:column>
+						<p:rowExpansion>
+							<table style="border: hidden;">
+								<tr>
+									<td><p:graphicImage
+											style="cursor: pointer; border:none; margin: 8px;"
+											url="/mediaservlet?idPrestador=#{prestador.pessoa.idPessoa}"
+											width="150" height="100" /></td>
+									<td>
+										<!-- BOTAO ADICIONAR ENTRADA LIVRE --> <p:commandLink
+											onclick="dlgEntradaLivre.show()" ajax="true"
+											id="btnAdicionarEntradaLivre"
+											rendered="#{sec:areAnyGranted('ROLE_ADICIONAR_ENTRADA_LIVRE_PRESTADOR, ROLE_ROOT')}">
+											<h:outputText value="Adicionar Entrada Livre+"
+												style="color: black;" />
+											<f:setPropertyActionListener
+												target="#{prestadorServicoController.prestadorServico}"
+												value="#{prestador}" />
+										</p:commandLink> <p:tooltip for="btnAdicionarEntradaLivre"
+											value="#{bundle['tit.add.entrada.livre']}" showEffect="slide"
+											hideEffect="slide" /> <br /> <p:dataTable
+											id="listaEntradaslivres"
+											value="#{prestador.entradasLivresList}" var="mo"
+											emptyMessage="Sem Entradas Livres Cadastradas"
+											styleClass="datatableHeaderPadrao2">
+											<f:facet name="header">
+												<h:outputText value="#{bundle['tit.entradas.livres']}" />
+											</f:facet>
+											<p:column style="width: 67px;">
+												<f:facet name="header">
+													<h:outputText value="#{bundle['tit.casa']}" />
+												</f:facet>
+												<h:outputText style="text-align: center" value="#{mo.unidadeHabitacional[0].unidadeHabitacional.identificacao}" />
+											</p:column>
+											<p:column>
+												<f:facet name="header">
+													<h:outputText value="#{bundle['tit.nome']}" />
+												</f:facet>
+												<h:outputText value="#{mo.pessoa.nome}" />
+											</p:column>
+											<p:column>
+												<f:facet name="header"></f:facet>
+												<!-- BOTAO REMOVER ENTRADA LIVRE -->
+												<h:commandLink
+													action="#{prestadorServicoController.removerEntradaLivre}"
+													update=":listagemForm" id="btnRemoverEntradaLivre"
+													rendered="#{sec:areAnyGranted('ROLE_REMOVER_ENTRADA_LIVRE_PRESTADOR, ROLE_ROOT')}">
+													<p:graphicImage value="../../resources/images/delete.png"
+														width="10px" height="10px" style="text-align:center;" />
+													<f:setPropertyActionListener
+														target="#{prestadorServicoController.morador}"
+														value="#{mo}" />
+													<f:setPropertyActionListener
+														target="#{prestadorServicoController.prestadorServico}"
+														value="#{prestador}" />
+												</h:commandLink>
+												<p:tooltip for="btnRemoverEntradaLivre"
+													value="Remover Entrada Livre" showEffect="slide"
+													hideEffect="slide" />
+											</p:column>
+										</p:dataTable>
+									</td>
+								</tr>
+							</table>
+						</p:rowExpansion>
+					</p:dataTable>
+				</p:tab>
+				<p:tab id="abaServicos" title="#{bundle['tit.serv.agend']}">
+					<p:dataTable id="listaServicosAgendados" var="servicoAgendado"
+						value="#{prestadorServicoController.servicosAgendados}"
+						paginator="true" rows="5" emptyMessage="Sem serviços agendados">
+						<f:facet name="header">
+							<h:outputText value="#{bundle['tit.serv.agend.cad']}" />
+						</f:facet>
+						<p:column
+							filterBy="prestadorServico.pessoa.nome"
+							sortBy="prestadorServico.pessoa.nome"
+							exportable="true">
+							<f:facet name="header">
+								<h:outputText value="#{bundle['tit.nome']}" />
+							</f:facet>
+							<h:outputText
+								value="#{servicoAgendado.prestadorServico.pessoa.nome}" />
+						</p:column>
+						<p:column filterBy="inicioAgendamentoServico"
+							sortBy="inicioAgendamentoServico"
+							exportable="true">
+							<f:facet name="header">
+								<h:outputText value="#{bundle['tit.data.inicio']}" />
+							</f:facet>
+							<h:outputText value="#{servicoAgendado.inicioAgendamentoServico}">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</h:outputText>
+						</p:column>
+						<p:column filterBy="fimAgendamentoServico"
+							sortBy="fimAgendamentoServico"
+							exportable="true">
+							<f:facet name="header">
+								<h:outputText value="#{bundle['tit.data.fim']}" />
+							</f:facet>
+							<h:outputText value="#{servicoAgendado.fimAgendamentoServico}">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</h:outputText>
+						</p:column>
+						<p:column filterBy="morador.pessoa.nome"
+							sortBy="morador.pessoa.nome" exportable="true">
+							<f:facet name="header">
+								<h:outputText value="#{bundle['tit.morador']}" />
+							</f:facet>
+							<h:outputText value="#{servicoAgendado.morador.pessoa.nome}" />
+						</p:column>
+						<p:column
+							filterBy="morador.unidadeHabitacional[0].unidadeHabitacional.identificacao"
+							sortBy="morador.unidadeHabitacional[0].unidadeHabitacional.identificacao"
+							sortFunction="#{prestadorServicoController.ordenacaoNumerica}"
+							exportable="true">
+							<f:facet name="header">
+								<h:outputText value="#{bundle['tit.residencia']}" />
+							</f:facet>
+							<h:outputText
+								value="#{servicoAgendado.morador.unidadeHabitacional[0].unidadeHabitacional.identificacao}" />
+						</p:column>
+						<p:column exportable="false">
+							<p:commandLink
+								action="#{prestadorServicoController.validarServicoAgendado}"
+								id="confirmServico" ajax="false" update=":listagemForm"
+								onclick="pageLoading.show();" oncomplete="pageLoading.hide();">
+								<p:graphicImage value="../../resources/images/check.png" width="20px"
+									height="20px" style="text-align:center;" />
+								<f:setPropertyActionListener
+									target="#{prestadorServicoController.servicoAgendado}"
+									value="#{servicoAgendado}" />
+							</p:commandLink>
+							<p:tooltip for="confirmServico"
+								value="Confirmar serviço agendado" showEffect="slide"
+								hideEffect="slide" />
+						</p:column>
+					</p:dataTable>
+				</p:tab>
+			</p:tabView>
+			<p:commandButton style="float: left; margin-top: 10px;" ajax="false"
+				value="#{bundle['btn.cadastrar.prestador']}"
+				action="#{prestadorServicoController.novoPrestador}"
+				onclick="pageLoading.show();" oncomplete="pageLoading.hide();" />
+
+		</h:form>
+
+		<ui:insert name="dialogOcorrencia">
+			<ui:include src="../../dialogs/dialogOcorrencia.xhtml" />
+			<ui:include src="../../dialogs/dialogServico.xhtml" />
+			<ui:include src="../../dialogs/dialogEntradaLivrePrestador.xhtml" />
+			<ui:include src="../../dialogs/dialogPrestacaoServicos.xhtml" />
+		</ui:insert>
+		<h:panelGroup rendered="#{usuarioController.sistemaIsDemo}">
+			<script type="text/javascript">
+				disponivelNosPlanos(1, 1, 1, 1);
+			</script>
+		</h:panelGroup>
+	</ui:define>
+</ui:composition>

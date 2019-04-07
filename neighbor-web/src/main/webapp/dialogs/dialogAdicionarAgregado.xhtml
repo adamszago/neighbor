@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<body>
+	<ui:composition>
+		<p:ajaxStatus onerror="ajaxLoading.hide();"
+			onstart="ajaxLoading.hide();" oncomplete="ajaxLoading.hide();" />
+
+		<p:dialog header="#{bundle['tit.add.agregados']}"
+			widgetVar="dlgAdicionarAgregado" modal="true" resizable="false"
+			width="600">
+			<h:form id="formAdicionarAgregado">
+				<p:growl id="growlAdicionarAgregado" showSummary="true" />
+				<h:panelGrid columns="2">
+					<h:outputLabel value="#{bundle['lbl.nome']}" for="nomeAgregado" />
+					<p:inputText
+						value="#{moradorController.agregado.agregado.pessoa.nome}"
+						size="50" maxlength="50" id="nomeAgregado"
+						styleClass="toCapitalize" />
+
+					<h:outputLabel value="#{bundle['tit.data.nasc']}"
+						for="dataNascimentoAgregado" />
+					<p:calendar
+						value="#{moradorController.agregado.agregado.pessoa.dataNascimento}"
+						id="dataNascimentoAgregado" navigator="true"
+						required="true"
+						requiredMessage="#{bundle['msg.informe.data.nasc']}"
+						maxdate="#{moradorController.dataMaximaNascimento}" locale="pt"
+						pattern="dd/MM/yyyy" readonlyInput="true" />
+
+					<h:outputLabel value="#{bundle['lbl.email']}" for="mailAgregado" />
+					<p:inputText
+						value="#{moradorController.agregado.agregado.pessoa.mail}"
+						size="50" maxlength="50" id="mailAgregado">
+						<f:validator
+							validatorId="br.com.lphantus.neighbor.component.validator.ValidatorEmail" />
+					</p:inputText>
+
+					<h:outputLabel value="#{bundle['lbl.cnh']}" for="cnhAgregado" />
+					<p:inputText
+						value="#{moradorController.agregado.agregado.pessoa.cnh}"
+						size="19" maxlength="15" id="cnhAgregado">
+						<f:validator
+							validatorId="br.com.lphantus.neighbor.component.validator.ValidatorCNH" />
+					</p:inputText>
+
+					<h:outputLabel value="#{bundle['lbl.parentesco']}" for="parentesco" />
+					<h:selectOneMenu value="#{moradorController.agregado.parentesco}"
+						id="parentesco">
+						<f:selectItem itemLabel="#{bundle['select.selecione']}"
+							itemValue="" />
+						<f:selectItem itemLabel="#{bundle['select.par.conjuge']}"
+							itemValue="CONJUGE" />
+						<f:selectItem itemLabel="#{bundle['select.par.filho']}"
+							itemValue="FILHO" />
+						<f:selectItem itemLabel="#{bundle['select.par.outro']}"
+							itemValue="OUTRO" />
+					</h:selectOneMenu>
+				</h:panelGrid>
+
+				<p:commandButton value="#{bundle['btn.gravar']}"
+					actionListener="#{moradorController.adicionarAgregado}" ajax="true"
+					update=":formAdicionarAgregado :cadastroMoradorForm:agregadosMorador growlAdicionarAgregado"
+					process=":formAdicionarAgregado">
+				</p:commandButton>
+			</h:form>
+
+		</p:dialog>
+	</ui:composition>
+</body>
+</html>

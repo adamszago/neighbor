@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+	<ui:define name="content">
+		<h:form id="listagemVeiculosForm" styleClass="innerContentFix">
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+			<p:dataTable id="veiculos" var="veiculo"
+				value="#{veiculoController.veiculos}" rowKey="#{veiculo.id}"
+				paginator="true" rows="10" selection="#{veiculoController.veiculo}"
+				selectionMode="single"
+				emptyMessage="#{bundle['msg.sem.veiculos.cadastrados']}">
+				<f:facet name="header">
+					<h:outputText value="#{bundle['tit.veiculos.cadastrados']}" />
+				</f:facet>
+				<p:column style="width:16px" exportable="false">
+					<p:rowToggler />
+				</p:column>
+				<p:column
+					sortBy="proprietario.unidadeHabitacional[0].unidadeHabitacional.identificacao"
+					filterBy="proprietario.unidadeHabitacional[0].unidadeHabitacional.identificacao"
+					sortFunction="#{veiculoController.ordenacaoNumerica}"
+					exportable="true" styleClass="centeredColumn">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.casa']}" />
+					</f:facet>
+					<h:outputText
+						value="#{veiculo.proprietario.unidadeHabitacional[0].unidadeHabitacional.identificacao}" />
+				</p:column>
+				<p:column sortBy="placa" filterBy="placa"
+					exportable="true">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.placa']}" />
+					</f:facet>
+					<h:outputText value="#{veiculo.placa}" />
+				</p:column>
+				<p:column sortBy="modelo" filterBy="modelo"
+					exportable="true">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.modelo']}" />
+					</f:facet>
+					<h:outputText value="#{veiculo.modelo}" />
+				</p:column>
+				<p:column sortBy="cor" filterBy="cor"
+					exportable="true">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.cor']}" />
+					</f:facet>
+					<h:outputText value="#{veiculo.cor}" />
+				</p:column>
+
+				<p:column
+					rendered="#{sec:areAnyGranted('ROLE_EDITAR_VEICULO, ROLE_ROOT')}"
+					exportable="false">
+					<!-- BOTAO EDITAR VEICULO -->
+					<h:commandLink action="#{veiculoController.editarVeiculo}"
+						id="editVeiculo" onclick="pageLoading.show();"
+						oncomplete="pageLoading.hide();">
+						<p:graphicImage value="../../resources/images/edit.png" width="20px"
+							height="20px" style="text-align:center;" />
+						<f:setPropertyActionListener target="#{veiculoController.veiculo}"
+							value="#{veiculo}" />
+					</h:commandLink>
+					<p:tooltip for="editVeiculo" value="Editar Registro"
+						showEffect="slide" hideEffect="slide" />
+				</p:column>
+
+				<p:column
+					rendered="#{sec:areAnyGranted('ROLE_EXCLUIR_VEICULO, ROLE_ROOT')}"
+					exportable="false">
+					<!-- BOTAO EXCLUIR VEICULO -->
+					<h:commandLink action="#{veiculoController.excluir}"
+						update=":listagemVeiculosForm :growlListaVeiculo"
+						onclick="return confirm('Confirma Exclusão do Registro?');pageLoading.show();"
+						ajax="true" id="delVeiculo" oncomplete="pageLoading.hide();">
+						<p:graphicImage value="../../resources/images/delete.png" width="20px"
+							height="20px" style="text-align:center;" />
+						<f:setPropertyActionListener target="#{veiculoController.veiculo}"
+							value="#{veiculo}" />
+					</h:commandLink>
+					<p:tooltip for="delVeiculo" value="Excluir Registro"
+						showEffect="slide" hideEffect="slide" />
+				</p:column>
+				<p:rowExpansion>
+					<h:panelGrid id="detalheVeiculo" columns="2" cellpadding="4"
+						style="width:300px;" styleClass="ui-widget-content"
+						columnClasses="label, value">
+
+						<h:outputText value="#{bundle['tit.proprietario']}" />
+						<h:outputText value="#{veiculo.proprietario.pessoa.nome}" />
+
+						<h:outputText value="#{bundle['tit.marca']}" />
+						<h:outputText value="#{veiculo.marca.marca}" />
+
+					</h:panelGrid>
+				</p:rowExpansion>
+			</p:dataTable>
+		</h:form>
+		<h:panelGroup rendered="#{usuarioController.sistemaIsDemo}">
+			<script type="text/javascript">
+				disponivelNosPlanos(1, 1, 1, 1);
+			</script>
+		</h:panelGroup>
+	</ui:define>
+</ui:composition>

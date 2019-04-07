@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<ui:define name="content">
+		<h:form id="listagemSindicosForm" styleClass="innerContentFix">
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+			<p:dataTable id="sindicos" var="sindico"
+				value="#{sindicoController.sindicos}" rowKey="#{sindico.id}"
+				paginator="true" rows="10" selection="#{sindicoController.sindico}"
+				selectionMode="single"
+				emptyMessage="#{bundle['msg.sem.sindicos.cad']}">
+				<f:facet name="header">
+					<h:outputText value="#{bundle['tit.sindicos.cadastrados']}" />
+				</f:facet>
+				<p:column style="width:16px" exportable="false">
+					<p:rowToggler />
+				</p:column>
+				<p:column sortBy="pessoa.nome" filterBy="pessoa.nome"
+					exportable="true">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['lbl.nome']}" />
+					</f:facet>
+					<h:outputText value="#{sindico.pessoa.nome}" />
+				</p:column>
+				<p:column sortBy="pessoa.mail" filterBy="pessoa.mail"
+					exportable="true">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['lbl.email']}" />
+					</f:facet>
+					<h:outputText value="#{sindico.pessoa.email}" />
+				</p:column>
+				<p:column exportable="fale">
+					<p:commandLink action="#{sindicoController.editarSindico}"
+						id="editSindico" onclick="pageLoading.show();"
+						oncomplete="pageLoading.hide();">
+						<p:graphicImage value="../../resources/images/edit.png"
+							width="20px" height="20px" style="text-align:center;" />
+						<f:setPropertyActionListener target="#{sindicoController.sindico}"
+							value="#{sindico}" />
+					</p:commandLink>
+					<p:tooltip for="editSindico" value="Editar Registro"
+						showEffect="slide" hideEffect="slide" />
+				</p:column>
+				<p:column style="width:16px" exportable="false">
+					<p:commandLink onclick="mostrarDglInativar(#{sindico.ativo})"
+						update=":listagemSindicosForm">
+						<p:graphicImage id="imgStatusSindico"
+							value="../../resources/images/ativo_#{sindico.ativo}.png"
+							width="24px" height="24px">
+							<p:tooltip for="imgStatusSindico" hideEffect="fade"
+								showEffect="fade"
+								value="#{sindico.ativo ? 'Sindico Ativo' : 'Sindico Inativo'}"></p:tooltip>
+						</p:graphicImage>
+						<f:setPropertyActionListener target="#{sindicoController.sindico}"
+							value="#{sindico}" />
+					</p:commandLink>
+				</p:column>
+
+
+				<p:rowExpansion>
+					<h4>
+						<h:outputText value="#{bundle['tit.condominios.administrad']}" />
+					</h4>
+					<p:dataList id="lSindicoCondominio" var="cond"
+						value="#{sindico.condominios}" effectSpeed="fast">
+						<p:column rendered="#{sindico.condominios != null}">
+							<h:outputText value="#{cond.nome}" />
+						</p:column>
+						<p:column rendered="#{sindico.condominios == null}">
+							<h:outputText value="#{bundle['msg.sem.condominios.sindico']}" />
+						</p:column>
+					</p:dataList>
+				</p:rowExpansion>
+			</p:dataTable>
+		</h:form>
+
+
+		<p:confirmDialog message="testee" header="Inativar" severity="alert"
+			widgetVar="dglInativarSindico" modal="true" closable="false">
+			<h:form>
+				<p:commandButton id="confirm" value="#{bundle['btn.sim']}"
+					update=":listagemSindicosForm:growlGeral"
+					oncomplete="dglInativarSindico.hide()"
+					action="#{sindicoController.ativarInativar}" />
+				<p:commandButton id="decline" value="#{bundle['btn.nao']}"
+					onclick="dglInativarSindico.hide()"
+					update=":listagemSindicosForm:growlGeral" />
+			</h:form>
+		</p:confirmDialog>
+		<script>
+			function mostrarDglInativar(sindicoEnable){
+				var men = '';
+				if(sindicoEnable == true){
+					men = 'Desativar';
+				}else {
+					men = 'Ativar';
+				}
+				jQuery('#dglInativarSindico p').html('Deseja <strong>'+men+'</strong> este síndico ?');
+				
+				jQuery('#ui-dialog-title-dglInativarSindico').html(men);
+				
+				dglInativarSindico.show();	
+			}
+		</script>
+	</ui:define>
+</ui:composition>

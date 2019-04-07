@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+	<ui:define name="content">
+		<h3>
+			<h:outputLabel value="#{bundle['tit.cadastro.animal']}" />
+		</h3>
+		<h:form id="cadastroAnimalEstimacao" class="innerContentFix">
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+			<h:inputHidden id="idAnimal"
+				value="#{animalController.animalEstimacao.id}" />
+
+			<h:panelGrid columns="2">
+				<h:outputLabel value="#{bundle['lbl.dono']}: " for="ndono" />
+				<h:panelGrid columns="4" id="ndono">
+					<h:outputText value="#{bundle['lbl.casa']}" styleClass="label_obr"></h:outputText>
+					<p:inputText value="#{animalController.casa}" size="4"
+						maxlength="4" onblur="if(this.value=='')this.value='0'"
+						onfocus="if(this.value=='0')this.value=''"
+						styleClass="campo-onload" />
+					<p:commandLink id="buscaProprietario"
+						action="#{animalController.buscarDono}" ajax="true"
+						process="ndono" update="txtNomeDono growlGeral">
+						<p:graphicImage url="../../resources/images/lupa.png" width="24px"
+							height="24px" style="border:none;"></p:graphicImage>
+						<p:tooltip for="buscaProprietario" value="Buscar proprietário!" />
+					</p:commandLink>
+					<p:inputText
+						value="#{animalController.animalEstimacao.dono.pessoa.nome}"
+						size="30" maxlength="30" readonly="true" id="txtNomeDono"
+						required="true" requiredMessage="#{bundle['msg.informe.dono']}"
+						styleClass="inputNomeDono" />
+				</h:panelGrid>
+			</h:panelGrid>
+
+			<h:panelGrid columns="3" id="comboTipoAnimais">
+				<h:outputLabel value="#{bundle['lbl.tipo.animal']}: "
+					for="tipoAnimal" styleClass="label_obr" />
+				<h:selectOneMenu id="tipoAnimal"
+					value="#{animalController.tipoAnimalSelecionado}"
+					valueChangeListener="#{animalController.valueChangeListener}">
+					<f:selectItem itemLabel=":: Selecione ::" itemValue="-1" />
+					<f:selectItems value="#{animalController.listaSelectItem}" />
+				</h:selectOneMenu>
+				<p:commandLink onclick="dlgTipoAnimal.show()"
+					update=":cadastroAnimalEstimacao" process="comboTipoAnimais"
+					id="addTipoAnimal">
+					<p:graphicImage url="../../resources/images/btns/add.png"
+						width="24px" height="24px" style="border:none;"></p:graphicImage>
+					<p:tooltip for="addTipoAnimal" value="Adicionar tipo de animal!" />
+				</p:commandLink>
+			</h:panelGrid>
+
+			<h:panelGrid columns="2">
+				<h:outputLabel value="#{bundle['lbl.nome']}: " for="nomeAnimal" />
+				<p:inputText id="nomeAnimal"
+					value="#{animalController.animalEstimacao.nome}"
+					styleClass="toCapitalize" required="false" label="nomeAnimal"
+					size="30" maxlength="40"
+					requiredMessage="#{bundle['msg.informe.nome.animal']}" />
+
+				<h:outputLabel value="#{bundle['lbl.raca']}: " for="raca"
+					styleClass="label_obr" />
+				<p:inputText id="raca"
+					value="#{animalController.animalEstimacao.raca}"
+					styleClass="toCapitalize" required="true" label="raca" size="30"
+					maxlength="30" requiredMessage="#{bundle['msg.informe.raca']}" />
+
+				<h:outputLabel value="#{bundle['lbl.porte']}: " for="porte"
+					styleClass="label_obr" />
+				<h:selectOneMenu value="#{animalController.animalEstimacao.porte}"
+					id="porte" required="true"
+					requiredMessage="#{bundle['msg.informe.porte']}">
+					<f:selectItem itemLabel="#{bundle['select.selecione']}"
+						itemValue="" />
+					<f:selectItem itemLabel="#{bundle['select.animal.pequeno']}"
+						itemValue="PEQUENO" />
+					<f:selectItem itemLabel="#{bundle['select.animal.medio']}"
+						itemValue="MEDIO" />
+					<f:selectItem itemLabel="#{bundle['select.animal.grande']}"
+						itemValue="GRANDE" />
+				</h:selectOneMenu>
+
+				<h:outputLabel value="Vacinado: " for="vacinado" />
+				<h:selectBooleanCheckbox id="vacinado"
+					value="#{animalController.animalEstimacao.vacinado}">
+					<p:ajax event="change" update="pnlDataVacina" />
+				</h:selectBooleanCheckbox>
+			</h:panelGrid>
+
+			<h:panelGrid id="pnlDataVacina" columns="2">
+				<h:outputLabel value="#{bundle['lbl.data.ultima.vist.vacina']}: "
+					for="dataVacina"
+					rendered="#{animalController.animalEstimacao.vacinado}" />
+				<p:calendar id="dataVacina"
+					value="#{animalController.animalEstimacao.dataVistoriaCartao}"
+					maxdate="#{animalController.dataMaximaVistoria}"
+					rendered="#{animalController.animalEstimacao.vacinado}"
+					pattern="dd/MM/yyyy" navigator="true" mindate="01/01/2000"
+					locale="pt" required="true"
+					requiredMessage="#{bundle['msg.informe.data.vistoria']}" />
+			</h:panelGrid>
+			<h:panelGrid columns="3">
+				<p:commandButton value="#{bundle['btn.gravar']}"
+					action="#{animalController.gravarAnimal}" ajax="true"
+					update=":cadastroAnimalEstimacao"
+					rendered="#{animalController.animalEstimacao.id == null || animalController.animalEstimacao.id == 0}"
+					onclick="pageLoading.show();" oncomplete="pageLoading.hide();" />
+				<p:commandButton value="#{bundle['btn.editar']}"
+					action="#{animalController.alterarAnimal}" ajax="true"
+					update=":cadastroAnimalEstimacao"
+					rendered="#{animalController.animalEstimacao.id > 0}"
+					onclick="pageLoading.show();" oncomplete="pageLoading.hide();" />
+
+				<p:commandButton value="#{bundle['btn.limpar']}"
+					action="#{animalController.novoAnimal}" ajax="true" process="@this"
+					update=":cadastroAnimalEstimacao" onclick="pageLoading.show();"
+					oncomplete="pageLoading.hide();" />
+			</h:panelGrid>
+		</h:form>
+
+		<ui:insert name="dialogTipoAnimal">
+			<ui:include src="../../dialogs/dialogTipoAnimal.xhtml" />
+		</ui:insert>
+		<h:panelGroup rendered="#{usuarioController.sistemaIsDemo}">
+			<h:panelGroup rendered="#{usuarioController.sistemaIsDemo}">
+				<script type="text/javascript">
+					disponivelNosPlanos(1, 1, 1, 1);
+				</script>
+			</h:panelGroup>
+		</h:panelGroup>
+	</ui:define>
+</ui:composition>

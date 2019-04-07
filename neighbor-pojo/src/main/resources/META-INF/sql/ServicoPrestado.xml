@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings version="2.0"
+	xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_1_0.xsd">
+
+	<named-query name="ServicoPrestado.buscarServicoPorMorador">
+		<query>
+			<![CDATA[
+				SELECT sp 
+				FROM ServicoPrestado sp 
+				INNER JOIN sp.morador morador 
+				WHERE morador.idPessoa = :idPessoa
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="ServicoPrestado.buscarServicosAgendados">
+		<query>
+			<![CDATA[
+				SELECT sp 
+				FROM ServicoPrestado sp 
+				INNER JOIN sp.morador.unidadeHabitacional relacionamento 
+				WHERE (:idCondominio IS NULL OR relacionamento.unidadeHabitacional.condominio.idPessoa = :idCondominio) 
+				AND sp.ativo = true 
+				AND sp.confirmado = false 
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="ServicoPrestado.buscarServicosAgendadosMorador">
+		<query>
+			<![CDATA[
+				SELECT sp 
+				FROM ServicoPrestado sp 
+				WHERE sp.morador.idPessoa = :idPessoa 
+				AND sp.ativo = true 
+				AND sp.confirmado = false
+			]]>
+		</query>
+	</named-query>
+
+</entity-mappings>

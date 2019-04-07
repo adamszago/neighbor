@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<body>
+	<ui:composition>
+		<p:dialog header="Moradores" widgetVar="dlgSindicoMorador"
+			modal="true" resizable="false">
+			<h:form id="formSindicoMorador">
+				<p:dataTable id="moradores" var="morador"
+					value="#{moradorController.moradoresAtivos}"
+					rowKey="#{morador.pessoa.nome}" paginator="true" rows="10"
+					selection="#{sindicoController.sindico.sindicoMorador}"
+					selectionMode="single"
+					rowStyleClass="#{morador.adimplente ? null : 'devedor'}"
+					emptyMessage="Sem Moradores Cadastrados">
+
+					<f:facet name="header">  
+				    	Moradores Cadastrados  
+				    </f:facet>
+					<p:column sortBy="pessoa.nome"
+						filterBy="pessoa.nome">
+						<f:facet name="header">  
+                    		Nome  
+            			</f:facet>
+						<h:outputText value="#{morador.pessoa.nome}" />
+					</p:column>
+					<p:column sortBy="unidadeHabitacional.identificacao" filterBy="unidadeHabitacional.identificacao">
+						<f:facet name="header">  
+                    		Casa  
+            			</f:facet>
+						<h:outputText value="#{morador.unidadeHabitacional.identificacao}" />
+					</p:column>
+					<p:column>
+						<p:commandLink action="#{sindicoController.selecionarMorador}"
+							id="selecMorador" ajax="true" update=":cadastroSindicoForm"
+							oncomplete="dlgSindicoMorador.hide()">
+							<p:graphicImage value="../../resources/images/btns/add.png"
+								width="20px" height="20px" style="text-align:center;" />
+							<f:setPropertyActionListener
+								target="#{sindicoController.moradorSelecionado}"
+								value="#{morador}" />
+						</p:commandLink>
+						<p:tooltip for="selecMorador"
+							value="Selecionar Morador para Síndico" showEffect="slide"
+							hideEffect="slide" />
+					</p:column>
+				</p:dataTable>
+			</h:form>
+		</p:dialog>
+	</ui:composition>
+</body>
+</html>

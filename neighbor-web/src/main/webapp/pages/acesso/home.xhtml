@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<ui:define name="content">
+		<img src="../../resources/images/btns/page_close_hover.png" class="dn" />
+		<div id="1" class="boxintro_start">
+			<div class="inner">
+				Olá, seja bem-vindo ao
+				<p:graphicImage value="../../resources/images/txt-lphantus.gif" />
+				<strong><em>Neighbor</em>!</strong><br /> <br />Clique no botão a
+				seguir para uma rápida apresentação do sistema...<input
+					type="button" class="btnClose" /><input type="button"
+					class="btnNext" />
+			</div>
+		</div>
+
+		<div id="2" class="boxintro_home">
+			<span class="arrow-n arrow-pos"></span>
+			<div class="inner">
+				Aqui você acessa a Home, essa é a primeira página que você vê quando
+				entra no sistema.<input type="button" class="btnClose" /><input
+					type="button" class="btnBack" /><input type="button"
+					class="btnNext" />
+			</div>
+		</div>
+
+		<h:panelGroup rendered="#{not usuarioController.userLogadoMorador}">
+			<div id="3" class="boxintro_moradores">
+				<span class="arrow-n arrow-pos"></span>
+				<div class="inner">
+					Aqui ficam cadastrados todos os moradores (<strong>responsáveis</strong>
+					pela casa) no condomínio...<input type="button" class="btnClose" /><input
+						type="button" class="btnBack" /><input type="button"
+						class="btnNext" />
+				</div>
+			</div>
+		</h:panelGroup>
+		<h:panelGroup rendered="#{usuarioController.userLogadoMorador}">
+			<div id="3" class="boxintro_moradores">
+				<span class="arrow-n arrow-pos"></span>
+				<div class="inner">
+					Aqui ficam cadastrados todos os moradores da casa...<input
+						type="button" class="btnClose" /><input type="button"
+						class="btnBack" /><input type="button" class="btnNext" />
+				</div>
+			</div>
+		</h:panelGroup>
+
+		<h:panelGroup rendered="#{not usuarioController.userLogadoMorador}">
+			<div id="4" class="boxintro_agregados">
+				<span class="arrow-no arrow-pos"></span>
+				<div class="inner">
+					...os demais moradores da casa ficam no menu: <strong>Condomínio
+						-> Moradores -> Agregados</strong><input type="button" class="btnClose" /><input
+						type="button" class="btnBack" /><input type="button"
+						class="btnNext" />
+				</div>
+			</div>
+		</h:panelGroup>
+
+		<h:panelGroup rendered="#{not usuarioController.userLogadoMorador}">
+			<div id="5" class="boxintro_visitantes">
+				<span class="arrow-nne arrow-pos"></span>
+				<div class="inner">
+					Para manter um controle de quem entra e quem sai, todas as pessoas
+					que visitam o condomínio são registradas...<input type="button"
+						class="btnClose" /><input type="button" class="btnBack" /><input
+						type="button" class="btnNext" />
+				</div>
+			</div>
+		</h:panelGroup>
+		<h:panelGroup rendered="#{usuarioController.userLogadoMorador}">
+			<div id="4" class="boxintro_visitantes">
+				<span class="arrow-nne arrow-pos"></span>
+				<div class="inner">
+					O morador tem o registro de quem visitou a sua casa...<input
+						type="button" class="btnClose" /><input type="button"
+						class="btnBack" /><input type="button" class="btnNext" />
+				</div>
+			</div>
+		</h:panelGroup>
+
+		<h:panelGroup rendered="#{not usuarioController.userLogadoMorador}">
+			<div id="6" class="boxintro_prestadores">
+				<span class="arrow-nne arrow-pos"></span>
+				<div class="inner">
+					...inclusive prestadores de serviços, como pedreiro, encanador,
+					entregador de pizza, etc...<input type="button" class="btnClose" /><input
+						type="button" class="btnBack" /><input type="button"
+						class="btnNext" />
+				</div>
+			</div>
+		</h:panelGroup>
+		<h:panelGroup rendered="#{usuarioController.userLogadoMorador}">
+			<div id="5" class="boxintro_prestadores">
+				<span class="arrow-nne arrow-pos"></span>
+				<div class="inner">
+					...inclusive de seus prestadores de serviços, como pedreiro,
+					encanador, entregador de pizza, etc...<input type="button"
+						class="btnClose" /><input type="button" class="btnBack" /><input
+						type="button" class="btnNext" />
+				</div>
+			</div>
+		</h:panelGroup>
+
+		<h:panelGroup rendered="#{not usuarioController.userLogadoMorador}">
+			<div id="7" class="boxintro_animais">
+				<span class="arrow-nne arrow-pos"></span><span
+					class="arrow-ne arrow-pos2"></span>
+				<div class="inner">
+					Você pode ter o controle dos Veículos e Animais de Estimação dos
+					condôminos.<input type="button" class="btnClose" /><input
+						type="button" class="btnBack" /><input type="button"
+						class="btnNext" />
+				</div>
+			</div>
+		</h:panelGroup>
+		<h:panelGroup rendered="#{usuarioController.userLogadoMorador}">
+			<div id="6" class="boxintro_animais">
+				<span class="arrow-nne arrow-pos"></span><span
+					class="arrow-ne arrow-pos2"></span>
+				<div class="inner">
+					O morador pode editar seus veículos e animais de estimação. Ele
+					pode, por exemplo, atualizar a data da última vacina.<input
+						type="button" class="btnClose" /><input type="button"
+						class="btnBack" /><input type="button" class="btnNext" />
+				</div>
+			</div>
+		</h:panelGroup>
+
+		<h:panelGroup rendered="#{not usuarioController.userLogadoMorador}">
+			<div id="8" class="boxintro_agenda">
+				<span class="arrow-n arrow-pos"></span>
+				<div class="inner">
+					Aqui você visualiza as reservas agendadas, bem como os itens de
+					reservas, por exemplo, quiósque, salão de festas, etc...<input
+						type="button" class="btnClose" /><input type="button"
+						class="btnBack" /><input type="button" class="btnNext" />
+				</div>
+			</div>
+		</h:panelGroup>
+		<h:panelGroup rendered="#{usuarioController.userLogadoMorador}">
+			<div id="7" class="boxintro_agenda">
+				<span class="arrow-n arrow-pos"></span>
+				<div class="inner">
+					Aqui você visualiza as reservas agendadas, bem como os itens de
+					reservas, por exemplo, quiósque, salão de festas, etc...<input
+						type="button" class="btnClose" /><input type="button"
+						class="btnBack" /><input type="button" class="btnNext" />
+				</div>
+			</div>
+		</h:panelGroup>
+
+		<h:panelGroup rendered="#{not usuarioController.userLogadoMorador}">
+			<div id="9" class="boxintro_ocorrencia">
+				<span class="arrow-n arrow-pos"></span>
+				<div class="inner">
+					Aqui você visualiza todas as ocorrências registradas no condomínio.<input
+						type="button" class="btnClose" /><input type="button"
+						class="btnBack" /><input type="button" class="btnNext" />
+				</div>
+			</div>
+		</h:panelGroup>
+		<h:panelGroup rendered="#{usuarioController.userLogadoMorador}">
+			<div id="8" class="boxintro_ocorrencia">
+				<span class="arrow-n arrow-pos"></span>
+				<div class="inner">
+					Onde o morador visualiza as ocorrências registradas para sua casa.<input
+						type="button" class="btnClose" /><input type="button"
+						class="btnBack" /><input type="button" class="btnNext" />
+				</div>
+			</div>
+		</h:panelGroup>
+
+		<h:panelGroup rendered="#{not usuarioController.userLogadoMorador}">
+			<div id="10" class="boxintro_menu">
+				<span class="arrow-no arrow-pos"></span>
+				<div class="inner">
+					No topo ficam os links mais acessados, mas existem muito mais
+					opções no menu horizontal do sistema.<input type="button"
+						class="btnClose" /><input type="button" class="btnBack" /><input
+						type="button" class="btnNext" />
+				</div>
+			</div>
+		</h:panelGroup>
+		<h:panelGroup rendered="#{usuarioController.userLogadoMorador}">
+			<div id="9" class="boxintro_email">
+				<span class="arrow-n arrow-pos"></span>
+				<div class="inner">
+					Clicando no ícone de "email", você visualiza as mensagens <strong>do</strong>
+					síndico.<input type="button" class="btnClose" /><input
+						type="button" class="btnBack" /><input type="button"
+						class="btnNext" />
+				</div>
+			</div>
+		</h:panelGroup>
+
+		<h:panelGroup rendered="#{usuarioController.userLogadoMorador}">
+			<div id="10" class="boxintro_escreveremail">
+				<span class="arrow-n arrow-pos"></span>
+				<div class="inner">
+					Clicando no ícone de "escrever email", você escreve uma mensagem <strong>para</strong>
+					o síndico.<input type="button" class="btnClose" /><input
+						type="button" class="btnBack" /><input type="button"
+						class="btnNext" />
+				</div>
+			</div>
+		</h:panelGroup>
+
+		<div id="11" class="boxintro_fim">
+			<div class="inner">
+				O
+				<p:graphicImage value="../../resources/images/txt-lphantus.gif" />
+				<strong><em>Neighbor</em></strong> foi pensado para ser bem simples
+				e intuitivo, mas qualquer dúvida ou observação, pode contar com o
+				nosso <strong><a
+					href="http://lphantus.com.br/site/suporte/" target="_blank">Suporte</a></strong>.<input
+					type="button" class="btnClose" /><input type="button"
+					class="btnBack" />
+			</div>
+		</div>
+
+
+		<div class="heightSpacer150"></div>
+
+		<!-- Imagem teste onload -->
+		<!-- <p:graphicImage width="179px" height="152px" value="http://glamourcents.com/wp-content/uploads/2012/03/tester.jpg" /> -->
+
+
+		<!-- LINK RESERVAS PENDENTES APROVACAO-->
+		<h:panelGroup styleClass="containerLinkReservasPendentes"
+			rendered="#{sec:areAnyGranted('ROLE_APROVAR_RESERVA, ROLE_ROOT')}">
+			<h:form>
+				<h:panelGroup
+					rendered="#{aprovacaoController.qtdItensPendentes > 0}">
+						Você tem <strong>#{aprovacaoController.qtdItensPendentes}</strong>
+					<h:panelGroup
+						rendered="#{aprovacaoController.qtdItensPendentes == 1}">
+							reserva pendente de aprovação.
+							<h:commandLink action="#{aprovacaoController.pageListaAprovacao}"
+							style="text-decoration: underline">
+							<strong>Clique aqui para aprová-la.</strong>
+						</h:commandLink>
+					</h:panelGroup>
+					<h:panelGroup
+						rendered="#{aprovacaoController.qtdItensPendentes > 1}">
+							reservas pendentes de aprovação.
+							<h:commandLink action="#{aprovacaoController.pageListaAprovacao}"
+							style="text-decoration: underline">
+							<strong>Clique aqui para aprová-las.</strong>
+						</h:commandLink>
+					</h:panelGroup>
+				</h:panelGroup>
+			</h:form>
+		</h:panelGroup>
+		<!-- FIM -->
+
+		<h:panelGroup rendered="#{usuarioController.sistemaIsDemo}">
+			<script type="text/javascript">
+				disponivelNosPlanos(0, 0, 0, 0);
+			</script>
+		</h:panelGroup>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+	<ui:define name="content">
+
+		<h:form id="listagemForm" styleClass="innerContentFix">
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+			<p:dataTable var="usuariosTotem"
+				value="#{totemController.usuariosTotem}" paginator="true" rows="10"
+				emptyMessage="#{bundle['msg.sem.senhas.cadastradas']}">
+				<f:facet name="header">
+					<h:outputText value="#{bundle['tit.senhas.cadastradas']}" />
+				</f:facet>
+				<p:column width="40" sortBy="casa"
+					sortFunction="#{totemController.ordenacaoNumerica}"
+					filterBy="casa">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.casa']}" />
+					</f:facet>
+					<h:outputText value="#{usuariosTotem.casa}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.tipo']}" />
+					</f:facet>
+					<h:outputText
+						value="#{usuariosTotem.morador != null ? 'Morador' : 'Agregado' }" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.nome']}" />
+					</f:facet>
+					<h:outputText value="#{usuariosTotem.nome}" />
+				</p:column>
+
+				<!-- BOTAO EDITAR TOTEM -->
+				<p:column
+					rendered="#{sec:areAnyGranted('ROLE_PAGINA_MORADOR, ROLE_ROOT')}"
+					exportable="false">
+					<p:commandLink action="#{totemController.editarTotem}"
+						id="editTotem" update=":formMoradorTotem :formAgregadoTotem"
+						onclick="pageLoading.show();"
+						oncomplete="handleTotemRequest(args);">
+						<p:graphicImage
+							value="../../resources/images/edit#{usuariosTotem.id == null ? '2' : ''}.png"
+							width="20px" height="20px" style="text-align:center;" />
+						<f:setPropertyActionListener target="#{totemController.totem}"
+							value="#{usuariosTotem}" />
+					</p:commandLink>
+					<p:tooltip for="editTotem" value="Editar Registro"
+						showEffect="slide" hideEffect="slide" />
+				</p:column>
+				<!-- BOTAO EXCLUIR SENHA TOTEM -->
+				<p:column
+					rendered="#{sec:areAnyGranted('ROLE_PAGINA_MORADOR, ROLE_ROOT')}">
+					<p:commandLink onclick="confirmaExclusao.show()" ajax="true"
+						id="delTotem">
+						<p:graphicImage value="../../resources/images/delete.png" width="20px"
+							height="20px" style="text-align:center;" />
+						<f:setPropertyActionListener target="#{totemController.totem}"
+							value="#{usuariosTotem}" />
+					</p:commandLink>
+					<p:tooltip for="delTotem" value="Excluir Registro"
+						showEffect="slide" hideEffect="slide" />
+				</p:column>
+			</p:dataTable>
+
+			<p:confirmDialog message="Confirma exclusão do Registro ?"
+				header="Excluir" severity="alert" widgetVar="confirmaExclusao"
+				modal="true">
+				<p:commandButton id="confirm" value="#{bundle['btn.sim']}"
+					update=":listagemForm" oncomplete="confirmaExclusao.hide()"
+					action="#{totemController.excluir}" />
+				<p:commandButton id="decline" value="#{bundle['btn.nao']}"
+					onclick="confirmaExclusao.hide()" type="button" />
+			</p:confirmDialog>
+		</h:form>
+		<ui:insert>
+			<ui:include src="../../dialogs/dialogMoradorTotem.xhtml" />
+			<ui:include src="../../dialogs/dialogAgregadoTotem.xhtml" />
+		</ui:insert>
+		<script type="text/javascript">
+			function handleTotemRequest(args) {
+				if (args.isMorador) {
+					dlgMoradorTotem.show();
+				} else {
+					dlgAgregadoTotem.show();
+				}
+			}
+		</script>
+	</ui:define>
+</ui:composition>

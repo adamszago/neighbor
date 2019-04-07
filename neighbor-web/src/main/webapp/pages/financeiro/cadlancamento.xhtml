@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<ui:define name="content">
+		<h3>
+			<h:outputText value="#{bundle['tit.lancamento.cadastro.receber']}" />
+		</h3>
+
+		<h:form id="cadastroForm" prependId="false">
+
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+
+			<h:panelGroup>
+				<h:outputLabel value="#{bundle['lbl.sindico.msg.todos']}" />
+				<h:panelGrid columns="2">
+					<p:outputLabel value="#{bundle['lbl.casas']}: " for="numCasas"
+						styleClass="label_obr" />
+					<h:panelGrid columns="2">
+						<p:inputText id="numCasas" value="#{lancamentoController.casas}">
+							<p:ajax event="change"
+								listener="#{lancamentoController.carregarListaMoradoresEvento}"
+								update="pessoas" />
+						</p:inputText>
+						<p:commandLink
+							actionListener="#{lancamentoController.carregarListaMoradoresEvento}"
+							update="pessoas" process="@parent">
+							<p:graphicImage url="../../resources/images/lupa.png" />
+						</p:commandLink>
+					</h:panelGrid>
+					<p:outputLabel value="#{bundle['lbl.blocos']}: " for="numBlocos"
+						styleClass="label_obr"
+						rendered="#{usuarioController.userLogado.condominio.possuiBloco}" />
+					<p:inputText id="numBlocos" value="#{lancamentoController.blocos}"
+						rendered="#{usuarioController.userLogado.condominio.possuiBloco}">
+						<p:ajax event="change"
+							listener="#{lancamentoController.carregarListaMoradoresEvento}"
+							update="pessoas" />
+					</p:inputText>
+				</h:panelGrid>
+				<div style="width: 600px">
+					<p:dataTable id="pessoas" var="pessoa"
+						emptyMessage="#{bundle['msg.sem.registros']}"
+						value="#{lancamentoController.pessoas}" paginator="true" rows="5">
+
+						<p:column headerText="#{bundle['lbl.casa']}">
+				            #{pessoa.unidadeHabitacional[0].unidadeHabitacional.identificacao}
+				        </p:column>
+
+						<p:column headerText="#{bundle['lbl.bloco']}"
+							rendered="#{usuarioController.userLogado.condominio.possuiBloco}">
+				            #{pessoa.unidadeHabitacional[0].unidadeHabitacional.bloco}
+				        </p:column>
+
+						<p:column headerText="#{bundle['lbl.nome']}">
+				            #{pessoa.pessoa.nome}
+				        </p:column>
+
+						<p:column headerText="#{bundle['lbl.cpf']}">  
+				            #{pessoa.pessoa.cpf}
+				        </p:column>
+					</p:dataTable>
+				</div>
+				<h:panelGrid columns="2">
+					<p:outputLabel value="#{bundle['lbl.lancamento.nome']}: "
+						for="nomeLancamento" styleClass="label_obr" />
+					<p:inputText id="nomeLancamento"
+						value="#{lancamentoController.entity.nome}" />
+
+					<p:outputLabel value="#{bundle['lbl.lancamento.data']}: "
+						for="dataLancamento" styleClass="label_obr" />
+					<p:calendar id="dataLancamento"
+						value="#{lancamentoController.entity.data}" navigator="true"
+						maxdate="1/1/2030" locale="pt" pattern="dd/MM/yyyy"
+						readonlyInput="true" />
+
+					<p:outputLabel value="#{bundle['lbl.lancamento.valor']}: "
+						for="valorLancamento" styleClass="label_obr" />
+					<p:inputText id="valorLancamento" converter="moneyConverter"
+						value="#{lancamentoController.entity.valor}" />
+
+					<p:outputLabel value="#{bundle['lbl.lancamento.observacao']}: "
+						for="obsLancamento" styleClass="label_obr" />
+					<p:inputTextarea id="obsLancamento" rows="5" cols="30"
+						counter="counter" value="#{lancamentoController.entity.obs}"
+						maxlength="200" counterTemplate="{0} caracteres restantes."
+						autoResize="false" />
+
+					<h:outputText id="nada" />
+					<h:outputText id="counter" />
+
+					<h:outputText value="#{bundle['lbl.centro.custo']}: "
+						styleClass="label_obr"
+						rendered="#{lancamentoController.existeCentroCustoLancavel}" />
+					<p:tree id="centro" var="node"
+						rendered="#{lancamentoController.existeCentroCustoLancavel}"
+						value="#{lancamentoController.treeRootCentrosCusto}"
+						selectionMode="single"
+						selection="#{lancamentoController.nodeCentroCustoSelecionado}">
+						<p:treeNode>
+							<h:outputText value="#{node}" id="lblNode" />
+						</p:treeNode>
+					</p:tree>
+				</h:panelGrid>
+				<h:outputLabel value="#{bundle['msg.ctrl.clique']}"
+					rendered="#{lancamentoController.existeCentroCustoLancavel}" />
+
+				<br />
+				<br />
+
+				<h:panelGrid columns="2" styleClass="layoutCadMorador">
+					<p:commandButton value="#{bundle['btn.gravar']}" id="btnGravar"
+						action="#{lancamentoController.gravarLancamentoReceber}"
+						ajax="false" update="growlGeral"
+						rendered="#{not lancamentoController.alteracao}"
+						onclick="pageLoading.show();" oncomplete="pageLoading.hide();" />
+
+					<p:commandButton value="#{bundle['btn.alterar']}"
+						action="#{lancamentoController.alterar}" ajax="false"
+						update=":cadastroForm"
+						rendered="#{lancamentoController.alteracao}"
+						onclick="pageLoading.show();" oncomplete="pageLoading.hide();">
+					</p:commandButton>
+
+					<p:commandButton value="#{bundle['btn.limpar']}"
+						action="#{lancamentoController.limparObjetoLancamento}"
+						ajax="false" process="@this" onclick="pageLoading.show();"
+						update=":cadastroForm" oncomplete="pageLoading.hide();" />
+				</h:panelGrid>
+			</h:panelGroup>
+		</h:form>
+
+		<script>
+			jQuery(document).ready(function() {
+				aplicaMascaraMonetaria("#valorLancamento");
+			});
+		</script>
+
+	</ui:define>
+</ui:composition>

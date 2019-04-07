@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+	
+<body>
+	<ui:composition>
+		<h:form id="listaReservaForm">
+			<ui:insert>
+				<ui:include src="/templates/growlGeral.xhtml" />
+			</ui:insert>
+			<p:dataTable value="#{reservaController.reservas}" var="rsv"
+				paginator="true" rows="10" selection="#{reservaController.reserva}"
+				styleClass="innerContentFix" emptyMessage="Sem reservas realizadas!">
+
+				<f:facet name="header">
+					<h:panelGroup>
+						Reservas Efetuadas
+					</h:panelGroup>
+				</f:facet>
+				<p:column style="width:16px" id="colunaImagemPagamentoReserva"
+					rendered="#{sec:areAnyGranted('ROLE_PAGAR_RESERVA, ROLE_ROOT')}">
+					<h:commandLink action="#{reservaController.pagarReserva}"
+						update=":listaReservaForm"
+						rendered="#{rsv.itemReserva.necessitaPagamento}">
+						<p:graphicImage id="imgReservaPaga"
+							value="../../resources/images/adimplente_#{rsv.pago}.png" width="24px"
+							height="24px">
+							<p:tooltip for="imgReservaPaga" hideEffect="fade"
+								showEffect="fade"
+								value="#{rsv.pago ? 'Reserva paga' : 'Reserva não foi paga'}"></p:tooltip>
+						</p:graphicImage>
+						<f:setPropertyActionListener target="#{reservaController.reserva}"
+							value="#{rsv}" />
+					</h:commandLink>
+					<p:graphicImage id="imgReservaFree"
+						value="../../resources/images/entrada_livre_true.gif"
+						rendered="#{!rsv.itemReserva.necessitaPagamento}">
+						<p:tooltip for="imgReservaFree" hideEffect="fade"
+							showEffect="fade" value="Este item é grátis!" />
+					</p:graphicImage>
+				</p:column>
+				<p:column sortBy="dataSolicitacao" rendered="#{not usuarioController.userLogadoMorador}">
+					<f:facet name="header">  
+                		Data Cadastro  
+         			</f:facet>
+					<h:outputText value="#{rsv.dataSolicitacao}">
+						<f:convertDateTime locale="pt" pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</p:column>
+				<p:column sortBy="dataReserva">
+					<f:facet name="header">  
+                		Data Reserva  
+         			</f:facet>
+					<h:outputText value="#{rsv.dataReserva}">
+						<f:convertDateTime locale="pt" pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</p:column>
+				<p:column sortBy="morador.unidadeHabitacional[0].unidadeHabitacional.identificacao"
+					filterBy="morador.unidadeHabitacional[0].unidadeHabitacional.identificacao">
+					<f:facet name="header">
+                		Casa  
+         			</f:facet>
+					<h:outputText value="#{rsv.morador.unidadeHabitacional[0].unidadeHabitacional.identificacao}" />
+				</p:column>
+				<p:column sortBy="morador.pessoa.nome"
+					filterBy="morador.pessoa.nome">
+					<f:facet name="header">  
+                		Morador  
+         			</f:facet>
+					<h:outputText value="#{rsv.morador.pessoa.nome}" />
+				</p:column>
+				<p:column sortBy="itemReserva.nome"
+					filterBy="itemReserva.nome">
+					<f:facet name="header">  
+                		Item Reserva  
+         			</f:facet>
+					<h:outputText value="#{rsv.itemReserva.nome}" />
+				</p:column>
+				<p:column style="width:16px"
+					rendered="#{sec:areAnyGranted('ROLE_EXCLUIR_RESERVA, ROLE_ROOT')}">
+					<p:commandLink onclick="dglExcluirReserva.show()"
+						update=":listaReservaForm" id="delReserva">
+						<p:graphicImage value="../../resources/images/delete.png" width="20px"
+							height="20px" style="text-align:center;" />
+						<p:tooltip for="delReserva" value="Excluir Registro"
+							showEffect="slide" hideEffect="slide" />
+						<f:setPropertyActionListener target="#{reservaController.reserva}"
+							value="#{rsv}" />
+					</p:commandLink>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+
+		<p:confirmDialog message="Deseja Excluir esta Reserva?"
+			style="width: 240px;" header="Inativar" severity="alert"
+			widgetVar="dglExcluirReserva" modal="true" closable="false">
+			<h:form>
+				<p:commandButton id="confirm" value="Sim" update=":listaReservaForm"
+					oncomplete="dglExcluirReserva.hide()"
+					actionListener="#{reservaController.excluir}"
+					style="margin-left: 40px; margin-right: 39px;" />
+
+				<p:commandButton id="decline" value="Não"
+					oncomplete="dglExcluirReserva.hide()" update=":listaReservaForm"
+					actionListener="#{reservaController.limparReserva}" />
+			</h:form>
+		</p:confirmDialog>
+
+		<script>
+			function mostrarDglInativar() {
+				jQuery('#dglInativar p').html(
+						'Deseja <strong> excluir </strong> esta reserva ?');
+				jQuery('#ui-dialog-title-dglExcluirReserva').html(men);
+				dglExcluirReserva.show();
+			}
+		</script>
+		
+	</ui:composition>
+</body>
+</html>

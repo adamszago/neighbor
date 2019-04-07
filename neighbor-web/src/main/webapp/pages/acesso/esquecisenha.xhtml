@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+	
+<head>
+	<title>Lphantus Neighbor</title>
+
+	<!-- favicon -->
+	<link rel="shortcut icon" href="../../resources/images/favicon.ico" type="image/vnd.microsoft.icon"/>
+	<meta http-equiv="refresh" content="1440" />
+	<meta http-equiv="X-UA-Compatible" content="IE=9" />
+
+	<!-- all OOTB css -->
+	<link rel="stylesheet" type="text/css" href="../../resources/css/forms-min.css"/>
+	<link rel="stylesheet" type="text/css" href="../../resources/css/Menu-min.css"/>
+	<link rel="stylesheet" type="text/css" href="../../resources/css/search-min.css"/>
+	<link rel="stylesheet" type="text/css" href="../../resources/css/corev4-min.css"/>
+	<link rel="stylesheet" type="text/css" href="../../resources/css/disponivel-nos-planos-min.css"/>
+	<!-- <link rel="stylesheet" type="text/css" href="../../resources/css/estilos_002.css" /> -->
+
+	<link rel="stylesheet" type="text/css" href="../../resources/css/usuario-min.css" />
+	<link rel="stylesheet" type="text/css" href="../../resources/css/primefaces-bootstrap/theme-nobg-min.css" />
+	
+	<!-- link to our custom css -->
+	<link rel="stylesheet" type="text/css" href="../../resources/css/fsLayout-min.css" />
+	<link rel="stylesheet" type="text/css" href="../../resources/css/usuario-min.css" />
+	<link rel="stylesheet" type="text/css" href="../../resources/css/template-azul-LPN-min.css" />
+
+</head>
+<body onload="document.forms[0].action='esquecisenha.jsf?status=ok';">
+
+	<div id="conteudo" style="margin:0 auto;" class="formLogin boxLogin">
+		<script type="text/javascript" src="../../resources/scripts/validacao-min.js" />
+		<script type="text/javascript" src="../../resources/scripts/geral-min.js" />
+
+		<h:form id="recuperacaoUsuarioSenhaForm" prependId="false">
+		
+			<p:growl id="growlGeral" showDetail="false" sticky="false"
+				errorIcon="../../resources/images/info_red.png" life="5000" />
+
+			<div class="containerRedefinirSenha">
+				<br /> <br />
+				<div>
+					<img id="logo" border="0"
+						style="height: auto; width: auto; margin-left: 28px;"
+						alt="Lphantus Neighbor"
+						src="../../resources/images/logo_neighbor.gif" />
+					<h2>Solicite seu acesso</h2>
+					<h:outputText
+						value="Digite abaixo o seu login para que uma senha seja enviada para seu email:" />
+					<br /> <br />
+					<h:outputLabel value="Login: " for="login" />
+					<p:inputText value="#{usuarioController.usuario.login}" id="login"
+						styleClass="login" />
+					<br /> <br />
+					<c:if test="${param.status eq 'ok'}">
+						<div id="divEnviado"
+							class="ui-message-error ui-widget ui-corner-all">
+							<span class="ui-message-error-icon"></span>
+							<center>
+								<span class="ui-message-error-detail asterisco_obr">*Seu usuario e senha foi enviado para seu e-mail</span>
+							</center>
+						</div>
+						<br /> <br />
+					</c:if>
+					<p:commandButton value="Enviar"
+						action="#{usuarioController.enviarEmailRecuperacao}" ajax="true"
+						onclick="pageLoading.show();" oncomplete="pageLoading.hide();" />
+
+				</div>
+			</div>
+		</h:form>
+	</div>
+	
+</body>
+</html>

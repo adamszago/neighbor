@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml" 
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:sec="http://www.springframework.org/security/tags" >
+			<ui:define name="content">
+				<h:form id="cadastroMoradorForm">
+					<p:messages /> 
+ 					<h:panelGrid columns="2">
+						<br />
+						<h:inputHidden id="idMorador"
+							value="#{moradorController.morador.idMorador}" />
+						
+						<h:outputLabel value="#{bundle['lbl.proprietario']}: " for="agregado" />
+						<h:selectBooleanCheckbox id="agregado" onselect="buscaProprietario.show()" />
+						
+						<h:outputLabel value="#{bundle['lbl.proprietario']}: " for="proprietario" />
+						<p:inputText id="proprietario" value="#{moradorController.morador.moradorPrincipal.nome}" disabled="true"
+							required="false" label="proprietario" size="60" maxlength="80" />
+						
+						<h:outputLabel value="#{bundle['lbl.nome']}: " for="nome" />
+						<p:inputText id="nome" value="#{moradorController.morador.pessoa.nome}"
+							required="false" label="nome" size="60" maxlength="80" />
+				
+						<h:outputLabel value="#{bundle['lbl.cpf']}: " for="cpf" />
+						<p:inputMask id="cpf" value="#{moradorController.morador.cpf}"
+							required="true" label="cpf" mask="999.999.999-99">
+						</p:inputMask>
+				
+						<h:outputLabel value="#{bundle['lbl.cnh']}: " for="cnh" />
+						<p:inputText id="cnh" value="#{moradorController.morador.cnh}"
+							required="false" label="cnh" size="15" maxlength="15" />
+				
+						<h:outputLabel value="#{bundle['lbl.rg']}: " for="rg" />
+						<p:inputText id="rg" value="#{moradorController.morador.rg}"
+							required="false" label="rg" size="15" maxlength="15" />
+				
+						<h:outputLabel value="#{bundle['lbl.casa']}: " for="casa" />
+						<p:inputText id="casa" value="#{moradorController.morador.casa}"
+							required="false" label="casa" size="5" maxlength="5" />
+				
+						<h:outputLabel value="#{bundle['lbl.email']}: " for="mail" />
+						<p:inputText id="mail" value="#{moradorController.morador.pessoa.mail}"
+							required="false" label="mail" size="60" maxlength="80" />
+				
+						<h:outputLabel value="#{bundle['lbl.profissao']}: " for="profissao" />
+						<p:inputText id="profissao"
+							value="#{moradorController.morador.profissao}" required="false"
+							label="casa" size="40" maxlength="40" />
+					</h:panelGrid>
+				</h:form>
+				<p:dialog id="buscaProprietario" modal="true">
+					<h:outputText value="teste"></h:outputText>
+				</p:dialog>
+				<p:dialog id="cadastroAnimalEstimacao" modal="true" >
+					<h:form>
+						<h:panelGrid columns="2">
+							<br />
+							<h:inputHidden id="idAnimal"
+								value="#{moradorController.animalEstimacao.id}" />
+	
+							<h:outputLabel value="#{bundle['lbl.nome']}: " for="nomeAnimal"/>
+							<p:inputText id="nomeAnimal" value="#{moradorController.animalEstimacao.nome}"
+								required="false" label="nomeAnimal" size="80" maxlength="100" />
+								
+							<h:outputLabel value="#{bundle['lbl.raca']}: " for="raca"/>
+							<p:inputText id="raca" value="#{moradorController.animalEstimacao.raca}"
+								required="false" label="raca" size="30" maxlength="30"/>
+							
+							<h:outputLabel value="#{bundle['lbl.porte']}: " for="porte"/>
+							<h:selectOneMenu value="#{moradorController.animalEstimacao.porte}" id="porte">  
+					            <f:selectItem itemLabel="Pequeno" itemValue="PEQUENO" />  
+					            <f:selectItem itemLabel="Médio" itemValue="MEDIO" />  
+					            <f:selectItem itemLabel="Grande" itemValue="GRANDE" />  
+					        </h:selectOneMenu>  
+								
+							<h:outputLabel value="Vacinado: " for="vacinado"/>
+							<h:selectBooleanCheckbox id="vacinado" value="#{moradorController.animalEstimacao.vacinado}" />  
+	
+							<h:outputLabel value="Data Última Vistoria Vacina: " for="dataVacina" />
+							<p:calendar id="dataVacina"  value="#{moradorController.animalEstimacao.dataVistoriaCartao}" />
+							
+							<!-- ************* TABELA ANIMAIS ESTIMACAO ************* -->
+							<h:commandLink action="#{moradorController.adicionarAnimal}" update=":cadastroAnimalEstimacao" 
+									ajax="true" immediate="true">
+								<p:graphicImage  id="addAnimal" value="../resources/images/add.png" style="text-align:center;" />
+							</h:commandLink>
+						</h:panelGrid>
+					</h:form>
+				</p:dialog>
+						<p:commandButton value="#{bundle['btn.gravar']}" action="#{moradorController.gravar}" ajax="true" 
+											update=":cadastroMoradorForm" />
+							<p:commandButton value="#{bundle['btn.limpar']}" action="#{moradorController.novo}" ajax="true" 
+											update=":cadastroMoradorForm"/>
+			</ui:define>
+</ui:composition>
+

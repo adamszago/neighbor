@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings version="2.0"
+	xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_1_0.xsd">
+
+	<named-query name="ConfiguracaoCondominio.buscarPorCondominio">
+		<query>
+			<![CDATA[
+				SELECT conf 
+				FROM ConfiguracaoCondominio conf 
+				WHERE conf.condominio.idPessoa = :idCondominio
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="ConfiguracaoCondominio.buscarPorMorador">
+		<query>
+			<![CDATA[
+				SELECT config 
+				FROM Morador morador, ConfiguracaoCondominio config 
+				INNER JOIN morador.unidadeHabitacional relacionamento 
+				WHERE morador = :morador 
+				AND relacionamento.unidadeHabitacional.condominio = config.condominio
+			]]>
+		</query>
+	</named-query>
+
+</entity-mappings>

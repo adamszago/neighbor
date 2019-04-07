@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings version="2.0"
+	xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_1_0.xsd">
+
+	<named-query name="Historico.findAllByCondominio">
+		<query>
+			<![CDATA[
+				SELECT hist 
+				FROM Historico hist 
+				WHERE (:idCondominio IS NULL OR hist.idCondominio = :idCondominio) 
+				ORDER BY hist.dataHoraAcao DESC
+			]]>
+		</query>
+	</named-query>
+
+	<named-native-query name="Historico.consultaUtilizacao" result-set-mapping="dummy">
+		<query>
+			<![CDATA[
+				SELECT ID_CONDOMINIO, 
+					sum(case when HOUR(DATA_HORA_ACAO) = 0 then 1 else null end) as hora0,
+			    	sum(case when HOUR(DATA_HORA_ACAO) = 1 then 1 else null end) as hora1,
+			       	sum(case when HOUR(DATA_HORA_ACAO) = 2 then 1 else null end) as hora2,
+			       	sum(case when HOUR(DATA_HORA_ACAO) = 3 then 1 else null end) as hora3,
+			       	sum(case when HOUR(DATA_HORA_ACAO) = 4 then 1 else null end) as hora4,
+			       	sum(case when HOUR(DATA_HORA_ACAO) = 5 then 1 else null end) as hora5,
+			       	sum(case when HOUR(DATA_HORA_ACAO) = 6 then 1 else null end) as hora6,
+			       	sum(case when HOUR(DATA_HORA_ACAO) = 7 then 1 else null end) as hora7,
+			       	sum(case when HOUR(DATA_HORA_ACAO) = 8 then 1 else null end) as hora8,
+			       	sum(case when HOUR(DATA_HORA_ACAO) = 9 then 1 else null end) as hora9,
+					sum(case when HOUR(DATA_HORA_ACAO) = 10 then 1 else null end) as hora10,
+			       	sum(case when HOUR(DATA_HORA_ACAO) = 11 then 1 else null end) as hora11,
+			       	sum(case when HOUR(DATA_HORA_ACAO) = 12 then 1 else null end) as hora12,
+			       	sum(case when HOUR(DATA_HORA_ACAO) = 13 then 1 else null end) as hora13,
+			       	sum(case when HOUR(DATA_HORA_ACAO) = 14 then 1 else null end) as hora14,
+			       	sum(case when HOUR(DATA_HORA_ACAO) = 15 then 1 else null end) as hora15,
+			       	sum(case when HOUR(DATA_HORA_ACAO) = 16 then 1 else null end) as hora16,
+			       	sum(case when HOUR(DATA_HORA_ACAO) = 17 then 1 else null end) as hora17,
+			       	sum(case when HOUR(DATA_HORA_ACAO) = 18 then 1 else null end) as hora18,
+			       	sum(case when HOUR(DATA_HORA_ACAO) = 19 then 1 else null end) as hora19,
+			       	sum(case when HOUR(DATA_HORA_ACAO) = 20 then 1 else null end) as hora20,
+			       	sum(case when HOUR(DATA_HORA_ACAO) = 21 then 1 else null end) as hora21,
+			       	sum(case when HOUR(DATA_HORA_ACAO) = 22 then 1 else null end) as hora22,
+			       	sum(case when HOUR(DATA_HORA_ACAO) = 23 then 1 else null end) as hora23
+				FROM HISTORICO
+		 		WHERE ( :dataInicio IS NULL OR DATE(DATA_HORA_ACAO) >= :dataInicio )
+					AND ( :dataFim IS NULL OR DATE(DATA_HORA_ACAO) <= :dataFim )
+					AND ( :idCondominio IS NULL OR :idCondominio = ID_CONDOMINIO )
+				GROUP BY ID_CONDOMINIO
+			 	ORDER BY ID_CONDOMINIO ASC
+		 	]]>
+		</query>
+	</named-native-query>
+	
+	<sql-result-set-mapping name="dummy">
+	    <column-result name="id_condominio" />
+	    <column-result name="hora0" />
+	    <column-result name="hora1" />
+	    <column-result name="hora2" />
+	    <column-result name="hora3" />
+	    <column-result name="hora4" />
+	    <column-result name="hora5" />
+	    <column-result name="hora6" />
+	    <column-result name="hora7" />
+	    <column-result name="hora8" />
+	    <column-result name="hora9" />
+	    <column-result name="hora10" />
+	    <column-result name="hora11" />
+	    <column-result name="hora12" />
+	    <column-result name="hora13" />
+	    <column-result name="hora14" />
+	    <column-result name="hora15" />
+	    <column-result name="hora16" />
+	    <column-result name="hora17" />
+	    <column-result name="hora18" />
+	    <column-result name="hora19" />
+	    <column-result name="hora20" />
+	    <column-result name="hora21" />
+	    <column-result name="hora22" />
+	    <column-result name="hora23" />
+	</sql-result-set-mapping>
+
+</entity-mappings>

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="1.0"
+	xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
+	<persistence-unit name="neighbor_pu" transaction-type="RESOURCE_LOCAL">
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+
+		<exclude-unlisted-classes>false</exclude-unlisted-classes>
+
+		<jta-data-source>jdbc/lpneighbor_ds</jta-data-source>
+
+		<class>br.com.lphantus.neighbor.entity.AgendaSindico</class>
+		<class>br.com.lphantus.neighbor.entity.Agregado</class>
+		<class>br.com.lphantus.neighbor.entity.AnimalEstimacao</class>
+		<class>br.com.lphantus.neighbor.entity.Banco</class>
+		<class>br.com.lphantus.neighbor.entity.Boleta</class>
+		<class>br.com.lphantus.neighbor.entity.Carteira</class>
+		<class>br.com.lphantus.neighbor.entity.CentroCusto</class>
+		<class>br.com.lphantus.neighbor.entity.Condominio</class>
+		<class>br.com.lphantus.neighbor.entity.ConfiguracaoCondominio</class>
+		<class>br.com.lphantus.neighbor.entity.Contrato</class>
+		<class>br.com.lphantus.neighbor.entity.Documento</class>
+		<class>br.com.lphantus.neighbor.entity.Duplicata</class>
+		<class>br.com.lphantus.neighbor.entity.DuplicataParcela</class>
+		<class>br.com.lphantus.neighbor.entity.DuplicataParcelaPK</class>
+		<class>br.com.lphantus.neighbor.entity.Endereco</class>
+		<class>br.com.lphantus.neighbor.entity.Fatura</class>
+		<class>br.com.lphantus.neighbor.entity.GrupoPermissao</class>
+		<class>br.com.lphantus.neighbor.entity.Historico</class>
+		<class>br.com.lphantus.neighbor.entity.ItemReserva</class>
+		<class>br.com.lphantus.neighbor.entity.Lancamento</class>
+		<class>br.com.lphantus.neighbor.entity.LancamentoTipo</class>
+		<class>br.com.lphantus.neighbor.entity.MarcaVeiculo</class>
+		<class>br.com.lphantus.neighbor.entity.Mensagem</class>
+		<class>br.com.lphantus.neighbor.entity.ModuloAcesso</class>
+		<class>br.com.lphantus.neighbor.entity.Morador</class>
+		<class>br.com.lphantus.neighbor.entity.MoradorAgregado</class>
+		<class>br.com.lphantus.neighbor.entity.MoradorAgregadoPK</class>
+		<class>br.com.lphantus.neighbor.entity.MoradorUnidadeHabitacional</class>
+		<class>br.com.lphantus.neighbor.entity.MoradorUnidadeHabitacionalPK</class>
+		<class>br.com.lphantus.neighbor.entity.Movimentacao</class>
+		<class>br.com.lphantus.neighbor.entity.Ocorrencia</class>
+		<class>br.com.lphantus.neighbor.entity.Permissao</class>
+		<class>br.com.lphantus.neighbor.entity.Pessoa</class>
+		<class>br.com.lphantus.neighbor.entity.PessoaFisica</class>
+		<class>br.com.lphantus.neighbor.entity.PessoaJuridica</class>
+		<class>br.com.lphantus.neighbor.entity.Plano</class>
+		<class>br.com.lphantus.neighbor.entity.PrestadorServico</class>
+		<class>br.com.lphantus.neighbor.entity.Rateio</class>
+		<class>br.com.lphantus.neighbor.entity.Reserva</class>
+		<class>br.com.lphantus.neighbor.entity.ReservaTemp</class>
+		<class>br.com.lphantus.neighbor.entity.SequenciaFoto</class>
+		<class>br.com.lphantus.neighbor.entity.ServicoPrestado</class>
+		<class>br.com.lphantus.neighbor.entity.Sindico</class>
+		<class>br.com.lphantus.neighbor.entity.SindicoCondominio</class>
+		<class>br.com.lphantus.neighbor.entity.SindicoCondominioPK</class>
+		<class>br.com.lphantus.neighbor.entity.Telefone</class>
+		<class>br.com.lphantus.neighbor.entity.TemplateLancamento</class>
+		<class>br.com.lphantus.neighbor.entity.TipoAnimal</class>
+		<class>br.com.lphantus.neighbor.entity.TipoPrestador</class>
+		<class>br.com.lphantus.neighbor.entity.TipoTelefone</class>
+		<class>br.com.lphantus.neighbor.entity.Totem</class>
+		<class>br.com.lphantus.neighbor.entity.UnidadeHabitacional</class>
+		<class>br.com.lphantus.neighbor.entity.Usuario</class>
+		<class>br.com.lphantus.neighbor.entity.Veiculo</class>
+		<class>br.com.lphantus.neighbor.entity.Visita</class>
+		<class>br.com.lphantus.neighbor.entity.Visitante</class>
+		
+		<mapping-file>META-INF/sql/AgendaSindico.xml</mapping-file>
+		<mapping-file>META-INF/sql/Agregado.xml</mapping-file>
+		<mapping-file>META-INF/sql/AnimalEstimacao.xml</mapping-file>
+		<mapping-file>META-INF/sql/Banco.xml</mapping-file>
+		<mapping-file>META-INF/sql/Boleta.xml</mapping-file>
+		<mapping-file>META-INF/sql/Carteira.xml</mapping-file>
+		<mapping-file>META-INF/sql/CentroCusto.xml</mapping-file>
+		<mapping-file>META-INF/sql/Condominio.xml</mapping-file>
+		<mapping-file>META-INF/sql/ConfiguracaoCondominio.xml</mapping-file>
+		<mapping-file>META-INF/sql/Contrato.xml</mapping-file>
+		<mapping-file>META-INF/sql/Documento.xml</mapping-file>
+		<mapping-file>META-INF/sql/Duplicata.xml</mapping-file>
+		<mapping-file>META-INF/sql/DuplicataParcela.xml</mapping-file>
+		<mapping-file>META-INF/sql/Endereco.xml</mapping-file>
+		<mapping-file>META-INF/sql/Fatura.xml</mapping-file>
+		<mapping-file>META-INF/sql/GrupoPermissao.xml</mapping-file>
+		<mapping-file>META-INF/sql/Historico.xml</mapping-file>
+		<mapping-file>META-INF/sql/ItemReserva.xml</mapping-file>
+		<mapping-file>META-INF/sql/Lancamento.xml</mapping-file>
+		<!-- <mapping-file>META-INF/sql/LancamentoTipo.xml</mapping-file> -->
+		<mapping-file>META-INF/sql/MarcaVeiculo.xml</mapping-file>
+		<mapping-file>META-INF/sql/Mensagem.xml</mapping-file>
+		<mapping-file>META-INF/sql/ModuloAcesso.xml</mapping-file>
+		<mapping-file>META-INF/sql/Morador.xml</mapping-file>
+		<mapping-file>META-INF/sql/MoradorAgregado.xml</mapping-file>
+		<mapping-file>META-INF/sql/MoradorUnidadeHabitacional.xml</mapping-file>
+		<mapping-file>META-INF/sql/Movimentacao.xml</mapping-file>
+		<mapping-file>META-INF/sql/Ocorrencia.xml</mapping-file>
+		<mapping-file>META-INF/sql/Permissao.xml</mapping-file>
+		<!-- <mapping-file>META-INF/sql/Pessoa.xml</mapping-file> -->
+		<mapping-file>META-INF/sql/PessoaFisica.xml</mapping-file>
+		<!-- <mapping-file>META-INF/sql/PessoaJuridica.xml</mapping-file> -->
+		<!-- <mapping-file>META-INF/sql/Plano.xml</mapping-file> -->
+		<mapping-file>META-INF/sql/PrestadorServico.xml</mapping-file>
+		<mapping-file>META-INF/sql/Rateio.xml</mapping-file>
+		<mapping-file>META-INF/sql/Reserva.xml</mapping-file>
+		<mapping-file>META-INF/sql/ReservaTemp.xml</mapping-file>
+		<!-- <mapping-file>META-INF/sql/SequenciaFoto.xml</mapping-file> -->
+		<mapping-file>META-INF/sql/ServicoPrestado.xml</mapping-file>
+		<mapping-file>META-INF/sql/Sindico.xml</mapping-file>
+		<!-- <mapping-file>META-INF/sql/SindicoCondominio.xml</mapping-file> -->
+		<!-- <mapping-file>META-INF/sql/Telefone.xml</mapping-file> -->
+		<mapping-file>META-INF/sql/TemplateLancamento.xml</mapping-file>
+		<mapping-file>META-INF/sql/TipoAnimal.xml</mapping-file>
+		<mapping-file>META-INF/sql/TipoPrestador.xml</mapping-file>
+		<mapping-file>META-INF/sql/TipoTelefone.xml</mapping-file>
+		<mapping-file>META-INF/sql/Totem.xml</mapping-file>
+		<mapping-file>META-INF/sql/UnidadeHabitacional.xml</mapping-file>
+		<mapping-file>META-INF/sql/Usuario.xml</mapping-file>
+		<mapping-file>META-INF/sql/Veiculo.xml</mapping-file>
+		<mapping-file>META-INF/sql/Visita.xml</mapping-file>
+		<mapping-file>META-INF/sql/Visitante.xml</mapping-file>
+		
+		<properties>
+			<property name="hibernate.cache.use_second_level_cache" value="false" />
+		</properties>
+	</persistence-unit>
+</persistence>

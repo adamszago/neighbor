@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+<body>
+	<ui:composition>
+		<p:dialog header="Agendar Visita" widgetVar="dlgAgendarVisita"
+			width="560" modal="true" resizable="false" closable="false">
+			<h:form id="formAgendarVisita">
+
+				<style>
+.ui-selectonemenu label.ui-selectonemenu-label {
+	padding-right: 28px;
+	text-align: left;
+}
+</style>
+
+				<h:panelGrid columns="2" id="pgAgendaVisita">
+					<h:outputLabel value="Morador" for="morador" />
+					<h:inputText
+						value="#{moradorPageController.visitaAgendada.morador.pessoa.nome}"
+						size="50" maxlength="50" id="morador" disabled="true" />
+
+					<h:outputLabel value="Nome Visitante" for="nomeVisitante" />
+					<h:inputText
+						value="#{moradorPageController.visitaAgendada.visitante.pessoa.nome}"
+						size="50" maxlength="50" id="nomeVisitante"
+						styleClass="toCapitalize"
+						readonly="#{not empty moradorPageController.visitaAgendada.visitante.pessoa.nome}"
+						required="true" requiredMessage="O Visitante é obrigatório!" />
+
+					<h:outputLabel value="Tipo Agendamento" for="tipo" />
+					<p:selectOneMenu id="tipo" style="width: 166px;"
+						value="#{moradorPageController.tempoAcessoVisita}">
+						<f:converter converterId="tempoAcessoConverter" />
+						<f:selectItems value="#{moradorPageController.tempoAcesso}"
+							var="tempo" itemValue="#{tempo}" itemLabel="#{tempo.descricao}" />
+						<p:ajax update="dataInicioVisita,dataFimVisita"
+							listener="#{moradorPageController.trocaTempoAgendamento}" />
+					</p:selectOneMenu>
+
+					<h:outputLabel value="Data Inicio Visita" for="dataInicioVisita" />
+					<p:calendar
+						value="#{moradorPageController.visitaAgendada.inicioAgendamentoVisita}"
+						id="dataInicioVisita" navigator="true"
+						mindate="#{moradorPageController.dataInicial}" maxdate="1/1/2030"
+						locale="pt" pattern="dd/MM/yyyy" required="true"
+						disabled="#{moradorPageController.dataInicialBloqueada}" />
+
+					<h:outputLabel value="Data Fim Visita" for="dataFimVisita" />
+					<p:calendar
+						value="#{moradorPageController.visitaAgendada.inicioAgendamentoVisita}"
+						id="dataFimVisita" navigator="true"
+						mindate="#{moradorPageController.dataInicial}" maxdate="1/1/2030"
+						locale="pt" pattern="dd/MM/yyyy" required="true"
+						disabled="#{moradorPageController.dataFinalBloqueada}" />
+
+					<h:outputLabel value="Tipo Entrada: " for="tipoEntrada" />
+					<p:selectOneMenu id="tipoEntrada" style="width: 166px;"
+						value="#{moradorPageController.tipoAcessoVisita}">
+						<f:converter converterId="tipoAcessoConverter" />
+						<f:selectItems value="#{moradorPageController.tiposAcesso}"
+							var="tipo" itemValue="#{tipo}" itemLabel="#{tipo.descricao}" />
+						<p:ajax update="testPanel1,testPanel2"
+							listener="#{moradorPageController.trocaTipoEntradaVisitante}" />
+					</p:selectOneMenu>
+
+					<p:outputPanel id="testPanel1">
+						<h:outputLabel id="lblDocumento" value="CNH: " for="documento"
+							rendered="#{moradorPageController.documentoVisivel}" />
+					</p:outputPanel>
+					<p:outputPanel id="testPanel2">
+						<h:inputText rendered="#{moradorPageController.documentoVisivel}"
+							value="#{moradorPageController.visitaAgendada.visitante.pessoa.cnh}"
+							id="documento">
+							<f:validator
+								validatorId="br.com.lphantus.neighbor.component.validator.ValidatorCNH" />
+						</h:inputText>
+					</p:outputPanel>
+
+					<p:commandButton value="Registrar Visita"
+						actionListener="#{moradorPageController.registrarVisita}"
+						ajax="false" update=":formAgendarVisita :paginaMoradorForm"
+						process=":formAgendarVisita">
+					</p:commandButton>
+					<p:commandButton value="Cancelar"
+						action="#{moradorPageController.novaVisitaAgendada}" ajax="true"
+						onsuccess="dlgAgendarVisita.hide(); ajaxLoading.hide();">
+					</p:commandButton>
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+	</ui:composition>
+</body>
+</html>

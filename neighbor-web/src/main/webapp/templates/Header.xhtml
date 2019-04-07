@@ -1,0 +1,762 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<body>
+
+	<ui:composition>
+		<h:form>
+
+			<h:panelGroup>
+				<div class="s4-notdlg">
+					<table border="0" cellpadding="0" cellspacing="0" width="100%">
+						<tbody>
+							<tr>
+								<td rowspan="3" width="5">&nbsp;</td>
+								<td rowspan="3" align="right" valign="middle"><a
+									href="../acesso/home.jsf" target="_self"> <p:graphicImage
+											url="#{usuarioController.urlImagem}" alt="Lphantus Neighbor" />
+								</a></td>
+								<td rowspan="3"><img
+									src="../../resources/images/spacer.gif" width="10" height="70" /></td>
+								<td align="center" valign="top">
+									<div>
+										<table class="menuInv topMenu" border="0" cellpadding="0"
+											cellspacing="20" width="630">
+											<tbody>
+												<tr>
+													<td><a href="../acesso/home.jsf" target="_self"><p:graphicImage
+																url="../../resources/images/icons/home.png" alt=""
+																styleClass="ico_top1"></p:graphicImage></a></td>
+													<td><span class="btn_add"><p:commandLink
+																ajax="false" update="" onclick="pageLoading.show();"
+																onerror="pageLoading.hide();"
+																onsuccess="pageLoading.hide();"
+																oncomplete="pageLoading.hide();" immediate="true"
+																global="false" action="#{moradorController.novoMorador}">
+																<p:graphicImage
+																	url="../../resources/images/btns/add.png"></p:graphicImage>
+															</p:commandLink></span> <p:commandLink ajax="false" update=""
+															onclick="pageLoading.show();"
+															onerror="pageLoading.hide();"
+															onsuccess="pageLoading.hide();"
+															oncomplete="pageLoading.hide();" immediate="true"
+															global="false"
+															action="#{moradorController.listarMoradores}">
+															<p:graphicImage
+																url="../../resources/images/icons/moradores.png" alt=""
+																styleClass="ico_top2"></p:graphicImage>
+														</p:commandLink></td>
+													<td><span class="btn_add"><p:commandLink
+																ajax="false" update="" onclick="pageLoading.show();"
+																onerror="pageLoading.hide();"
+																onsuccess="pageLoading.hide();"
+																oncomplete="pageLoading.hide();" immediate="true"
+																global="false"
+																action="#{visitanteController.novoVisitante}">
+																<p:graphicImage
+																	url="../../resources/images/btns/add.png"></p:graphicImage>
+															</p:commandLink></span> <p:commandLink ajax="false" update=""
+															onclick="pageLoading.show();"
+															onerror="pageLoading.hide();"
+															onsuccess="pageLoading.hide();"
+															oncomplete="pageLoading.hide();" immediate="true"
+															global="false"
+															action="#{visitanteController.listarVisitantes}">
+															<p:graphicImage
+																url="../../resources/images/icons/visitantes.png" alt=""
+																styleClass="ico_top4"></p:graphicImage>
+														</p:commandLink></td>
+													<td><span class="btn_add"><p:commandLink
+																ajax="false" update="" onclick="pageLoading.show();"
+																onerror="pageLoading.hide();"
+																onsuccess="pageLoading.hide();"
+																oncomplete="pageLoading.hide();" immediate="true"
+																global="false"
+																action="#{prestadorServicoController.novoPrestador}">
+																<p:graphicImage
+																	url="../../resources/images/btns/add.png"></p:graphicImage>
+															</p:commandLink></span> <p:commandLink ajax="false" update=""
+															onclick="pageLoading.show();"
+															onerror="pageLoading.hide();"
+															onsuccess="pageLoading.hide();"
+															oncomplete="pageLoading.hide();" immediate="true"
+															global="false"
+															action="#{prestadorServicoController.listarPrestadores}">
+															<p:graphicImage
+																url="../../resources/images/icons/prestadores.png"
+																alt="" styleClass="ico_top5"></p:graphicImage>
+														</p:commandLink></td>
+													<td><span class="btn_add"><p:commandLink
+																ajax="false" update="" onclick="pageLoading.show();"
+																onerror="pageLoading.hide();"
+																onsuccess="pageLoading.hide();"
+																oncomplete="pageLoading.hide();" immediate="true"
+																global="false" action="#{animalController.novoAnimal}">
+																<p:graphicImage
+																	url="../../resources/images/btns/add.png"></p:graphicImage>
+															</p:commandLink></span> <p:commandLink ajax="false" update=""
+															onclick="pageLoading.show();"
+															onerror="pageLoading.hide();"
+															onsuccess="pageLoading.hide();"
+															oncomplete="pageLoading.hide();" immediate="true"
+															global="false" action="#{animalController.listarAnimais}">
+															<p:graphicImage
+																url="../../resources/images/icons/animais.png" alt=""
+																styleClass="ico_top6"></p:graphicImage>
+														</p:commandLink></td>
+													<td><span class="btn_add"><p:commandLink
+																ajax="false" update="" onclick="pageLoading.show();"
+																onerror="pageLoading.hide();"
+																onsuccess="pageLoading.hide();"
+																oncomplete="pageLoading.hide();" immediate="true"
+																global="false" action="#{veiculoController.novoVeiculo}">
+																<p:graphicImage
+																	url="../../resources/images/btns/add.png"></p:graphicImage>
+															</p:commandLink></span> <p:commandLink ajax="false" update=""
+															onclick="pageLoading.show();"
+															onerror="pageLoading.hide();"
+															onsuccess="pageLoading.hide();"
+															oncomplete="pageLoading.hide();" immediate="true"
+															global="false"
+															action="#{veiculoController.listarVeiculos}">
+															<p:graphicImage
+																url="../../resources/images/icons/veiculos.png" alt=""
+																styleClass="ico_top6"></p:graphicImage>
+														</p:commandLink></td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</td>
+							</tr>
+							<tr style="display: none">
+								<td align="center" colspan="3">
+									<div id="zz1_TopNavigationMenuV4" class="s4-tn">
+										<div class="menu horizontal menu-horizontal">
+											<ul class="root static">
+
+												<li class="static dynamic-children">
+													<!--#### USUARIO LOGADO ###-->
+													<div align="right" class="userLogado">
+														<span id="nomeCondominio">Condomínio:
+															#{usuarioController.userLogado.condominio.pessoa.nome}</span> <br />
+														<span id="nomeuserLogado">Bem-vindo, <strong>#{usuarioController.userLogado.pessoa.nome}</strong></span>
+														<span id="loginuserLogado">(#{usuarioController.userLogado.login})</span>
+													</div>
+												</li>
+											</ul>
+										</div>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</h:panelGroup>
+
+			<p:growl id="messages" />
+
+			<p:menubar autoDisplay="false">
+				<!--########################################## GESTAO DE CONDOMINIO ##########################################-->
+				<!--  verifica se tem alguma permissao para o grupo "Gestão de Condôminios" para renderizar o titulo-->
+				<p:submenu label="Condomínio" icon="ui-icon-home"
+					rendered="#{sec:areAnyGranted('ROLE_ROOT, 
+														ROLE_CADASTRO_MORADOR,ROLE_LISTA_MORADOR, 
+														ROLE_LISTA_AGREGADOS,
+                                                      	ROLE_CADASTRO_VISITANTE,
+                                                      	ROLE_CADASTRO_PRESTADOR,
+                                                        ROLE_CADASTRO_VEICULO, 
+                                                        ROLE_CADASTRO_ANIMAL,
+                                                        ROLE_CADASTRO_MARCA_VEICULO, 
+                                                        ROLE_CADASTRO_TIPO_ANIMAL')}">
+					<p:submenu label="Moradores">
+						<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+							onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+							oncomplete="pageLoading.hide();" immediate="true" global="false"
+							value="Listar" action="#{moradorController.listarMoradores}"
+							icon="ui-icon-search"
+							rendered="#{sec:areAnyGranted('ROLE_ROOT,ROLE_LISTA_MORADOR')}" />
+						<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+							onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+							oncomplete="pageLoading.hide();" immediate="true" global="false"
+							value="Novo" action="#{moradorController.novoMorador}"
+							icon="ui-icon-plus"
+							rendered="#{sec:areAnyGranted('ROLE_CADASTRO_MORADOR, ROLE_ROOT')}" />
+						<p:separator />
+						<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+							onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+							oncomplete="pageLoading.hide();" immediate="true" global="false"
+							value="Agregados" action="#{agregadoController.listarAgregados}"
+							icon="ui-icon-person"
+							rendered="#{sec:areAnyGranted('ROLE_LISTA_AGREGADOS, ROLE_ROOT')}" />
+					</p:submenu>
+					<p:submenu label="Prestadores">
+						<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+							onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+							oncomplete="pageLoading.hide();" immediate="true" global="false"
+							value="Listar"
+							action="#{prestadorServicoController.listarPrestadores}"
+							icon="ui-icon-search"
+							rendered="#{sec:areAnyGranted('ROLE_LISTA_PRESTADOR, ROLE_ROOT')}" />
+						<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+							onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+							oncomplete="pageLoading.hide();" immediate="true" global="false"
+							value="Novo" action="#{prestadorServicoController.novoPrestador}"
+							icon="ui-icon-plus"
+							rendered="#{sec:areAnyGranted('ROLE_CADASTRO_PRESTADOR, ROLE_ROOT')}" />
+						<p:separator />
+						<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+							onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+							oncomplete="pageLoading.hide();" immediate="true" global="false"
+							value="Tipos"
+							action="#{prestadorServicoController.novoTipoPrestador}"
+							icon="ui-icon-pencil"
+							rendered="#{sec:areAnyGranted('ROLE_CADASTRO_TIPO_PRESTADOR, ROLE_ROOT')}" />
+					</p:submenu>
+					<p:submenu label="Visitantes">
+						<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+							onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+							oncomplete="pageLoading.hide();" immediate="true" global="false"
+							value="Listar" action="#{visitanteController.listarVisitantes}"
+							icon="ui-icon-search"
+							rendered="#{sec:areAnyGranted('ROLE_LISTA_VISITANTE, ROLE_ROOT')}" />
+						<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+							onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+							oncomplete="pageLoading.hide();" immediate="true" global="false"
+							value="Novo" action="#{visitanteController.novoVisitante}"
+							icon="ui-icon-plus"
+							rendered="#{sec:areAnyGranted('ROLE_CADASTRO_VISITANTE, ROLE_ROOT')}" />
+					</p:submenu>
+
+					<p:separator />
+
+					<p:submenu label="Animais">
+						<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+							onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+							oncomplete="pageLoading.hide();" immediate="true" global="false"
+							value="Listar" action="#{animalController.listarAnimais}"
+							icon="ui-icon-search"
+							rendered="#{sec:areAnyGranted('ROLE_LISTA_ANIMAL, ROLE_ROOT')}" />
+						<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+							onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+							oncomplete="pageLoading.hide();" immediate="true" global="false"
+							value="Novo" action="#{animalController.novoAnimal}"
+							icon="ui-icon-plus"
+							rendered="#{sec:areAnyGranted('ROLE_CADASTRO_ANIMAL, ROLE_ROOT')}" />
+						<p:separator />
+						<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+							onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+							oncomplete="pageLoading.hide();" immediate="true" global="false"
+							value="Tipos" action="#{animalController.novoTipoAnimal}"
+							icon="ui-icon-pencil"
+							rendered="#{sec:areAnyGranted('ROLE_CADASTRO_TIPO_ANIMAL, ROLE_ROOT')}" />
+					</p:submenu>
+
+					<p:submenu label="Veículos">
+						<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+							onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+							oncomplete="pageLoading.hide();" immediate="true" global="false"
+							value="Listar" action="#{veiculoController.listarVeiculos}"
+							icon="ui-icon-search"
+							rendered="#{sec:areAnyGranted('ROLE_LISTA_VEICULOS, ROLE_ROOT')}" />
+						<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+							onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+							oncomplete="pageLoading.hide();" immediate="true" global="false"
+							value="Novo" action="#{veiculoController.novoVeiculo}"
+							icon="ui-icon-plus"
+							rendered="#{sec:areAnyGranted('ROLE_CADASTRO_VEICULO, ROLE_ROOT')}" />
+						<p:separator />
+						<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+							onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+							oncomplete="pageLoading.hide();" immediate="true" global="false"
+							value="Marcas" action="#{veiculoController.novaMarcaVeiculo}"
+							icon="ui-icon-wrench"
+							rendered="#{sec:areAnyGranted('ROLE_CADASTRO_MARCA_VEICULO, ROLE_ROOT')}" />
+					</p:submenu>
+
+				</p:submenu>
+				<!--############################################## FIM ###############################################-->
+
+				<!--########################################## COMUNICACAO ##########################################-->
+				<p:submenu label="Mensagens" icon="ui-icon-mail-closed"
+					rendered="#{sec:areAnyGranted('ROLE_LISTA_MENSAGEM, ROLE_MENSAGEM_PARA_SINDICO, ROLE_MENSAGEM_DO_SINDICO, ROLE_ROOT')}">
+					<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+						onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+						oncomplete="pageLoading.hide();" immediate="true" global="false"
+						value="Recebidas" action="#{mensagemController.listaMensagens}"
+						icon="ui-icon-arrowreturnthick-1-w"
+						rendered="#{sec:areAnyGranted('ROLE_LISTA_MENSAGEM, ROLE_ROOT')}" />
+					<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+						onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+						oncomplete="pageLoading.hide();" immediate="true" global="false"
+						value="Enviar" action="#{mensagemController.novaMensagemSindico}"
+						icon="ui-icon-arrowreturnthick-1-e"
+						rendered="#{sec:areAnyGranted('ROLE_MENSAGEM_PARA_SINDICO, ROLE_ROOT') and usuarioController.userLogado.sindico==false }" />
+					<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+						onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+						oncomplete="pageLoading.hide();" immediate="true" global="false"
+						value="Enviar"
+						action="#{mensagemController.novaMensagemDoSindico}"
+						icon="ui-icon-arrowreturnthick-1-e"
+						rendered="#{sec:areAnyGranted('ROLE_MENSAGEM_DO_SINDICO, ROLE_ROOT') and usuarioController.userLogado.sindico==true }" />
+				</p:submenu>
+				<!--############################################## FIM ###############################################-->
+
+				<!--########################################## RESERVAS ##########################################-->
+				<p:submenu label="Reservas" icon="ui-icon-calendar"
+					rendered="#{sec:areAnyGranted('ROLE_CADASTRO_RESERVA, ROLE_APROVAR_RESERVA, ROLE_LISTA_ITEM_RESERVA, ROLE_CADASTRO_ITEM_RESERVA, ROLE_ROOT')}">
+					<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+						onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+						oncomplete="pageLoading.hide();" immediate="true" global="false"
+						value="Aprovadas" action="#{reservaController.novaReserva}"
+						icon="ui-icon-check"
+						rendered="#{sec:areAnyGranted('ROLE_CADASTRO_RESERVA, ROLE_ROOT')}" />
+					<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+						onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+						oncomplete="pageLoading.hide();" immediate="true" global="false"
+						value="Pendentes"
+						action="#{aprovacaoController.pageListaAprovacao}"
+						icon="ui-icon-alert"
+						rendered="#{sec:areAnyGranted('ROLE_APROVAR_RESERVA, ROLE_ROOT')}" />
+					<p:separator />
+					<p:submenu label="Itens" icon="ui-icon-pencil"
+						rendered="#{sec:areAnyGranted('ROLE_LISTA_ITEM_RESERVA, ROLE_CADASTRO_ITEM_RESERVA, ROLE_ROOT')}">
+						<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+							onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+							oncomplete="pageLoading.hide();" immediate="true" global="false"
+							value="Listar"
+							action="#{itemReservaController.pageListaItemReserva}"
+							icon="ui-icon-search"
+							rendered="#{sec:areAnyGranted('ROLE_LISTA_ITEM_RESERVA, ROLE_ROOT')}" />
+						<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+							onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+							oncomplete="pageLoading.hide();" immediate="true" global="false"
+							value="Novo" action="#{itemReservaController.novoItemReserva}"
+							icon="ui-icon-plus"
+							rendered="#{sec:areAnyGranted('ROLE_CADASTRO_ITEM_RESERVA, ROLE_ROOT')}" />
+					</p:submenu>
+				</p:submenu>
+				<!--############################################## FIM ###############################################-->
+
+				<!--########################################## OCORRENCIAS ##########################################-->
+				<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+					onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+					oncomplete="pageLoading.hide();" immediate="true" global="false"
+					value="Ocorrências"
+					rendered="#{sec:areAnyGranted('ROLE_ROOT, ROLE_LISTA_OCORRENCIA')}"
+					action="#{ocorrenciaController.listarOcorrencias}"
+					icon="ui-icon-volume-on" />
+				<!--############################################## FIM ###############################################-->
+
+				<!--########################################## ADMINISTRACAO ##########################################-->
+				<p:submenu label="Administração" icon="ui-icon-wrench"
+					rendered="#{sec:areAnyGranted('ROLE_ROOT, 
+													ROLE_CADASTRO_CONDOMINIO, ROLE_LISTA_CONDOMINIO,
+													ROLE_LISTA_TOTEM_ADM,
+													ROLE_AGENDA_SINDICO,
+													ROLE_VER_HISTORICO')}">
+					<p:submenu label="Condomínios" icon="ui-icon-home"
+						rendered="#{sec:areAnyGranted('ROLE_ROOT, ROLE_CADASTRO_CONDOMINIO, ROLE_LISTA_CONDOMINIO')}">
+						<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+							onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+							oncomplete="pageLoading.hide();" immediate="true" global="false"
+							value="Listar"
+							action="#{condominioController.pageListaCondominio}"
+							icon="ui-icon-search"
+							rendered="#{sec:areAnyGranted('ROLE_LISTA_CONDOMINIO, ROLE_ROOT')}" />
+						<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+							onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+							oncomplete="pageLoading.hide();" immediate="true" global="false"
+							value="Novo" action="#{condominioController.pageNovoCondominio}"
+							icon="ui-icon-plus"
+							rendered="#{sec:areAnyGranted('ROLE_CADASTRO_CONDOMINIO, ROLE_ROOT')}" />
+						<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+							onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+							oncomplete="pageLoading.hide();" immediate="true" global="false"
+							value="Configurar" action="#{configuracaoCondominioController.pageConfigurar}"
+							icon="ui-icon-wrench"
+							rendered="#{sec:areAnyGranted('ROLE_ROOT')}" />
+					</p:submenu>
+					<!-- <p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+						onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+						oncomplete="pageLoading.hide();" immediate="true" global="false"
+						value="Todos Moradores"
+						action="#{moradorController.pageListaMoradoresAdm}"
+						icon="ui-icon-person"
+						rendered="#{sec:areAnyGranted('ROLE_LISTA_MORADOR_ADM, ROLE_ROOT')}" /> -->
+					<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+						onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+						oncomplete="pageLoading.hide();" immediate="true" global="false"
+						value="Lista Totem" action="#{totemController.pageTotem}"
+						icon="ui-icon-key"
+						rendered="#{sec:areAnyGranted('ROLE_LISTA_TOTEM_ADM, ROLE_ROOT')}" />
+					<!-- <p:submenu label="Inadimplência" icon="ui-icon-flag"
+						rendered="#{sec:areAnyGranted('ROLE_REGISTRO_PAGAMENTO, ROLE_ROOT')}">
+						<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+							onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+							oncomplete="pageLoading.hide();" immediate="true" global="false"
+							value="Gestão Manual"
+							action="#{contasController.pageRegistroPagamentos}"
+							icon="ui-icon-pencil" />
+						<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+							onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+							oncomplete="pageLoading.hide();" immediate="true" global="false"
+							value="Subir Arquivo"
+							action="#{contasController.pageRegistroPagamentosArquivo}"
+							icon="ui-icon-folder-open" />
+					</p:submenu> -->
+					<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+						onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+						oncomplete="pageLoading.hide();" immediate="true" global="false"
+						value="Agenda do síndico" label="Agenda do síndico"
+						action="#{agendaSindicoController.pageAgenda}" icon="ui-icon-note"
+						rendered="#{sec:areAnyGranted('ROLE_AGENDA_SINDICO, ROLE_ROOT')}" />
+					<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+						onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+						oncomplete="pageLoading.hide();" immediate="true" global="false"
+						value="Enviar arquivos" label="Disponibilizar arquivos"
+						action="#{documentoController.pageDocumento}" icon="ui-icon-note"
+						rendered="#{sec:areAnyGranted('ROLE_DISPONIBILIZAR_ARQUIVOS, ROLE_ROOT')}" />
+					<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+						onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+						oncomplete="pageLoading.hide();" immediate="true" global="false"
+						value="Histórico" action="#{historicoController.pageHistorico}"
+						icon="ui-icon-clipboard"
+						rendered="#{sec:areAnyGranted('ROLE_VER_HISTORICO, ROLE_ROOT')}" />
+					<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+						onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+						oncomplete="pageLoading.hide();" immediate="true" global="false"
+						value="Relatório de Utilização" label="Relatório de Utilização"
+						action="#{utilizacaoController.pageUtilizacao}" icon="ui-icon-image"
+						rendered="#{sec:areAnyGranted('ROLE_UTILIZACAO, ROLE_ROOT')}" />
+				</p:submenu>
+				<!--############################################## FIM ###############################################-->
+
+				<!--########################################## FINANCEIRO ##########################################-->
+
+				<p:submenu label="Financeiro" icon="ui-icon-bookmark"
+					rendered="#{sec:areAnyGranted('ROLE_ROOT, ROLE_BALANCETE, ROLE_CONFIGURAR_CONDOMINIO,
+														ROLE_LISTAR_CENTRO, ROLE_ADICIONAR_CENTRO,
+														ROLE_LISTAR_CARTEIRA, ROLE_ADICIONAR_CARTEIRA,
+														ROLE_LISTAR_LANCAMENTO, ROLE_ADICIONAR_LANCAMENTO,
+														ROLE_LISTAR_AUTOMATICO, ROLE_ADICIONAR_AUTOMATICO,
+														ROLE_LISTAR_FATURAS, ROLE_ADICIONAR_FATURA, 
+														ROLE_LISTAR_DUPLICATAS, ROLE_ADICIONAR_DUPLICATA,
+														ROLE_LISTAR_MOVIMENTACAO, ROLE_ADICIONAR_MOVIMENTACAO')}">
+					<p:submenu label="Parâmetros" icon="ui-icon-wrench">
+						<!-- Voltar ROLE_ROOT -->
+						<p:submenu label="Tipo Lançamento" icon="ui-icon-tag"
+							rendered="#{sec:areAnyGranted('')}">
+							<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+								onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+								oncomplete="pageLoading.hide();" immediate="true" global="false"
+								value="Listar"
+								action="#{lancamentoTipoController.pageListaLancamentoTipo}"
+								icon="ui-icon-search" />
+							<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+								onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+								oncomplete="pageLoading.hide();" immediate="true" global="false"
+								value="Novo"
+								action="#{lancamentoTipoController.pageListaLancamentoTipo}"
+								icon="ui-icon-plus" />
+						</p:submenu>
+						<p:submenu label="Centro de Custo" icon="ui-icon-radio-off"
+							rendered="#{sec:areAnyGranted('ROLE_LISTAR_CENTRO, ROLE_ADICIONAR_CENTRO, ROLE_ROOT')}">
+							<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+								onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+								oncomplete="pageLoading.hide();" immediate="true" global="false"
+								value="Listar"
+								action="#{centroCustoController.pageListaCentroCusto}"
+								icon="ui-icon-search"
+								rendered="#{sec:areAnyGranted('ROLE_LISTAR_CENTRO, ROLE_ROOT')}" />
+							<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+								onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+								oncomplete="pageLoading.hide();" immediate="true" global="false"
+								value="Novo"
+								action="#{centroCustoController.pageCadastroCentroCusto}"
+								icon="ui-icon-plus"
+								rendered="#{sec:areAnyGranted('ROLE_ROOT, ROLE_ADICIONAR_CENTRO')}" />
+						</p:submenu>
+						<p:submenu label="Banco" icon="ui-icon-folder-collapsed"
+							rendered="#{sec:areAnyGranted('')}">
+							<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+								onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+								oncomplete="pageLoading.hide();" immediate="true" global="false"
+								value="Novo Banco" action="#{bancoController.pageCadastroBanco}"
+								icon="ui-icon-plus" />
+							<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+								onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+								oncomplete="pageLoading.hide();" immediate="true" global="false"
+								value="Listar" action="#{bancoController.pageListaBanco}"
+								icon="ui-icon-search" />
+						</p:submenu>
+						<p:submenu label="Carteira" icon="ui-icon-folder-collapsed"
+							rendered="#{sec:areAnyGranted('ROLE_ROOT, ROLE_LISTAR_CARTEIRA, ROLE_ADICIONAR_CARTEIRA')}">
+							<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+								onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+								oncomplete="pageLoading.hide();" immediate="true" global="false"
+								value="Listar" action="#{carteiraController.pageListaCarteira}"
+								icon="ui-icon-search"
+								rendered="#{sec:areAnyGranted('ROLE_ROOT, ROLE_LISTAR_CARTEIRA')}" />
+							<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+								onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+								oncomplete="pageLoading.hide();" immediate="true" global="false"
+								value="Novo" action="#{carteiraController.pageCadastroCarteira}"
+								icon="ui-icon-plus"
+								rendered="#{sec:areAnyGranted('ROLE_ROOT, ROLE_ADICIONAR_CARTEIRA')}" />
+						</p:submenu>
+						<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+							onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+							oncomplete="pageLoading.hide();" immediate="true" global="false"
+							value="Configurações"
+							action="#{configuracaoCondominioController.configurarCondominio}"
+							icon="ui-icon-wrench"
+							rendered="#{sec:areAnyGranted('ROLE_ROOT, ROLE_CONFIGURAR_CONDOMINIO')}" />
+					</p:submenu>
+					<!-- Voltar ROLE_ROOT -->
+					<p:submenu label="Contas a Receber" icon="ui-icon-arrowthick-1-sw"
+						rendered="#{sec:areAnyGranted('ROLE_ROOT, ROLE_LISTAR_LANCAMENTO, ROLE_ADICIONAR_LANCAMENTO,
+														ROLE_LISTAR_AUTOMATICO, ROLE_ADICIONAR_AUTOMATICO,
+														ROLE_LISTAR_FATURAS, ROLE_ADICIONAR_FATURA, 
+														ROLE_LISTAR_DUPLICATAS, ROLE_ADICIONAR_DUPLICATA')}">
+						<p:submenu label="Lançamento" icon="ui-icon-arrow-1-sw"
+							rendered="#{sec:areAnyGranted('ROLE_ROOT, ROLE_LISTAR_LANCAMENTO, ROLE_ADICIONAR_LANCAMENTO')}">
+							<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+								onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+								oncomplete="pageLoading.hide();" immediate="true" global="false"
+								value="Listar"
+								action="#{lancamentoController.pageListaLancamento}"
+								icon="ui-icon-search"
+								rendered="#{sec:areAnyGranted('ROLE_ROOT, ROLE_LISTAR_LANCAMENTO')}" />
+							<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+								onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+								oncomplete="pageLoading.hide();" immediate="true" global="false"
+								value="Novo"
+								action="#{lancamentoController.pageCadastroLancamento}"
+								icon="ui-icon-plus"
+								rendered="#{sec:areAnyGranted('ROLE_ROOT, ROLE_ADICIONAR_LANCAMENTO')}" />
+						</p:submenu>
+						<p:submenu label="Automatico" icon="ui-icon-arrow-1-sw"
+							rendered="#{sec:areAnyGranted('ROLE_ROOT, ROLE_LISTAR_AUTOMATICO, ROLE_ADICIONAR_AUTOMATICO')}">
+							<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+								onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+								oncomplete="pageLoading.hide();" immediate="true" global="false"
+								value="Listar"
+								action="#{templateLancamentoController.pageListaAutomatico}"
+								icon="ui-icon-search"
+								rendered="#{sec:areAnyGranted('ROLE_ROOT, ROLE_LISTAR_AUTOMATICO')}" />
+							<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+								onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+								oncomplete="pageLoading.hide();" immediate="true" global="false"
+								value="Novo"
+								action="#{templateLancamentoController.pageCadastroAutomatico}"
+								icon="ui-icon-plus"
+								rendered="#{sec:areAnyGranted('ROLE_ROOT, ROLE_ADICIONAR_AUTOMATICO')}" />
+						</p:submenu>
+						<p:submenu label="Fatura" icon="ui-icon-document-b"
+							rendered="#{sec:areAnyGranted('ROLE_ROOT, ROLE_LISTAR_FATURAS, ROLE_ADICIONAR_FATURA')}">
+							<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+								onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+								oncomplete="pageLoading.hide();" immediate="true" global="false"
+								value="Listar" action="#{faturaController.pageListaFatura}"
+								icon="ui-icon-search"
+								rendered="#{sec:areAnyGranted('ROLE_ROOT, ROLE_LISTAR_FATURAS')}" />
+							<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+								onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+								oncomplete="pageLoading.hide();" immediate="true" global="false"
+								value="Novo" action="#{faturaController.pageCadastroFatura}"
+								icon="ui-icon-plus"
+								rendered="#{sec:areAnyGranted('ROLE_ROOT, ROLE_ADICIONAR_FATURA')}" />
+						</p:submenu>
+						<p:submenu label="Duplicata" icon="ui-icon-document-b"
+							rendered="#{sec:areAnyGranted('ROLE_ROOT, ROLE_LISTAR_DUPLICATAS, ROLE_ADICIONAR_DUPLICATA')}">
+							<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+								onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+								oncomplete="pageLoading.hide();" immediate="true" global="false"
+								value="Listar"
+								action="#{duplicataController.pageListaDuplicata}"
+								icon="ui-icon-search"
+								rendered="#{sec:areAnyGranted('ROLE_ROOT, ROLE_LISTAR_DUPLICATAS,')}" />
+							<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+								onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+								oncomplete="pageLoading.hide();" immediate="true" global="false"
+								value="Novo"
+								action="#{duplicataController.pageCadastroDuplicata}"
+								icon="ui-icon-plus"
+								rendered="#{sec:areAnyGranted('ROLE_ROOT, ROLE_ADICIONAR_DUPLICATA')}" />
+						</p:submenu>
+					</p:submenu>
+					<p:submenu label="Contas a Pagar" icon="ui-icon-arrowthick-1-ne"
+						rendered="#{sec:areAnyGranted('ROLE_ROOT, ROLE_LISTAR_LANCAMENTO, ROLE_ADICIONAR_LANCAMENTO')}">
+						<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+							onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+							oncomplete="pageLoading.hide();" immediate="true" global="false"
+							value="Listar"
+							action="#{lancamentoPagarController.pageListaLancamento}"
+							icon="ui-icon-search"
+							rendered="#{sec:areAnyGranted('ROLE_ROOT, ROLE_LISTAR_LANCAMENTO')}" />
+						<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+							onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+							oncomplete="pageLoading.hide();" immediate="true" global="false"
+							value="Novo"
+							action="#{lancamentoPagarController.pageCadastroLancamento}"
+							icon="ui-icon-plus"
+							rendered="#{sec:areAnyGranted('ROLE_ROOT, ROLE_ADICIONAR_LANCAMENTO')}" />
+						<!-- <p:submenu label="Fatura" icon="ui-icon-document-b"
+							rendered="#{sec:areAnyGranted('ROLE_ROOT')}">
+							<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+								onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+								oncomplete="pageLoading.hide();" immediate="true" global="false"
+								value="Listar" action="#{faturaPagarController.pageListaFatura}"
+								icon="ui-icon-search"
+								rendered="#{sec:areAnyGranted('ROLE_LISTAR_FATURAS, ROLE_ROOT')}" />
+							<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+								onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+								oncomplete="pageLoading.hide();" immediate="true" global="false"
+								value="Novo"
+								action="#{faturaPagarController.pageCadastroFatura}"
+								icon="ui-icon-plus"
+								rendered="#{sec:areAnyGranted('ROLE_ADICIONAR_FATURA, ROLE_ROOT')}" />
+						</p:submenu>-->
+					</p:submenu>
+					<p:submenu label="Geral" icon="ui-icon-transferthick-e-w"
+						rendered="#{sec:areAnyGranted('ROLE_ROOT, ROLE_LISTAR_MOVIMENTACAO, ROLE_ADICIONAR_MOVIMENTACAO')}">
+						<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+							onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+							oncomplete="pageLoading.hide();" immediate="true" global="false"
+							value="Movimentações"
+							action="#{movimentacaoController.pageListaMovimentacao}"
+							icon="ui-icon-search"
+							rendered="#{sec:areAnyGranted('ROLE_ROOT, ROLE_LISTAR_MOVIMENTACAO')}" />
+						<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+							onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+							oncomplete="pageLoading.hide();" immediate="true" global="false"
+							value="Balancete" label="Balancete mensal"
+							action="#{balanceteController.pageBalancete}" icon="ui-icon-note"
+							rendered="#{sec:areAnyGranted('ROLE_ROOT, ROLE_BALANCETE')}" />
+					</p:submenu>
+				</p:submenu>
+				<!--############################################## FIM ###############################################-->
+
+				<!--########################################## SEGURANCA ##########################################-->
+				<p:submenu label="Segurança" icon="ui-icon-locked"
+					rendered="#{sec:areAnyGranted('')}">
+					<p:submenu label="Usuários" icon="ui-icon-person">
+						<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+							onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+							oncomplete="pageLoading.hide();" immediate="true" global="false"
+							value="Listar" action="#{usuarioController.pageListaUsuarios}"
+							icon="ui-icon-search" />
+						<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+							onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+							oncomplete="pageLoading.hide();" immediate="true" global="false"
+							value="Novo" action="#{usuarioController.novoUsuario}"
+							icon="ui-icon-plus" />
+					</p:submenu>
+					<p:submenu label="Módulos Acesso" icon="ui-icon-tag">
+						<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+							onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+							oncomplete="pageLoading.hide();" immediate="true" global="false"
+							value="Listar"
+							action="#{moduloAcessoController.pageListaModuloAcesso}"
+							icon="ui-icon-search" />
+						<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+							onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+							oncomplete="pageLoading.hide();" immediate="true" global="false"
+							value="Novo" action="#{moduloAcessoController.novoModuloAcesso}"
+							icon="ui-icon-plus" />
+
+					</p:submenu>
+				</p:submenu>
+				<!--############################################## FIM ###############################################-->
+
+				<!--########################################## AREA ROOT ##########################################-->
+				<p:submenu label="Área Root" icon="ui-icon-locked"
+					rendered="#{sec:areAnyGranted('ROLE_ROOT, 
+													ROLE_CADASTRO_USUARIO, ROLE_LISTA_USUARIO,
+													ROLE_LISTA_MODULOACESSO, ROLE_CADASTRO_MODULOACESSO')}">
+					<p:submenu label="Usuários" icon="ui-icon-person"
+						rendered="#{sec:areAnyGranted('ROLE_ROOT, 
+													ROLE_CADASTRO_USUARIO, ROLE_LISTA_USUARIO')}">
+						<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+							onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+							oncomplete="pageLoading.hide();" immediate="true" global="false"
+							value="Listar"
+							action="#{acessoRootController.pageListarUsuarios}"
+							icon="ui-icon-search"
+							rendered="#{sec:areAnyGranted('ROLE_ROOT, ROLE_LISTA_USUARIO')}" />
+						<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+							onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+							oncomplete="pageLoading.hide();" immediate="true" global="false"
+							value="Novo" action="#{acessoRootController.novoUsuario}"
+							icon="ui-icon-plus"
+							rendered="#{sec:areAnyGranted('ROLE_ROOT, ROLE_CADASTRO_USUARIO')}" />
+					</p:submenu>
+					<p:submenu label="Módulos Acesso" icon="ui-icon-tag"
+						rendered="#{sec:areAnyGranted('ROLE_ROOT, 
+													ROLE_LISTA_MODULOACESSO, ROLE_CADASTRO_MODULOACESSO')}">
+						<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+							onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+							oncomplete="pageLoading.hide();" immediate="true" global="false"
+							value="Listar"
+							action="#{acessoRootController.pageListarModulosAcesso}"
+							icon="ui-icon-search"
+							rendered="#{sec:areAnyGranted('ROLE_ROOT, ROLE_CADASTRO_MODULOACESSO')}" />
+						<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+							onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+							oncomplete="pageLoading.hide();" immediate="true" global="false"
+							value="Novo" action="#{acessoRootController.novoModuloAcesso}"
+							icon="ui-icon-plus"
+							rendered="#{sec:areAnyGranted('ROLE_ROOT, ROLE_CADASTRO_MODULOACESSO')}" />
+					</p:submenu>
+				</p:submenu>
+				<!--############################################## FIM ###############################################-->
+
+				<!--############################################## AJUDA ###############################################-->
+				<p:submenu label="Ajuda" icon="ui-icon-help">
+					<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+						onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+						oncomplete="pageLoading.hide();" immediate="true" global="false"
+						value="FAQ" url="http://www.lphantus.com.br/site/suporte/faq/"
+						icon="ui-icon-script" />
+					<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+						onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+						oncomplete="pageLoading.hide();" immediate="true" global="false"
+						value="Tour"
+						url="http://www.lphantus.com.br/site/lpn/sistema-de-gestao-para-condominios/"
+						icon="ui-icon-comment" />
+					<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+						onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+						oncomplete="pageLoading.hide();" immediate="true" global="false"
+						value="Suporte" url="http://www.lphantus.com.br/site/suporte/"
+						icon="ui-icon-lightbulb" />
+					<p:separator />
+					<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+						onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+						oncomplete="pageLoading.hide();" immediate="true" global="false"
+						value="Sobre LPN" url="http://www.lphantus.com.br/site/sobre/"
+						target="_blank" icon="ui-icon-star" />
+				</p:submenu>
+				<!--############################################## FIM ###############################################-->
+
+				<!--############################################## SAIR ###############################################-->
+				<p:menuitem ajax="false" update="" onclick="pageLoading.show();"
+					onerror="pageLoading.hide();" onsuccess="pageLoading.hide();"
+					oncomplete="pageLoading.hide();" immediate="true" global="false"
+					value="Sair" action="#{usuarioController.logout}"
+					icon="ui-icon-power" />
+				<!--############################################## FIM ###############################################-->
+
+			</p:menubar>
+		</h:form>
+		<!-- end header -->
+
+	</ui:composition>
+</body>
+
+</html>

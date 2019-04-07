@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<ui:define name="content">
+		<h:form id="listagemCondominiosForm" styleClass="innerContentFix">
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+			<p:dataTable id="condominios" var="condominio"
+				value="#{condominioController.condominios}"
+				rowKey="#{condominio.pessoa.idPessoa}" paginator="true" rows="10"
+				selection="#{condominioController.condominio}"
+				selectionMode="single"
+				emptyMessage="#{bundle['msg.sem.condominios']}"
+				rowStyleClass="#{condominio.pessoa.ativo ? null : 'inativo'}">
+				<f:facet name="header">
+					<h:outputText value="#{bundle['tit.condominios.cadastrados']}" />
+				</f:facet>
+				<p:column sortBy="pessoa.nome"
+					filterBy="pessoa.nome" exportable="true">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.nome']}" />
+					</f:facet>
+					<h:outputText value="#{condominio.pessoa.nome}" />
+				</p:column>
+				<p:column exportable="false">
+					<p:commandLink action="#{condominioController.editarCondominio}"
+						id="editCondominio" onclick="pageLoading.show();"
+						oncomplete="pageLoading.hide();">
+						<p:graphicImage value="../../resources/images/edit.png"
+							width="20px" height="20px" style="text-align:center;" />
+						<f:setPropertyActionListener
+							target="#{condominioController.condominio}" value="#{condominio}" />
+					</p:commandLink>
+					<p:tooltip for="editCondominio" value="Editar Registro"
+						showEffect="slide" hideEffect="slide" />
+				</p:column>
+				<p:column style="width:16px" exportable="false">
+					<p:commandLink
+						onclick="mostrarDglInativar(#{condominio.pessoa.ativo})"
+						update=":listagemCondominiosForm">
+						<p:graphicImage id="imgStatusCondominio"
+							value="../../resources/images/ativo_#{condominio.pessoa.ativo}.png"
+							width="24px" height="24px">
+							<p:tooltip for="imgStatusCondominio" hideEffect="fade"
+								showEffect="fade"
+								value="#{condominio.pessoa.ativo ? 'Condominio Ativo' : 'Condominio Inativo'}"></p:tooltip>
+						</p:graphicImage>
+						<f:setPropertyActionListener
+							target="#{condominioController.condominio}" value="#{condominio}" />
+					</p:commandLink>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+
+		<p:confirmDialog message="#{bundle['msg.conf.ativ']}"
+			header="Inativar" severity="alert" widgetVar="dglInativarCondominio"
+			modal="true" closable="false">
+			<h:form>
+				<p:commandButton id="confirm" value="#{bundle['btn.sim']}"
+					update=":listagemCondominiosForm:growlGeral"
+					oncomplete="dglInativarCondominio.hide()"
+					action="#{condominioController.ativarInativar}" />
+				<p:commandButton id="decline" value="#{bundle['btn.nao']}"
+					onclick="dglInativarCondominio.hide()"
+					update=":listagemCondominiosForm:growlGeral" />
+			</h:form>
+		</p:confirmDialog>
+		<script>
+			function mostrarDglInativar(condominioEnable){
+				var men = '';
+				if(condominioEnable == true){
+					men = 'Desativar';
+				}else {
+					men = 'Ativar';
+				}
+				jQuery('#dglInativarCondominio p').html('Deseja <strong>'+men+'</strong> este condomínio ?');
+				
+				jQuery('#ui-dialog-title-dglInativarCondominio').html(men);
+				
+				dglInativarCondominio.show();	
+			}
+		</script>
+	</ui:define>
+</ui:composition>

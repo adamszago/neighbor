@@ -1,0 +1,472 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<ui:define name="content">
+		<h3>
+			<h:outputText value="#{bundle['tit.cadastro.morador']}" />
+		</h3>
+		<!--         <p:fieldset legend="Cadastro de Morador">   -->
+		<h:form id="cadastroMoradorForm">
+			<!-- ************* ABA MORADOR PRINCIPAL ************* -->
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+			<h:inputHidden id="idMorador"
+				value="#{moradorController.morador.pessoa.idPessoa}" />
+
+			<style>
+				.content form table td label {
+					float: left !important;
+				}
+				
+				.layoutCadMorador td {
+					padding: 7px;
+					border: none;
+				}
+				
+				.layoutCadMorador tr {
+					border: none;
+				}
+			</style>
+
+			<p:panelGrid styleClass="layoutCadMorador">
+				<f:facet name="header">  
+			        #{bundle['tit.pnl.dad.morador']}  
+			    </f:facet>
+
+				<p:row>
+					<p:column>
+						<p:outputLabel value="#{bundle['lbl.casa']}: " for="casa"
+							styleClass="label_obr" />
+						<p:inputText id="casa"
+							value="#{moradorController.morador.unidadeHabitacional[0].unidadeHabitacional.identificacao}"
+							required="true" label="Casa" size="5" maxlength="5"
+							requiredMessage="#{bundle['msg.informe.casa.morador']}"
+							onblur="if(this.value=='')this.value='0'"
+							onfocus="if(this.value=='0')this.value=''"
+							styleClass="campo-onload" />
+					</p:column>
+					<p:column>
+						<p:outputLabel value="#{bundle['lbl.tem.interfone']}: "
+							for="txtInterfone" id="lblInterfone" />&nbsp;
+                        <p:selectBooleanCheckbox id="txtInterfone"
+							value="#{moradorController.morador.unidadeHabitacional[0].unidadeHabitacional.interfoneOk}" />
+					</p:column>
+					<p:column
+						rendered="#{moradorController.morador.pessoa.idPessoa > 0 }">
+						<p:outputLabel value="#{bundle['lbl.ativo']}: " for="ativo" />&nbsp;
+                        <p:selectBooleanCheckbox id="ativo"
+							value="#{moradorController.morador.pessoa.ativo}" />
+					</p:column>
+					<p:column>
+						<h:outputLabel value="#{bundle['tit.data.nasc']}: "
+							for="dataNascimento" styleClass="label_obr" />
+						<p:calendar
+							value="#{moradorController.morador.pessoa.dataNascimento}"
+							id="dataNascimento" navigator="true" mindate="1/1/1930"
+							required="true" size="17" yearRange="c-90:c+90"
+							requiredMessage="#{bundle['msg.informe.data.nasc']}"
+							maxdate="#{moradorController.dataMaximaNascimento}" locale="pt"
+							pattern="dd/MM/yyyy" readonlyInput="true" />
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+			<p:panelGrid styleClass="layoutCadMorador">
+				<p:row>
+					<p:column colspan="4">
+						<p:outputLabel value="#{bundle['lbl.nome']}: " for="nome"
+							styleClass="label_obr" />
+						<p:inputText id="nome"
+							value="#{moradorController.morador.pessoa.nome}"
+							styleClass="toCapitalize" required="true" label="Nome" size="72"
+							maxlength="80"
+							requiredMessage="#{bundle['msg.informe.nome.morador']}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column colspan="4">
+						<p:outputLabel value="#{bundle['lbl.email']}:" for="mail"
+							styleClass="label_obr" />
+						<p:inputText id="mail"
+							value="#{moradorController.morador.pessoa.mail}"
+							styleClass="toLowercase" required="true"
+							label="#{bundle['lbl.email']}" size="72" maxlength="80"
+							requiredMessage="#{bundle['msg.email.requerido']}">
+							<f:validator
+								validatorId="br.com.lphantus.neighbor.component.validator.ValidatorEmail" />
+						</p:inputText>
+						<p:message for="mail" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel value="#{bundle['lbl.tipo.morador']}: "
+							for="cmbTipoMorador" styleClass="label_obr" />
+					</p:column>
+					<p:column>
+						<p:selectOneMenu
+							value="#{moradorController.morador.unidadeHabitacional[0].tipoMorador}"
+							id="cmbTipoMorador" required="true"
+							requiredMessage="#{bundle['msg.sel.tipo.morador']}"
+							style="width: 166px;">
+							<f:selectItem itemLabel="#{bundle['select.selecione']}"
+								itemValue="" />
+							<f:selectItem itemLabel="#{bundle['select.tipo.morad.prop']}"
+								itemValue="PROPRIETARIO" />
+							<f:selectItem itemLabel="#{bundle['select.tipo.morad.part']}"
+								itemValue="ALUGUEL_PARTICULAR" />
+							<f:selectItem itemLabel="#{bundle['select.tipo.morad.imob']}"
+								itemValue="ALUGUEL_IMOBILIARIA" />
+							<f:selectItem itemLabel="#{bundle['select.tipo.morad.outro']}"
+								itemValue="OUTRO" />
+						</p:selectOneMenu>
+					</p:column>
+					<p:column>
+						<p:outputLabel value="#{bundle['lbl.sexo']}: " for="sexo" />
+					</p:column>
+					<p:column>
+						<p:selectOneMenu id="sexo"
+							value="#{moradorController.morador.pessoa.sexo}"
+							style="width: 120px">
+							<f:selectItem itemLabel="#{bundle['select.sex.masculino']}"
+								itemValue="M" />
+							<f:selectItem itemLabel="#{bundle['select.sex.feminino']}"
+								itemValue="F" />
+						</p:selectOneMenu>
+					</p:column>
+				</p:row>
+
+				<p:row>
+					<p:column>
+						<p:outputLabel value="#{bundle['lbl.profissao']}: "
+							for="profissao" />
+					</p:column>
+					<p:column>
+						<p:inputText id="profissao" styleClass="toCapitalize"
+							value="#{moradorController.morador.pessoa.profissao}"
+							required="false" label="Profissão" size="25" maxlength="25" />
+					</p:column>
+					<p:column>
+						<p:outputLabel value="#{bundle['lbl.cnh']}: " for="cnh" />
+					</p:column>
+					<p:column>
+						<p:inputText id="cnh"
+							value="#{moradorController.morador.pessoa.cnh}" required="false"
+							label="CNH" size="25" maxlength="15">
+							<f:validator
+								validatorId="br.com.lphantus.neighbor.component.validator.ValidatorCNH" />
+						</p:inputText>
+					</p:column>
+				</p:row>
+				
+				<p:row>
+					<p:column>
+						<h:panelGroup rendered="#{not usuarioController.sistemaIsDemo}">
+							<p:outputLabel value="#{bundle['lbl.cpf']}: " for="cpf1"
+								styleClass="label_obr" />
+						</h:panelGroup>
+					</p:column>
+					<p:column>
+						<h:panelGroup rendered="#{not usuarioController.sistemaIsDemo}">
+							<p:inputMask id="cpf1"
+								value="#{moradorController.morador.pessoa.cpf}" required="true"
+								label="CPF" mask="999.999.999-99" size="25"
+								requiredMessage="#{bundle['msg.informe.cpf']}">
+								<f:validator
+									validatorId="br.com.lphantus.neighbor.component.validator.ValidatorCPF" />
+							</p:inputMask>
+						</h:panelGroup>
+					</p:column>
+					<ui:remove>
+						<p:column>
+							<h:panelGroup rendered="#{usuarioController.sistemaIsDemo}">
+								<p:outputLabel value="#{bundle['lbl.cpf']}: " for="cpf2"
+									styleClass="label_obr" />
+								<p:inputMask id="cpf2"
+									value="#{moradorController.morador.pessoa.cpf}" required="true"
+									label="CPF" mask="999.999.999-99">
+								</p:inputMask>
+							</h:panelGroup>
+						</p:column>
+					</ui:remove>
+					<p:column>
+						<p:outputLabel value="#{bundle['lbl.rg']}: " for="rg" />
+					</p:column>
+					<p:column>
+						<p:inputText id="rg"
+							value="#{moradorController.morador.pessoa.rg}" required="false"
+							label="RG" size="25" maxlength="25" styleClass="toUppercase" />
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+
+			<p:panelGrid columns="1" id="pnlExtraMorador" styleClass="layoutCadMorador">
+				<h:panelGroup width="100%">
+					<p:outputPanel autoUpdate="true">
+						<p:commandLink onclick="dlgAdicionarFone.show();"
+							id="adicionarTelefone" immediate="true" global="false">
+							<p:graphicImage value="../../resources/images/btns/add.png"
+								id="addTelefone" />
+							<span
+								style="margin-left: 5px; margin-top: 5px; position: absolute"><h:outputLabel
+									value="#{bundle['tit.add.telefone']}" /></span>
+						</p:commandLink>
+
+						<p:dataTable id="telefonesMorador"
+							value="#{moradorController.morador.telefones}" var="tel" rows="4"
+							emptyMessage="Sem telefones cadastrados para este morador!"
+							rowKey="#{tel.id}" style="width: 460px;"
+							styleClass="datatableHeaderPadrao2">
+							<f:facet name="header">
+								<h:outputLabel value="#{bundle['tit.telefones']}" />
+							</f:facet>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputLabel value="#{bundle['tit.numero']}" />
+								</f:facet>
+								<h:outputText value="#{tel.numero}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputLabel value="#{bundle['tit.tipo.telefone']}" />
+								</f:facet>
+								<h:outputText value="#{tel.tipoTelefone}" />
+							</p:column>
+							<p:column style="width:16px">
+								<p:commandLink onclick="dglRemoverTelefone.show()"
+									id="lnkRemoverTelefone" immediate="true" global="false">
+									<p:graphicImage value="../../resources/images/delete.png"
+										width="20px" height="20px" style="text-align:center;" />
+									<f:setPropertyActionListener
+										target="#{moradorController.telefone}" value="#{tel}" />
+								</p:commandLink>
+							</p:column>
+						</p:dataTable>
+						<br />
+
+						<p:commandLink onclick="dlgAdicionarAgregado.show();"
+							immediate="true" global="false">
+							<p:graphicImage value="../../resources/images/btns/add.png"
+								id="addAgregado" />
+							<span
+								style="margin-left: 5px; margin-top: 5px; position: absolute"><h:outputLabel
+									value="#{bundle['tit.add.agregados']}" /></span>
+						</p:commandLink>
+
+						<p:dataTable id="agregadosMorador"
+							value="#{moradorController.morador.agregados}" var="agr" rows="4"
+							rowKey="#{agr.id}"
+							emptyMessage="Sem agregados cadastrados para este morador!"
+							styleClass="datatableHeaderPadrao2"
+							rowStyleClass="#{agr.agregado.pessoa.ativo ? null : 'inativo'}"
+							style="width: 460px;">
+
+							<f:facet name="header">
+								<h:outputLabel value="#{bundle['tit.agregados']}" />
+							</f:facet>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputLabel value="#{bundle['tit.nome']}" />
+								</f:facet>
+								<h:outputText value="#{agr.agregado.pessoa.nome}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputLabel value="#{bundle['tit.data.nasc']}" />
+								</f:facet>
+								<h:outputText value="#{agr.agregado.pessoa.dataNascimento}">
+									<f:convertDateTime pattern="dd/MM/yyyy" />
+								</h:outputText>
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputLabel value="#{bundle['tit.parentesco']}" />
+								</f:facet>
+								<h:outputText value="#{agr.parentesco}" />
+							</p:column>
+							<p:column style="width:16px">
+								<p:commandLink onclick="dglRemoverAgregado.show()" ajax="true"
+									id="lnkRemoverAgregado" immediate="true" global="false">
+									<p:graphicImage value="../../resources/images/delete.png"
+										width="20px" height="20px" style="text-align:center;" />
+									<f:setPropertyActionListener
+										target="#{moradorController.agregado}" value="#{agr}" />
+								</p:commandLink>
+							</p:column>
+						</p:dataTable>
+
+					</p:outputPanel>
+				</h:panelGroup>
+			</p:panelGrid>
+
+			<p:panelGrid styleClass="layoutCadMorador">
+				<f:facet name="header">  
+			        #{bundle['tit.pnl.dad.endereco']}
+			    </f:facet>
+
+				<p:row>
+					<p:column>
+						<p:outputLabel value="#{bundle['lbl.bairro']}: " for="bairro"
+							styleClass="label_obr" />
+					</p:column>
+					<p:column>
+						<p:inputText id="bairro"
+							value="#{moradorController.morador.unidadeHabitacional[0].unidadeHabitacional.endereco.bairro}"
+							required="true" label="Bairro" size="40" maxlength="40"
+							requiredMessage="#{bundle['msg.informe.bairro.morador']}" />
+					</p:column>
+					<p:column>
+						<p:outputLabel value="#{bundle['lbl.logradouro']}: "
+							for="logradouro" styleClass="label_obr" />
+					</p:column>
+					<p:column>
+						<p:inputText id="logradouro"
+							value="#{moradorController.morador.unidadeHabitacional[0].unidadeHabitacional.endereco.logradouro}"
+							required="true" label="Logradouro" size="55" maxlength="70"
+							requiredMessage="#{bundle['msg.informe.logradouro.morador']}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel value="#{bundle['lbl.cidade']}: " for="cidade"
+							styleClass="label_obr" />
+					</p:column>
+					<p:column>
+						<p:inputText id="cidade"
+							value="#{moradorController.morador.unidadeHabitacional[0].unidadeHabitacional.endereco.cidade}"
+							required="true" label="Cidade" size="40" maxlength="40"
+							requiredMessage="#{bundle['msg.informe.cidade.morador']}" />
+					</p:column>
+					<p:column>
+						<p:outputLabel value="#{bundle['lbl.complemento']}: "
+							for="complemento" styleClass="label_obr" />
+					</p:column>
+					<p:column>
+						<p:inputText id="complemento"
+							value="#{moradorController.morador.unidadeHabitacional[0].unidadeHabitacional.complemento}"
+							label="Complemento" size="30" maxlength="30" />
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+
+			<p:panelGrid styleClass="layoutCadMorador">
+				<p:row>
+					<p:column>
+						<p:outputLabel value="#{bundle['lbl.numero']}: " for="numero"
+							styleClass="label_obr" />
+					</p:column>
+					<p:column>
+						<p:inputText id="numero"
+							value="#{moradorController.morador.unidadeHabitacional[0].unidadeHabitacional.numero}"
+							required="true" label="Numero" size="8" maxlength="8"
+							requiredMessage="#{bundle['msg.informe.numero.morador']}" />
+					</p:column>
+					<p:column>
+						<p:outputLabel value="#{bundle['lbl.estado']}: " for="estado"
+							styleClass="label_obr" />
+					</p:column>
+					<p:column>
+						<p:selectOneMenu
+							value="#{moradorController.morador.unidadeHabitacional[0].unidadeHabitacional.endereco.uf}"
+							id="estado" required="true" label="Estado" style="width: 100px;"
+							requiredMessage="#{bundle['msg.informe.estado.morador']}">
+							<f:selectItem itemLabel="#{bundle['select.selecione']}"
+								itemValue="" />
+							<f:selectItems value="#{moradorController.estados}" />
+						</p:selectOneMenu>
+					</p:column>
+					<p:column>
+						<p:outputLabel value="#{bundle['lbl.cep']}: " for="cep"
+							styleClass="label_obr" />
+					</p:column>
+					<p:column>
+						<p:inputMask id="cep" mask="99999-999"
+							value="#{moradorController.morador.unidadeHabitacional[0].unidadeHabitacional.endereco.cep}"
+							required="true" label="Cep" size="10" maxlength="10"
+							requiredMessage="#{bundle['msg.informe.cep.morador']}" />
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+
+			<p:panelGrid columns="2" styleClass="layoutCadMorador">
+				<p:commandButton value="#{bundle['btn.gravar']}" id="btnGravar"
+					action="#{moradorController.gravar}" update=":cadastroMoradorForm"
+					ajax="false"
+					rendered="#{moradorController.morador.pessoa.idPessoa == null || moradorController.morador.pessoa.idPessoa == 0}"
+					onclick="pageLoading.show();" oncomplete="pageLoading.hide();" />
+
+				<p:commandButton value="#{bundle['btn.alterar']}"
+					action="#{moradorController.alterar}" ajax="false"
+					update=":cadastroMoradorForm"
+					rendered="#{moradorController.morador.pessoa.idPessoa > 0 }"
+					onclick="pageLoading.show();" oncomplete="pageLoading.hide();" />
+
+				<p:commandButton value="#{bundle['btn.limpar']}"
+					action="#{moradorController.novoMorador}" ajax="true"
+					process="@this" update=":cadastroMoradorForm"
+					onclick="pageLoading.show();" oncomplete="pageLoading.hide();" />
+			</p:panelGrid>
+		</h:form>
+		<!--         </p:fieldset>   -->
+
+		<p:confirmDialog message="Remover Telefone?" header="Remover"
+			severity="alert" widgetVar="dglRemoverTelefone" modal="true"
+			closable="false">
+			<h:form>
+				<p:commandButton id="confirm" value="Sim"
+					oncomplete="dglRemoverTelefone.hide()"
+					action="#{moradorController.removerTelefone}">
+				</p:commandButton>
+				<ui:remove>
+					<p:commandButton id="confirm" value="Sim"
+						update=":cadastroMoradorForm"
+						oncomplete="dglRemoverTelefone.hide()"
+						action="#{moradorController.removerTelefone}">
+					</p:commandButton>
+				</ui:remove>
+				<p:commandButton id="decline" value="Não"
+					onclick="dglRemoverTelefone.hide()" immediate="true" global="false" />
+			</h:form>
+		</p:confirmDialog>
+
+		<p:confirmDialog message="Remover Agregado?" header="Remover"
+			severity="alert" widgetVar="dglRemoverAgregado" modal="true"
+			closable="false">
+			<h:form>
+				<p:commandButton id="confirm" value="Sim"
+					oncomplete="dglRemoverAgregado.hide()"
+					action="#{moradorController.removerAgregado}">
+				</p:commandButton>
+				<ui:remove>
+					<p:commandButton id="confirm" value="Sim"
+						update=":cadastroMoradorForm:pnlExtraMorador:agregadosMorador :cadastroMoradorForm:growlGeral"
+						oncomplete="dglRemoverAgregado.hide()"
+						action="#{moradorController.removerAgregado}">
+					</p:commandButton>
+				</ui:remove>
+				<p:commandButton id="decline" value="Não"
+					onclick="dglRemoverAgregado.hide()" immediate="true" global="false" />
+			</h:form>
+		</p:confirmDialog>
+
+		<ui:insert>
+			<ui:include src="../../dialogs/dialogAdicionarAgregado.xhtml" />
+			<ui:include src="../../dialogs/dialogAdicionarTelefone.xhtml" />
+		</ui:insert>
+
+		<h:panelGroup rendered="#{usuarioController.sistemaIsDemo}">
+			<h:panelGroup rendered="#{usuarioController.sistemaIsDemo}">
+				<script type="text/javascript">
+					disponivelNosPlanos(1, 1, 1, 1);
+				</script>
+			</h:panelGroup>
+		</h:panelGroup>
+	</ui:define>
+</ui:composition>

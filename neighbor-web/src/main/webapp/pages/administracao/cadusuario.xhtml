@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+	<ui:define name="content">
+		<h3>
+			<h:outputText value="#{bundle['tit.cadastro.usuario']}" />
+		</h3>
+		<h:form id="cadastroUsuarioForm">
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+
+			<h:inputHidden id="idUsuario"
+				value="#{usuarioController.usuario.pessoa.idPessoa}" />
+
+			<p:panelGrid styleClass="gridPadrao1">
+				<p:row>
+					<p:column>
+						<h:outputLabel value="#{bundle['tit.nome.usuario']}: " for="nome" />
+					</p:column>
+					<p:column>
+						<p:inputText id="nome"
+							value="#{usuarioController.usuario.pessoa.nome}"
+							styleClass="campo-onload toCapitalize" required="true"
+							label="Nome" size="60" maxlength="80" minLength="4"
+							requiredMessage="#{bundle['msg.informe.nome']}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<h:outputLabel value="#{bundle['tit.email.usuario']}: " for="mail" />
+					</p:column>
+					<p:column>
+						<p:inputText id="mail"
+							value="#{usuarioController.usuario.pessoa.mail}"
+							styleClass="campo-onload" required="true" label="E-mail"
+							size="60" maxlength="80" minLength="4"
+							requiredMessage="#{bundle['msg.email.requerido']}">
+							<f:validator
+								validatorId="br.com.lphantus.neighbor.component.validator.ValidatorEmail" />
+						</p:inputText>
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<h:panelGroup rendered="#{!usuarioController.sistemaIsDemo}">
+							<h:outputLabel value="#{bundle['lbl.cpf']}: " for="cpf1" />
+						</h:panelGroup>
+						<h:panelGroup rendered="#{usuarioController.sistemaIsDemo}">
+							<h:outputLabel value="#{bundle['lbl.cpf']}: " for="cpf2" />
+						</h:panelGroup>
+					</p:column>
+					<p:column>
+						<h:panelGroup rendered="#{!usuarioController.sistemaIsDemo}">
+							<p:inputMask id="cpf1"
+								value="#{usuarioController.usuario.pessoa.cpf}" required="true"
+								label="CPF" mask="999.999.999-99"
+								requiredMessage="#{bundle['msg.informe.cpf']}">
+								<f:validator
+									validatorId="br.com.lphantus.neighbor.component.validator.ValidatorCPF" />
+							</p:inputMask>
+						</h:panelGroup>
+						<h:panelGroup rendered="#{usuarioController.sistemaIsDemo}">
+							<p:inputMask id="cpf2"
+								value="#{usuarioController.usuario.pessoa.cpf}" required="true"
+								label="CPF" mask="999.999.999-99"
+								requiredMessage="#{bundle['msg.informe.cpf']}">
+							</p:inputMask>
+						</h:panelGroup>
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<h:outputLabel value="#{bundle['lbl.login']}: " for="login" />
+					</p:column>
+					<p:column>
+						<p:inputText id="login" value="#{usuarioController.usuario.login}"
+							size="40" label="Login" required="true" maxlength="30"
+							minLength="3" requiredMessage="#{bundle['msg.informe.login']}"
+							onkeyup="this.value = removerCaracteresEspeciais(this.value)" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<h:outputLabel value="#{bundle['lbl.senha']}: " for="senha" />
+					</p:column>
+					<p:column>
+						<p:password id="senha" value="#{usuarioController.usuario.senha}"
+							feedback="true"
+							required="#{usuarioController.usuario.pessoa.idPessoa == null || usuarioController.usuario.pessoa.idPessoa == 0}"
+							minLength="4" maxlength="20"
+							requiredMessage="#{bundle['msg.informe.senha']}"
+							goodLabel="Médio" strongLabel="forte" weakLabel="fraco"
+							promptLabel="Digite uma senha" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<h:outputLabel value="#{bundle['lbl.senha.conf']}: "
+							for="confirmacao" />
+					</p:column>
+					<p:column>
+						<p:password id="confirmacao"
+							value="#{usuarioController.senhaConfirmacao}" minLength="4"
+							maxlength="20" goodLabel="Médio" strongLabel="forte"
+							weakLabel="fraco" promptLabel="Digite uma senha" />
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+
+			<br />
+			<h:panelGrid columns="1" id="listaModulosAcesso">
+				<h:panelGroup width="100%">
+
+					<p:dataTable id="ModulosAcesso"
+						value="#{moduloAcessoController.modulosAcesso}" var="mo"
+						width="100%" rowKey="#{mo.idModuloAcesso}"
+						emptyMessage="#{bundle['msg.sem.modulos.acesso']}"
+						selection="#{usuarioController.usuario.moduloAcesso}"
+						styleClass="datatableHeaderPadrao2">
+
+						<f:facet name="header">
+							<h:outputText value="#{bundle['tit.modulos.acesso']}" />
+						</f:facet>
+
+						<p:column selectionMode="single" />
+
+						<p:column sortBy="#{mo.nome}">
+							<f:facet name="header">
+								<h:outputText value="#{bundle['lbl.nome']}" />
+							</f:facet>
+							<h:outputText value="#{mo.nome}" />
+						</p:column>
+						<p:column sortBy="#{mo.descricao}">
+							<f:facet name="header">
+								<h:outputText value="#{bundle['lbl.descricao']}" />
+							</f:facet>
+							<h:outputText value="#{mo.descricao}" />
+						</p:column>
+						<p:column style="width:16px">
+							<f:facet name="header">
+								<h:outputText value="#{bundle['tit.permissoes']}" />
+							</f:facet>
+							<p:rowToggler />
+						</p:column>
+						<p:rowExpansion>
+							<p:dataList value="#{mo.permissoesList}" var="pe" itemType="disc">  
+								    #{pe.label} -  #{pe.descricao}  
+								</p:dataList>
+						</p:rowExpansion>
+					</p:dataTable>
+				</h:panelGroup>
+			</h:panelGrid>
+			<br />
+			<h:panelGrid columns="2">
+				<p:commandButton value="#{bundle['btn.gravar']}"
+					actionListener="#{usuarioController.gravarUsuario}" ajax="true"
+					update=":cadastroUsuarioForm"
+					rendered="#{usuarioController.usuario.pessoa.idPessoa == null || usuarioController.usuario.pessoa.idPessoa == 0}"
+					onclick="pageLoading.show();" oncomplete="pageLoading.hide();" />
+				<p:commandButton value="#{bundle['btn.alterar']}"
+					actionListener="#{usuarioController.alterarUsuario}" ajax="true"
+					update=":cadastroUsuarioForm"
+					rendered="#{usuarioController.usuario.pessoa.idPessoa > 0 }"
+					onclick="pageLoading.show();" oncomplete="pageLoading.hide();" />
+				<p:commandButton value="#{bundle['btn.limpar']}"
+					action="#{usuarioController.novoUsuario}" ajax="true"
+					process="@this" update=":cadastroUsuarioForm"
+					onclick="pageLoading.show();" oncomplete="pageLoading.hide();" />
+			</h:panelGrid>
+		</h:form>
+
+		<!-- 	<ui:insert name="dialogsExtras" > -->
+		<!-- 		<ui:include src="../../dialogs/dialogUsuarioMorador.xhtml" /> -->
+		<!-- 	</ui:insert> -->
+		<h:panelGroup rendered="#{usuarioController.sistemaIsDemo}">
+			<script type="text/javascript">
+				disponivelNosPlanos(1, 1, 1, 1);
+			</script>
+		</h:panelGroup>
+	</ui:define>
+</ui:composition>

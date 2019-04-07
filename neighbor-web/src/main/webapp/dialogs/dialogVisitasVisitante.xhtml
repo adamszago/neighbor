@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+<body>
+	<ui:composition>
+
+		<p:dialog header="Visitas" widgetVar="dlgVerVisitas" width="900"
+			modal="true" resizable="false">
+			<h:form id="formVisitas">
+				<h:panelGrid>
+					<p:dataTable id="listaVisitas" scrollable="true" height="330"
+						var="visita"
+						emptyMessage="Sem visitas cadastradas para este visitante"
+						rowKey="#{visita.idVisitante}" paginator="true" rows="5"
+						value="#{visitanteController.visitante.visitasList}" effectSpeed="fast">
+
+						<p:column filterBy="morador.unidadeHabitacional[0].unidadeHabitacional.identificacao"
+							sortBy="morador.unidadeHabitacional[0].unidadeHabitacional.identificacao"
+							style="text-align: center">
+							<f:facet name="header">  
+	              				Casa  
+	      					</f:facet>
+							<h:outputText value="#{visita.morador.unidadeHabitacional[0].unidadeHabitacional.identificacao}" />
+						</p:column>
+
+						<p:column filterBy="morador.pessoa.nome" sortBy="morador.pessoa.nome" style="text-align: center">
+							<f:facet name="header">  
+	              				Morador  
+	      					</f:facet>
+							<h:outputText value="#{visita.morador.pessoa.nome}" />
+						</p:column>
+						<p:column filterBy="inicioVisita" sortBy="inicioVisita" style="text-align: center">
+							<f:facet name="header">  
+	              				Data  
+	      					</f:facet>
+							<h:outputText value="#{visita.inicioVisita}">
+								<f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="GMT-3" />
+							</h:outputText>
+						</p:column>
+						
+						<p:column sortBy="fimVisita" filterBy="fimVisita" style="text-align: center">
+							<f:facet name="header">  
+	              				Data Fim Visita
+	      					</f:facet>
+							<h:outputText value="#{visita.fimVisita}">
+								<f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="GMT-3" />
+							</h:outputText>
+						</p:column>
+
+					</p:dataTable>
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+	</ui:composition>
+</body>
+</html>

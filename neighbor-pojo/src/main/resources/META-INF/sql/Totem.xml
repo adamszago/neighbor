@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings version="2.0"
+	xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_1_0.xsd">
+
+	<named-query name="Totem.existeUsuarioCadastrado">
+		<query>
+			<![CDATA[
+				SELECT totem 
+				FROM Totem totem 
+				LEFT JOIN totem.agregado agregado 
+				LEFT JOIN totem.morador morador 
+				WHERE totem.ativo = true 
+				AND ( 
+					(morador IS NULL AND agregado.idPessoa = :idAgregado) 
+						OR 
+					(agregado IS NULL AND morador.idPessoa = :idMorador)
+				)
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Totem.buscarAgregadoTotem">
+		<query>
+			<![CDATA[
+				SELECT totem 
+				FROM Totem totem 
+				INNER JOIN totem.agregado agregado 
+				WHERE totem.ativo = true 
+				AND agregado.idPessoa = :idAgregado
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Totem.buscarMoradorTotem">
+		<query>
+			<![CDATA[
+				SELECT totem 
+				FROM Totem totem 
+				INNER JOIN totem.morador morador 
+				WHERE totem.ativo = true 
+				AND morador.idPessoa = :idMorador
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Totem.findAllAtivos">
+		<query>
+			<![CDATA[
+				SELECT totem 
+				FROM Totem totem 
+				WHERE totem.ativo = true 
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Totem.buscarTodosAtivosPorCondominio">
+		<query>
+			<![CDATA[
+				SELECT totem, morador.nome, unidade.identificacao 
+				FROM Totem totem 
+				INNER JOIN totem.morador morador 
+				INNER JOIN morador.unidadeHabitacional relacionamento 
+				INNER JOIN relacionamento.unidadeHabitacional unidade 
+				INNER JOIN unidade.condominio condominio 
+				WHERE (:idCondominio IS NULL OR condominio.idPessoa = :idCondominio) 
+				AND totem.ativo = true 
+				AND morador.ativo = true 
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Totem.buscarTodosAtivosPorCondominioAgregado">
+		<query>
+			<![CDATA[
+				SELECT totem, agregado.nome, unidade.identificacao 
+				FROM Totem totem 
+				INNER JOIN totem.agregado agregado 
+				INNER JOIN agregado.morador relacionamentoMorador 
+				INNER JOIN relacionamentoMorador.morador morador 
+				INNER JOIN morador.unidadeHabitacional relacionamento 
+				INNER JOIN relacionamento.unidadeHabitacional unidade 
+				INNER JOIN unidade.condominio condominio 
+				WHERE (:idCondominio IS NULL OR condominio.idPessoa = :idCondominio) 
+				AND totem.ativo = true 
+				AND agregado.ativo = true
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Totem.buscarMoradorSemTotemOuInativoPorCondominio">
+		<query>
+			<![CDATA[
+				SELECT totem, morador.nome, unidade.identificacao 
+				FROM Totem totem 
+				INNER JOIN totem.morador morador 
+				INNER JOIN morador.unidadeHabitacional relacionamento 
+				INNER JOIN relacionamento.unidadeHabitacional unidade 
+				INNER JOIN unidade.condominio condominio 
+				WHERE (:idCondominio IS NULL OR condominio.idPessoa = :idCondominio) 
+				AND totem.ativo = false 
+				and morador.ativo = true
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Totem.buscarMoradorSemTotemOuInativoPorCondominioSemTotem">
+		<query>
+			<![CDATA[
+				SELECT morador, unidade.identificacao 
+				FROM Morador morador 
+				INNER JOIN morador.unidadeHabitacional relacionamento 
+				INNER JOIN relacionamento.unidadeHabitacional unidade 
+				INNER JOIN unidade.condominio condominio 
+				WHERE (:idCondominio IS NULL OR condominio.idPessoa = :idCondominio) 
+				AND (morador.idPessoa 
+					NOT IN (
+						SELECT moradorTotem.idPessoa 
+						FROM Totem totem 
+				 		INNER JOIN totem.morador moradorTotem 
+				 	)
+				)
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Totem.buscarAgregadoSemTotemOuInativoPorCondominio">
+		<query>
+			<![CDATA[
+				SELECT totem, agregado.nome, unidade.identificacao 
+				FROM Totem totem 
+				INNER JOIN totem.agregado agregado 
+				INNER JOIN agregado.morador relacionamentoMorador 
+				INNER JOIN relacionamentoMorador.morador morador 
+				INNER JOIN morador.unidadeHabitacional relacionamento 
+				INNER JOIN relacionamento.unidadeHabitacional unidade 
+				INNER JOIN unidade.condominio condominio 
+				WHERE (:idCondominio IS NULL OR condominio.idPessoa = :idCondominio) 
+				AND totem.ativo = false 
+				AND morador.ativo = true 
+				AND relacionamentoMorador.dataFim IS NULL
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Totem.buscarAgregadoSemTotemOuInativoPorCondominioSemTotem">
+		<query>
+			<![CDATA[
+				SELECT agregado, unidade.identificacao 
+				FROM Agregado agregado 
+				INNER JOIN agregado.morador relacionamentoMorador 
+				INNER JOIN relacionamentoMorador.morador morador 
+				INNER JOIN morador.unidadeHabitacional relacionamento 
+				INNER JOIN relacionamento.unidadeHabitacional unidade 
+				INNER JOIN unidade.condominio condominio 
+				WHERE (:idCondominio IS NULL OR condominio.idPessoa = :idCondominio) 
+				AND (agregado.idPessoa 
+					NOT IN (
+						SELECT agregadoTotem.idPessoa 
+						FROM Totem totem 
+				 		INNER JOIN totem.agregado agregadoTotem 
+				 	)
+				) 
+				AND relacionamentoMorador.dataFim IS NULL
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Totem.buscarTodosAtivosPorMorador">
+		<query>
+			<![CDATA[
+				SELECT totem, morador.nome, unidade.identificacao 
+				FROM Totem totem 
+				INNER JOIN totem.morador morador 
+				INNER JOIN morador.unidadeHabitacional relacionamento 
+				INNER JOIN relacionamento.unidadeHabitacional unidade 
+				INNER JOIN unidade.condominio condominio 
+				WHERE (:idMorador IS NULL OR morador.idPessoa = :idMorador) 
+				AND totem.ativo = true 
+				AND morador.ativo = true
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Totem.buscarTodosAtivosPorMoradorAgregado">
+		<query>
+			<![CDATA[
+				SELECT totem, agregado.nome, unidade.identificacao 
+				FROM Totem totem 
+				INNER JOIN totem.agregado agregado 
+				INNER JOIN agregado.morador relacionamentoMorador 
+				INNER JOIN relacionamentoMorador.morador morador 
+				INNER JOIN morador.unidadeHabitacional relacionamento 
+				INNER JOIN relacionamento.unidadeHabitacional unidade 
+				INNER JOIN unidade.condominio condominio 
+				WHERE (:idMorador IS NULL OR morador.idPessoa = :idMorador) 
+				AND totem.ativo = true 
+				AND agregado.ativo = true 
+				AND relacionamentoMorador.dataFim IS NULL
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Totem.buscarMoradorSemTotemOuInativoPorMorador">
+		<query>
+			<![CDATA[
+				SELECT totem, morador.nome, unidade.identificacao 
+				FROM Totem totem 
+				INNER JOIN totem.morador morador 
+				INNER JOIN morador.unidadeHabitacional relacionamento 
+				INNER JOIN relacionamento.unidadeHabitacional unidade 
+				INNER JOIN unidade.condominio condominio 
+				WHERE (:idMorador IS NULL OR morador.idPessoa = :idMorador) 
+				AND totem.ativo = false 
+				and morador.ativo = true
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Totem.buscarMoradorSemTotemOuInativoPorMoradorSemTotem">
+		<query>
+			<![CDATA[
+				SELECT morador, unidade.identificacao 
+				FROM Morador morador 
+				INNER JOIN morador.unidadeHabitacional relacionamento 
+				INNER JOIN relacionamento.unidadeHabitacional unidade 
+				INNER JOIN unidade.condominio condominio 
+				WHERE (:idMorador IS NULL OR morador.idPessoa = :idMorador) 
+				AND (morador.idPessoa 
+					NOT IN (
+						SELECT moradorTotem.idPessoa 
+						FROM Totem totem 
+				 		INNER JOIN totem.morador moradorTotem 
+				 	)
+				)
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Totem.buscarAgregadoSemTotemOuInativoPorMorador">
+		<query>
+			<![CDATA[
+				SELECT totem, agregado.nome, unidade.identificacao 
+				FROM Totem totem 
+				INNER JOIN totem.agregado agregado 
+				INNER JOIN agregado.morador relacionamentoMorador 
+				INNER JOIN relacionamentoMorador.morador morador 
+				INNER JOIN morador.unidadeHabitacional relacionamento 
+				INNER JOIN relacionamento.unidadeHabitacional unidade 
+				INNER JOIN unidade.condominio condominio 
+				WHERE (:idMorador IS NULL OR morador.idPessoa = :idMorador) 
+				AND totem.ativo = false 
+				AND morador.ativo = true 
+				AND relacionamentoMorador.dataFim IS NULL
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Totem.buscarAgregadoSemTotemOuInativoPorMoradorSemTotem">
+		<query>
+			<![CDATA[
+				SELECT agregado, unidade.identificacao 
+				FROM Agregado agregado 
+				INNER JOIN agregado.morador relacionamentoMorador 
+				INNER JOIN relacionamentoMorador.morador morador 
+				INNER JOIN morador.unidadeHabitacional relacionamento 
+				INNER JOIN relacionamento.unidadeHabitacional unidade 
+				INNER JOIN unidade.condominio condominio 
+				WHERE (:idMorador IS NULL OR morador.idPessoa = :idMorador) 
+				AND (agregado.idPessoa 
+					NOT IN (
+						SELECT agregadoTotem.idPessoa 
+						FROM Totem totem 
+				 		INNER JOIN totem.agregado agregadoTotem 
+				 	)
+				) 
+				AND relacionamentoMorador.dataFim IS NULL
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Totem.duplicadoAgregado">
+		<query>
+			<![CDATA[
+				SELECT tt 
+				FROM Totem tt WHERE tt.agregado IN 
+					(SELECT totem.agregado FROM Totem totem 
+						WHERE totem.agregado IS NOT NULL 
+						GROUP BY totem.agregado HAVING COUNT(totem) > 1 )
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Totem.duplicadoMorador">
+		<query>
+			<![CDATA[
+				SELECT tt 
+				FROM Totem tt WHERE tt.morador IN 
+					(SELECT totem.morador FROM Totem totem 
+						WHERE totem.morador IS NOT NULL 
+						GROUP BY totem.morador HAVING COUNT(totem) > 1 )
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Totem.duplicadoVisitante">
+		<query>
+			<![CDATA[
+				SELECT tt 
+				FROM Totem tt WHERE tt.visitante IN 
+					(SELECT totem.visitante FROM Totem totem 
+						WHERE totem.visitante IS NOT NULL 
+						GROUP BY totem.visitante HAVING COUNT(totem) > 1 )
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Totem.duplicadoPrestador">
+		<query>
+			<![CDATA[
+				SELECT tt 
+				FROM Totem tt WHERE tt.prestador IN 
+					(SELECT totem.prestador FROM Totem totem 
+						WHERE totem.prestador IS NOT NULL 
+						GROUP BY totem.prestador HAVING COUNT(totem) > 1 )
+			]]>
+		</query>
+	</named-query>
+
+</entity-mappings>

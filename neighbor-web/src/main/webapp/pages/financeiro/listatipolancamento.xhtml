@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<ui:define name="content">
+		<h3>
+			<h:outputText value="#{bundle['tit.tipo.lancamento']}" />
+		</h3>
+
+		<h:form id="listagemForm" styleClass="innerContentFix">
+
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+
+
+			<p:dataTable var="lancamentoTipo"
+				value="#{lancamentoTipoController.entities}" paginator="true"
+				rows="10" emptyMessage="Sem Tipos de Lançamentos Cadastradas">
+
+				<p:column sortBy="nome"
+					filterBy="nome">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.nome']}" />
+					</f:facet>
+					<h:outputText value="#{lancamentoTipo.nome}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.descricao']}" />
+					</f:facet>
+					<h:outputText value="#{lancamentoTipo.descricao}" />
+				</p:column>
+
+				<p:column style="width:50px;">
+					<h:commandLink id="editarLancamentoTipo" immediate="true"
+						onclick="pageLoading.show();" oncomplete="pageLoading.hide();"
+						action="#{totemController.showDialogCadastrar}">
+						<p:graphicImage value="../../resources/images/edit1.png"
+							style="text-align:center;" />
+						<f:setPropertyActionListener
+							target="#{lancamentoTipoController.entity}"
+							value="#{lancamentoTipo}" />
+					</h:commandLink>
+					<p:tooltip for="editarLancamentoTipo"
+						value="Editar Tipo Lançamento" />
+				</p:column>
+
+			</p:dataTable>
+		</h:form>
+		<h:panelGroup rendered="#{usuarioController.sistemaIsDemo}">
+			<script type="text/javascript">
+				disponivelNosPlanos(0, 0, 0, 1);
+			</script>
+		</h:panelGroup>
+	</ui:define>
+</ui:composition>

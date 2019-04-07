@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+	<ui:define name="content">
+		<h3>
+			<h:outputText value="#{bundle['tit.duplicatas.baixa']}" />
+		</h3>
+
+		<h:form id="cadastroForm">
+
+			<style>
+.content form table td label {
+	float: left !important;
+	width: 50px;
+}
+
+.layoutCadMorador td {
+	padding: 7px;
+	border: none;
+}
+
+.layoutCadMorador tr {
+	border: none;
+}
+</style>
+
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+
+			<p:panelGrid styleClass="layoutCadMorador">
+				<p:row>
+					<p:column>
+						<p:outputLabel value="#{bundle['lbl.carteira']}: " for="carteira"
+							styleClass="label_obr" />
+					</p:column>
+					<p:column>
+						<p:selectOneMenu id="carteira"
+							value="#{movimentacaoController.entity.carteira}"
+							converter="carteiraConverter" style="width: 166px;">
+							<f:selectItem itemLabel="#{bundle['select.selecione']}"
+								itemValue="" />
+							<f:selectItems value="#{movimentacaoController.carteiras}"
+								var="carteira" itemLabel="#{carteira.nome}"
+								itemValue="#{carteira}" />
+						</p:selectOneMenu>
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel value="#{bundle['lbl.movimentacao.data']}: "
+							for="dataLancamento" styleClass="label_obr" />
+					</p:column>
+					<p:column>
+						<p:calendar id="dataLancamento"
+							value="#{movimentacaoController.entity.dataMovimentacao}"
+							navigator="true" mindate="1/1/1930" maxdate="1/1/2030"
+							locale="pt" pattern="dd/MM/yyyy" readonlyInput="true" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel value="#{bundle['lbl.movimentacao.valor']}: "
+							for="valor" styleClass="label_obr" />
+					</p:column>
+					<p:column>
+						<p:inputText id="valor" disabled="true"
+							value="#{movimentacaoController.entity.valor}">
+							<f:converter converterId="moneyConverter" />
+						</p:inputText>
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+			<p:panelGrid styleClass="layoutCadMorador">
+				<p:row>
+					<p:column>
+						<h:outputText value="#{bundle['lbl.duplicata.parcelas']}: "
+							styleClass="label_obr" />
+					</p:column>
+					<p:column>
+						<p:dataTable id="parcelas" var="parcela" selectionMode="single"
+							selection="#{movimentacaoController.parcelaBaixa}"
+							value="#{movimentacaoController.parcelaModelo}" paginator="true"
+							rows="5">
+
+							<p:ajax event="rowSelect"
+								listener="#{movimentacaoController.onRowSelect}"
+								update=":cadastroForm:growlGeral :cadastroForm:valor" />
+							<p:ajax event="rowUnselect"
+								listener="#{movimentacaoController.onRowUnselect}"
+								update=":cadastroForm:growlGeral :cadastroForm:valor" />
+
+
+							<p:column headerText="#{bundle['lbl.parcela.numero']}"
+								filterBy="numeroParcela">  
+					            #{parcela.numeroParcela}
+					        </p:column>
+							<p:column headerText="#{bundle['lbl.data.pagamento']}"
+								filterBy="dataPagamento">
+								<h:outputText value="#{parcela.dataPagamento}">
+									<f:convertDateTime pattern="dd/MM/YYYY" />
+								</h:outputText>
+							</p:column>
+							<p:column headerText="#{bundle['lbl.vencto.limite']}"
+								filterBy="dataLimiteVencto">
+								<h:outputText value="#{parcela.dataLimiteVencto}">
+									<f:convertDateTime pattern="dd/MM/YYYY" />
+								</h:outputText>
+							</p:column>
+							<p:column headerText="#{bundle['lbl.duplicata.mora.recbtos_']}">
+								<h:outputText value="#{parcela.moraOutrosRecebimentos}">
+									<f:convertNumber pattern="R$ #,##0.00" />
+								</h:outputText>
+							</p:column>
+							<p:column headerText="#{bundle['lbl.duplicata.multa.vencto_']}">
+								<h:outputText value="#{parcela.multaVencimento}">
+									<f:convertNumber pattern="R$ #,##0.00" />
+								</h:outputText>
+							</p:column>
+							<p:column headerText="#{bundle['lbl.duplicata.taxa.dia_']}">
+								<h:outputText value="#{parcela.taxaDia}">
+									<f:convertNumber pattern="R$ #,##0.00" />
+								</h:outputText>
+							</p:column>
+							<p:column headerText="#{bundle['lbl.duplicata.desc_']}">
+								<h:outputText value="#{parcela.desconto}">
+									<f:convertNumber pattern="R$ #,##0.00" />
+								</h:outputText>
+							</p:column>
+							<p:column headerText="#{bundle['lbl.duplicata.abat_']}">
+								<h:outputText value="#{parcela.abatimento}">
+									<f:convertNumber pattern="R$ #,##0.00" />
+								</h:outputText>
+							</p:column>
+						</p:dataTable>
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+
+			<p:panelGrid styleClass="layoutCadMorador" columns="1">
+				<p:commandButton value="#{bundle['btn.confirmar']}" id="btnGravar"
+					action="#{movimentacaoController.finalizarBaixa}" ajax="false"
+					update=":cadastroForm" onclick="pageLoading.show();"
+					oncomplete="pageLoading.hide();" />
+			</p:panelGrid>
+		</h:form>
+
+	</ui:define>
+</ui:composition>

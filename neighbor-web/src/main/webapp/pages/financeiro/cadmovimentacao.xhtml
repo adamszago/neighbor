@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<ui:define name="content">
+		<h3>
+			<h:outputText value="#{bundle['tit.movimentacao.cadastro']}" />
+		</h3>
+
+		<h:form id="cadastroForm" prependId="false">
+
+			<style>
+				.content form table td label {
+					float: left !important;
+				}
+				
+				.layoutCadMorador td {
+					padding: 7px;
+					border: none;
+				}
+	
+				.layoutCadMorador tr {
+					border: none;
+				}
+			</style>
+
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+
+			<p:panelGrid styleClass="layoutCadMorador">
+				<p:row>
+					<p:column>
+						<p:outputLabel value="#{bundle['lbl.movimentacao.data']}: "
+							for="dataMovimento" />
+					</p:column>
+					<p:column>
+						<p:calendar id="dataMovimento"
+							value="#{movimentacaoController.entity.dataMovimentacao}"
+							navigator="true" mindate="1/1/1930" maxdate="1/1/2030"
+							locale="pt" pattern="dd/MM/yyyy" readonlyInput="true" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel value="#{bundle['lbl.movimentacao.texto']}: "
+							for="nomeMovimento" />
+					</p:column>
+					<p:column>
+						<p:inputText id="nomeMovimento"
+							value="#{movimentacaoController.entity.textoLivre}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel value="#{bundle['lbl.tipo.valor']}: "
+							for="cmbTipoMovimento" />
+					</p:column>
+					<p:column>
+						<p:selectOneMenu value="#{movimentacaoController.tipoMovimento}"
+							id="cmbTipoMovimento" required="true"
+							requiredMessage="#{bundle['msg.sel.tipo.morador']}"
+							style="width: 166px;" disabled="true">
+							<f:selectItem itemLabel="#{bundle['select.selecione']}"
+								itemValue="" />
+							<f:selectItem itemLabel="#{bundle['select.tipo.valor.entrada']}"
+								itemValue="IN" />
+							<f:selectItem itemLabel="#{bundle['select.tipo.valor.saida']}"
+								itemValue="OUT" />
+						</p:selectOneMenu>
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel value="#{bundle['lbl.lancamento.valor']}: "
+							for="valorMovimento" styleClass="label_obr" />
+					</p:column>
+					<p:column>
+						<p:inputText id="valorMovimento" converter="moneyConverter"
+							value="#{movimentacaoController.entity.valor}" disabled="true" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel value="#{bundle['lbl.carteira']}: " for="carteira"
+							styleClass="label_obr" />
+					</p:column>
+					<p:column>
+						<p:selectOneMenu id="carteira"
+							value="#{movimentacaoController.entity.carteira}"
+							converter="carteiraConverter" style="width: 166px;">
+							<f:selectItem itemLabel="#{bundle['select.selecione']}"
+								itemValue="" />
+							<f:selectItems value="#{movimentacaoController.carteiras}"
+								var="carteira" itemLabel="#{carteira.nome}"
+								itemValue="#{carteira}" />
+						</p:selectOneMenu>
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+
+			<p:panelGrid id="pgNovoRateio" styleClass="layoutCadMorador">
+				<p:row>
+					<p:column>
+						<p:outputLabel value="#{bundle['lbl.movimentacao.rateio.tipo']}: "
+							for="cmbTipoRateio" />
+					</p:column>
+					<p:column>
+						<p:selectOneMenu value="#{movimentacaoController.tipoRateio}"
+							id="cmbTipoRateio" style="width: 166px;">
+							<f:selectItem itemLabel="#{bundle['select.selecione']}"
+								itemValue="" />
+							<f:selectItem
+								itemLabel="#{bundle['select.tipo.rateio.percentual']}"
+								itemValue="PERC" />
+							<f:selectItem itemLabel="#{bundle['select.tipo.rateio.valor']}"
+								itemValue="FIXO" />
+							<p:ajax event="change" update="pgNovoRateio" />
+						</p:selectOneMenu>
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel id="lblRateioInputVlr"
+							value="#{bundle['lbl.movimentacao.rateio.valor']}: "
+							rendered="#{movimentacaoController.tipoRateio == 'FIXO'}"
+							for="rateioInputVlr" styleClass="label_obr" />
+						<p:outputLabel id="lblRateioInputPer"
+							value="#{bundle['lbl.movimentacao.rateio.percentual']}: "
+							rendered="#{movimentacaoController.tipoRateio == 'PERC'}"
+							for="rateioInputPer" styleClass="label_obr" />
+					</p:column>
+					<p:column>
+						<p:inputText id="rateioInputVlr"
+							value="#{movimentacaoController.rateio.valor}"
+							rendered="#{movimentacaoController.tipoRateio == 'FIXO'}" />
+						<p:inputText id="rateioInputPer"
+							value="#{movimentacaoController.percentual}"
+							rendered="#{movimentacaoController.tipoRateio == 'PERC'}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<h:outputText value="#{bundle['lbl.centro.custo']}: " />
+					</p:column>
+					<p:column>
+						<p:tree id="centro" var="node"
+							value="#{movimentacaoController.treeRootCentrosCusto}"
+							selectionMode="single"
+							selection="#{movimentacaoController.nodeCentroCustoSelecionado}">
+							<p:treeNode>
+								<h:outputText value="#{node}" id="lblNode" />
+							</p:treeNode>
+						</p:tree>
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column style="align:right" colspan="2">
+						<p:commandButton value="#{bundle['btn.gerar']}" id="btnGerar"
+							action="#{movimentacaoController.geraRateio}" ajax="true"
+							update=":cadastroForm" onclick="pageLoading.show();"
+							oncomplete="pageLoading.hide();" />
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+
+			<p:panelGrid styleClass="layoutCadMorador">
+				<p:row>
+					<p:column>
+						<p:dataTable id="rateios" var="rateio"
+							value="#{movimentacaoController.listaRateios}" paginator="true"
+							rows="5">
+
+							<p:column headerText="#{bundle['lbl.centro.custo']}"
+								filterBy="centroCusto">  
+					            #{rateio.centroCusto}
+					        </p:column>
+
+							<p:column headerText="#{bundle['lbl.movimentacao.rateio.valor']}"
+								filterBy="valor">  
+					            #{rateio.valor}
+					        </p:column>
+
+						</p:dataTable>
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+
+			<p:panelGrid columns="2" styleClass="layoutCadMorador">
+				<p:commandButton value="#{bundle['btn.alterar']}"
+					action="#{movimentacaoController.alterar}" ajax="false"
+					update=":cadastroForm"
+					rendered="#{movimentacaoController.alteracao}"
+					onclick="pageLoading.show();" oncomplete="pageLoading.hide();">
+				</p:commandButton>
+			</p:panelGrid>
+		</h:form>
+
+		<script>
+			jQuery(document).ready(function() {
+				aplicaMascaraMonetaria("#valorMovimento");
+				aplicaMascaraMonetaria("#rateioInputVlr");
+			});
+		</script>
+
+	</ui:define>
+</ui:composition>

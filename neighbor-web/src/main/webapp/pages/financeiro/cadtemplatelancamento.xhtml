@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+	<ui:define name="content">
+		<h3>
+			<h:outputText value="#{bundle['tit.lancamento.cadastro.automatico']}" />
+		</h3>
+
+		<h:form id="cadastroForm" prependId="false">
+
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+
+			<h:panelGroup>
+				<h:outputLabel value="#{bundle['lbl.sindico.msg.todos']}" />
+				<h:panelGrid columns="2">
+					<p:outputLabel value="#{bundle['lbl.casas']}: " for="numCasas"
+						styleClass="label_obr" />
+					<h:inputText id="numCasas"
+						value="#{templateLancamentoController.casas}">
+						<p:ajax event="change"
+							listener="#{templateLancamentoController.carregarListaMoradoresEvento}"
+							update="pessoas" />
+					</h:inputText>
+
+					<p:outputLabel value="#{bundle['lbl.blocos']}: " for="numBlocos"
+						styleClass="label_obr"
+						rendered="#{usuarioController.userLogado.condominio.possuiBloco}" />
+					<h:inputText id="numBlocos"
+						value="#{templateLancamentoController.blocos}"
+						rendered="#{usuarioController.userLogado.condominio.possuiBloco}">
+						<p:ajax event="change"
+							listener="#{templateLancamentoController.carregarListaMoradoresEvento}"
+							update="pessoas" />
+					</h:inputText>
+				</h:panelGrid>
+				<div style="width: 600px">
+					<p:dataTable id="pessoas" var="morador"
+						value="#{templateLancamentoController.pessoas}" paginator="true"
+						rows="5">
+
+						<p:column headerText="#{bundle['lbl.cpf']}">  
+			            #{morador.pessoa.cpf}
+			        </p:column>
+
+						<p:column headerText="#{bundle['lbl.nome']}">
+			            #{morador.pessoa.nome}
+			        </p:column>
+					</p:dataTable>
+				</div>
+				<h:panelGrid columns="2">
+					<p:outputLabel value="#{bundle['lbl.lancamento.nome']}: "
+						for="nomeLancamento" styleClass="label_obr" />
+					<p:inputText id="nomeLancamento"
+						value="#{templateLancamentoController.template.nome}" />
+
+					<p:outputLabel value="#{bundle['lbl.lancamento.valor']}: "
+						for="valorLancamento" styleClass="label_obr" />
+					<p:inputText id="valorLancamento" converter="moneyConverter"
+						value="#{templateLancamentoController.template.valor}" />
+
+					<p:outputLabel value="#{bundle['lbl.lancamento.observacao']}: "
+						for="obsLancamento" styleClass="label_obr" />
+					<p:inputTextarea id="obsLancamento" rows="5" cols="30"
+						counter="counter"
+						value="#{templateLancamentoController.template.obs}"
+						maxlength="200" counterTemplate="{0} caracteres restantes."
+						autoResize="false" />
+
+					<h:outputText id="nada" />
+					<h:outputText id="counter" />
+
+					<p:outputLabel value="#{bundle['lbl.lancamento.repeticao']}: "
+						for="tipoRepeticao" styleClass="label_obr" />
+					<p:selectOneMenu id="tipoRepeticao"
+						value="#{templateLancamentoController.template.repeticao}"
+						required="true" style="width:100px"
+						requiredMessage="#{bundle['msg.informe.template.repeticao']}">
+						<f:selectItem itemLabel="#{bundle['select.selecione']}"
+							itemValue="" />
+						<f:selectItem itemLabel="Diária" itemValue="1" />
+						<f:selectItem itemLabel="Semanal" itemValue="2" />
+						<f:selectItem itemLabel="Mensal" itemValue="3" />
+						<f:selectItem itemLabel="Semestral" itemValue="4" />
+						<f:selectItem itemLabel="Anual" itemValue="5" />
+					</p:selectOneMenu>
+
+					<p:outputLabel
+						value="#{bundle['lbl.lancamento.repeticao.parametro']}: "
+						for="paramRepeticao" styleClass="label_obr" />
+					<p:calendar id="paramRepeticao"
+						value="#{templateLancamentoController.template.paramRepeticao}"
+						navigator="true" mindate="1/1/1930" maxdate="1/1/2030" locale="pt"
+						pattern="dd/MM/yyyy" readonlyInput="true" />
+
+					<h:outputText value="#{bundle['lbl.centro.custo']}: "
+						styleClass="label_obr"
+						rendered="#{templateLancamentoController.existeCentroCustoLancavel}" />
+					<p:tree id="centro" var="node"
+						value="#{templateLancamentoController.treeRootCentrosCusto}"
+						selectionMode="single"
+						rendered="#{templateLancamentoController.existeCentroCustoLancavel}"
+						selection="#{templateLancamentoController.nodeCentroCustoSelecionado}">
+						<p:treeNode>
+							<h:outputText value="#{node}" id="lblNode" />
+						</p:treeNode>
+					</p:tree>
+				</h:panelGrid>
+				<h:outputLabel value="#{bundle['msg.ctrl.clique']}"
+					rendered="#{templateLancamentoController.existeCentroCustoLancavel}" />
+
+				<br />
+				<br />
+
+				<h:panelGrid styleClass="layoutCadMorador" columns="2">
+					<p:commandButton value="#{bundle['btn.gravar']}" id="btnGravar"
+						action="#{templateLancamentoController.gravarTemplateReceber}"
+						ajax="true" update="growlGeral"
+						rendered="#{templateLancamentoController.template.id == null || templateLancamentoController.template.id == 0}"
+						onclick="pageLoading.show();" oncomplete="pageLoading.hide();" />
+
+					<p:commandButton value="#{bundle['btn.alterar']}"
+						action="#{templateLancamentoController.alterarTemplate}"
+						ajax="false"
+						rendered="#{templateLancamentoController.template.id > 0}"
+						update=":cadastroForm" onclick="pageLoading.show();"
+						oncomplete="pageLoading.hide();" />
+
+					<p:commandButton value="#{bundle['btn.limpar']}"
+						action="#{templateLancamentoController.limparObjetoTemplate}"
+						ajax="true" process="@this" onclick="pageLoading.show();"
+						update=":cadastroForm" oncomplete="pageLoading.hide();" />
+				</h:panelGrid>
+			</h:panelGroup>
+		</h:form>
+
+		<script>
+			jQuery(document).ready(function() {
+				aplicaMascaraMonetaria("#valorLancamento");
+			});
+		</script>
+
+	</ui:define>
+</ui:composition>

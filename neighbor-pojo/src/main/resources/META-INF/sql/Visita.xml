@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings version="2.0"
+	xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_1_0.xsd">
+
+	<named-query name="Visita.buscaVisitasAtivasConfirmadasByMorador">
+		<query>
+			<![CDATA[
+				SELECT v 
+				FROM Visita v
+				INNER JOIN v.morador morador
+				INNER JOIN v.visitante visitante 
+				WHERE v.ativa = true 
+				AND v.confirmado = true
+				AND morador.idPessoa = :idMorador
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Visita.buscaVisitasAgendadasByMorador">
+		<query>
+			<![CDATA[
+				SELECT v 
+				FROM Visita v
+				INNER JOIN v.visitante visitante
+				INNER JOIN v.morador morador
+				WHERE v.ativa = true 
+				AND v.confirmado = false
+				AND morador.idPessoa = :idMorador
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Visita.buscaVisitasAgendadas">
+		<query>
+			<![CDATA[
+				SELECT v 
+				FROM Visita v
+				INNER JOIN v.morador morador
+				INNER JOIN v.visitante visitante
+				WHERE v.ativa = true 
+				AND v.confirmado = false
+				AND v.inicioAgendamentoVisita >= CURRENT_DATE
+				AND (:condominio IS NULL OR morador.condominio = :condominio)
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Visita.buscaVisitasByMorador">
+		<query>
+			<![CDATA[
+				SELECT v 
+				FROM Visita v
+				INNER JOIN v.morador morador
+				INNER JOIN v.visitante visitante
+				WHERE morador.idPessoa = :idMorador
+			]]>
+		</query>
+	</named-query>
+
+</entity-mappings>

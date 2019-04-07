@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+<body>
+	<ui:composition>
+		<p:dialog header="Mensagens Morador" widgetVar="dlgLerMensagemMorador"
+			modal="true" resizable="false" width="500">
+			<h:form id="formLerMensagemMorador">
+				<h:panelGrid columns="2">
+					<h:outputLabel value="De:" for="de" styleClass="font-weight:bold;" />
+					<h:outputText
+						value="#{moradorPageController.mensagem.remetente.pessoa.nome}"
+						id="de" />
+					<h:outputLabel value="Para:" for="destinatario"
+						styleClass="font-weight:bold;" />
+					<h:outputText
+						value="#{moradorPageController.mensagem.destinatario.pessoa.nome}"
+						id="destinatario" />
+					<h:outputLabel value="Assunto:" for="assunto"
+						styleClass="font-weight:bold;" />
+					<h:outputText value="#{moradorPageController.mensagem.assunto}"
+						id="assunto" />
+					<h:outputLabel value="Mensagem:" for="mensagem"
+						styleClass="font-weight:bold;" />
+					<h:panelGroup styleClass="corpoMesagem">
+						<h:outputText value="#{moradorPageController.mensagem.mensagem}"
+							readonly="true" id="mensagem" />
+					</h:panelGroup>
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+	</ui:composition>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<body>
+	<ui:composition>
+		<p:dialog header="Agregado" widgetVar="dlgAgregadoTotem" modal="true"
+			resizable="false" width="500" onHide="pageLoading.hide();">
+			<h:form id="formAgregadoTotem">
+				<h:panelGrid id="panelGridAgregadoTotem" columns="2">
+					<h:panelGroup>
+						<h:inputHidden value="#{totemController.totem.id}" />
+						<h:outputLabel value="Nome : " />
+					</h:panelGroup>
+					<p:inputText value="#{totemController.agregado.pessoa.nome}"
+						size="45" maxlength="50" styleClass="toCapitalize" readonly="true" />
+					<h:outputLabel value="Senha : " />
+					<p:password value="#{totemController.senha}" size="10"
+						maxlength="4" styleClass="toCapitalize" feedback="true">
+						<f:convertNumber integerOnly="true" minIntegerDigits="4"
+							maxIntegerDigits="4" />
+					</p:password>
+					<h:outputLabel value="Confirmar Senha : " />
+					<p:password value="#{totemController.confirmarSenha}" size="10"
+						maxlength="4" styleClass="toCapitalize">
+						<f:convertNumber integerOnly="true" minIntegerDigits="1"
+							maxIntegerDigits="4" />
+					</p:password>
+				</h:panelGrid>
+				<p:commandButton value="Confirmar"
+					actionListener="#{totemController.gravarAgregado}" ajax="true"
+					onclick="pageLoading.show();"
+					oncomplete="handleIncludeAgregadoTotemRequest(args);"
+					update=":listagemForm:growlGeral :listagemForm" />
+			</h:form>
+			<script type="text/javascript">
+				function handleIncludeAgregadoTotemRequest(args) {
+					if (args.resultOk) {
+						dlgAgregadoTotem.hide();
+					} else {
+					}
+				}
+			</script>
+		</p:dialog>
+	</ui:composition>
+</body>
+</html>

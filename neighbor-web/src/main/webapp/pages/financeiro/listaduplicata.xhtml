@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<ui:define name="content">
+		<h:form id="listagemForm" styleClass="innerContentFix">
+
+			<style>
+				.selectOneRadioColumn td {
+					border: none !important;
+				}
+			</style>
+
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+
+			<p:dataTable id="listaDuplicata" var="duplicata"
+				value="#{duplicataController.entities}" paginator="true" rows="10"
+				emptyMessage="#{bundle['msg.sem.registros.cadastrados']}">
+
+				<f:facet name="header">
+					<h:outputText value="#{bundle['tit.duplicatas.cadastro']}" />
+				</f:facet>
+
+				<p:column>
+					<h:selectOneRadio
+						valueChangeListener="#{duplicataController.itemSelecionado}"
+						onclick="dataTableSelectOneRadio(this);"
+						styleClass="selectOneRadioColumn">
+						<f:selectItem itemValue="null" />
+					</h:selectOneRadio>
+				</p:column>
+				<p:column sortBy="#{duplicata.fatura.lancamentos[0].pessoa.nome}"
+					filterBy="fatura.lancamentos[0].pessoa.nome">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.pessoa']}" />
+					</f:facet>
+					<h:outputText
+						value="#{duplicata.fatura.lancamentos[0].pessoa.nome}" />
+				</p:column>
+				<p:column style="text-align: right;">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.valor']}" />
+					</f:facet>
+					<h:outputText id="campoValor" value="#{duplicata.fatura.valor}">
+						<f:converter converterId="moneyConverter" />
+					</h:outputText>
+				</p:column>
+				<p:column style="text-align: right;">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.valor.pago']}" />
+					</f:facet>
+					<h:outputText id="campoValorPago" value="#{duplicata.valorPago}">
+						<f:converter converterId="moneyConverter" />
+					</h:outputText>
+				</p:column>
+				<p:column style="width:50px;">
+					<h:commandLink id="editarDuplicata" immediate="true"
+						action="#{duplicataController.editarDuplicata}"
+						onclick="pageLoading.show();" oncomplete="pageLoading.hide();">
+						<p:graphicImage value="../../resources/images/edit1.png"
+							style="text-align:center;" />
+						<f:setPropertyActionListener
+							target="#{duplicataController.entity}" value="#{duplicata}" />
+					</h:commandLink>
+					<p:tooltip for="editarDuplicata" value="Editar Duplicata" />
+				</p:column>
+			</p:dataTable>
+
+			<p:toolbar>
+				<p:toolbarGroup align="left">
+					<p:commandButton value="#{bundle['btn.novo']}"
+						icon="ui-icon-document"
+						action="#{duplicataController.pageCadastroDuplicata}" ajax="false"
+						immediate="true">
+					</p:commandButton>
+					<p:menuButton value="#{bundle['btn.duplicata.boletos']}">
+						<p:menuitem value="#{bundle['btn.duplicata.boletos.gerar']}"
+							id="btnGerarBoleto" action="#{duplicataController.gerarBoleto}"
+							ajax="false" update=":listagemForm" onclick="pageLoading.show();"
+							oncomplete="pageLoading.hide();" />
+						<p:menuitem value="#{bundle['btn.duplicata.boletos.gerar.todos']}"
+							id="btnGerarTodos" onclick="pageLoading.show();"
+							update=":listagemForm"
+							oncomplete="pageLoading.hide();dlgGerar.show();"
+							rendered="#{duplicataController.existemNaoAssociados}" />
+					</p:menuButton>
+					<p:commandButton value="#{bundle['btn.duplicata.baixa']}"
+						action="#{duplicataController.baixa}" ajax="false"
+						update=":listagemForm" onclick="pageLoading.show();"
+						oncomplete="pageLoading.hide();" />
+				</p:toolbarGroup>
+			</p:toolbar>
+		</h:form>
+
+		<p:confirmDialog header="#{bundle['tit.boletos.gerar']}"
+			severity="alert" widgetVar="dlgGerar" modal="true" closable="true"
+			message="#{bundle['msg.gera.boletos']}">
+			<h:form target="_blank">
+
+				<p:panelGrid styleClass="layoutCadMorador">
+					<p:row>
+						<p:column>
+							<p:outputLabel value="#{bundle['lbl.carteira']}: " for="carteira"
+								styleClass="label_obr" />
+						</p:column>
+						<p:column>
+							<p:selectOneMenu id="carteira"
+								value="#{duplicataController.carteiraBoleto}"
+								converter="carteiraConverter" style="width: 166px;">
+								<f:selectItem itemLabel="#{bundle['select.selecione']}"
+									itemValue="" />
+								<f:selectItems value="#{duplicataController.carteiras}"
+									var="carteira" itemLabel="#{carteira.nome}"
+									itemValue="#{carteira}" />
+							</p:selectOneMenu>
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+
+				<p:commandButton id="confirm" value="#{bundle['btn.sim']}"
+					ajax="false" action="#{duplicataController.gerarTodosBoletos}"
+					update=":listagemForm"
+					onclick="dlgGerar.hide(); window[1].location.assign(window.location + 'pages/financeiro/listaduplicata.jsf');" />
+				<p:commandButton id="decline" value="#{bundle['btn.nao']}"
+					oncomplete="dlgGerar.hide()" update=":listagemForm:growlGeral" />
+			</h:form>
+		</p:confirmDialog>
+
+		<h:panelGroup rendered="#{usuarioController.sistemaIsDemo}">
+			<script type="text/javascript">
+				disponivelNosPlanos(0, 0, 0, 1);
+			</script>
+		</h:panelGroup>
+	</ui:define>
+</ui:composition>

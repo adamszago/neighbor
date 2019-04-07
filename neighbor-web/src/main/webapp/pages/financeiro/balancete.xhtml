@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<ui:define name="content">
+		<style>
+			.selectStatus {
+				width: 76px;
+				text-align: left;
+			}
+			.columnStatus .ui-sortable-column-icon {
+				vertical-align: top;
+			}
+			
+			.tableView table,
+			.tableView a.ui-datepicker-prev,
+			.tableView a.ui-datepicker-next {
+			    display: none;
+			}
+		</style>
+
+		<h:form id="listagemForm" styleClass="innerContentFix" prependId="false">
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+
+			<h:panelGrid columns="3">
+				<p:commandButton
+					actionListener="#{balanceteController.decrementMonth}" id="navLeft"
+					update="@form" icon="ui-icon-triangle-1-w" />
+				<h:panelGroup class="tableView">
+					<p:calendar value="#{balanceteController.selectedDate}"
+						mode="inline" />
+				</h:panelGroup>
+				<p:commandButton
+					actionListener="#{balanceteController.incrementMonth}"
+					id="navRight" update="@form" icon="ui-icon-triangle-1-e" />
+			</h:panelGrid>
+
+			<p:treeTable value="#{balanceteController.treeRoot}"
+				var="itemBalancete" id="treeBalancete">
+				<f:facet name="header">
+					<h:outputText value="#{bundle['tit.balancete']}" />
+				</f:facet>
+				<p:column headerText="#{bundle['tit.nome']}">
+					<div>
+						<h:outputText id="campoNome" value="#{itemBalancete.centroCusto.nome}" />
+					</div>
+					<p:tooltip for="campoNome" value="#{itemBalancete.centroCusto.descricao}"
+						style="max-width:200px" />
+				</p:column>
+				<p:column headerText="#{bundle['tit.valor']}"
+					style="width:100px;" styleClass="textoCentro">
+					<h:outputText value="#{itemBalancete.valor}" id="valorItem">
+						<f:converter converterId="moneyConverter" />
+					</h:outputText>
+				</p:column>
+			</p:treeTable>
+		</h:form>
+		
+		<script>
+		    jQuery(document).ready(function() {
+		    	aplicaMascaraMonetaria("#valorItem");
+		    });
+		</script>
+	</ui:define>
+</ui:composition>

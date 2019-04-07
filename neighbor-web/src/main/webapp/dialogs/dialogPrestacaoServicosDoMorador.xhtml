@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+<body>
+	<ui:composition>
+		<p:dialog header="#{bundle['tit.serv.prestados']}"
+			widgetVar="dlgPrestacaoServicos" width="800" modal="true"
+			resizable="false">
+			<h:form id="formPrestacaoServicos">
+				<h:panelGrid>
+					<p:dataTable id="listaPrestacaoServicos" scrollable="true"
+						height="330" var="servicoPrestado"
+						emptyMessage="#{bundle['msg.sem.servicos.prestados']}"
+						value="#{moradorController.servicosPrestados}" effectSpeed="fast">
+
+						<p:column
+							sortBy="prestadorServico.tipoPrestador.tipoPrestador"
+							filterBy="prestadorServico.tipoPrestador.tipoPrestador"
+							style="width: 281px">
+							<f:facet name="header">
+								<h:outputText value="#{bundle['tit.tipo.prestador']}" />
+							</f:facet>
+							<h:outputText
+								value="#{servicoPrestado.prestadorServico.tipoPrestador.tipoPrestador}" />
+						</p:column>
+
+						<p:column sortBy="prestadorServico.cpf"
+							filterBy="prestadorServico.cpf"
+							style="width: 281px">
+							<f:facet name="header">
+								<h:outputText value="#{bundle['tit.cpf']}" />
+							</f:facet>
+							<h:outputText value="#{servicoPrestado.prestadorServico.cpf}" />
+						</p:column>
+
+						<p:column sortBy="prestadorServico.nome"
+							filterBy="prestadorServico.nome"
+							style="width: 281px">
+							<f:facet name="header">
+								<h:outputText value="#{bundle['tit.nome']}" />
+							</f:facet>
+							<h:outputText value="#{servicoPrestado.prestadorServico.nome}" />
+						</p:column>
+						<p:column sortBy="dataServico"
+							filterBy="dataServico"
+							style="width: 125px; text-align: center">
+							<f:facet name="header">
+								<h:outputText value="#{bundle['tit.data.servico']}" />
+							</f:facet>
+							<h:outputText value="#{servicoPrestado.dataServico}">
+								<f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="GMT-3" />
+							</h:outputText>
+						</p:column>
+
+						<p:column sortBy="dataFimServico"
+							filterBy="dataFimServico"
+							style="width: 125px; text-align: center">
+							<f:facet name="header">
+								<h:outputText value="#{bundle['tit.data.servico.fim']}" />
+							</f:facet>
+							<h:outputText value="#{servicoPrestado.dataFimServico}">
+								<f:convertDateTime pattern="dd/MM/yyyy" timeZone="GMT-3" />
+							</h:outputText>
+						</p:column>
+					</p:dataTable>
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+	</ui:composition>
+</body>
+</html>

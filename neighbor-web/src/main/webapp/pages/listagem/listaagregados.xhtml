@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+	<ui:define name="content">
+		<h:form id="listagemForm" styleClass="innerContentFix">
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+			<p:dataTable id="agregados" var="agregado"
+				value="#{agregadoController.agregados}" rowKey="#{agregado.pessoa.idPessoa}"
+				paginator="true" rows="10"
+				selection="#{agregadoController.agregado}" selectionMode="single"
+				emptyMessage="#{bundle['msg.sem.agreg.cadastrados']}"
+				style="width: 100%">
+				<f:facet name="header">
+					<h:outputText value="#{bundle['tit.agregados.cadastrados']}" />
+				</f:facet>
+				<p:column sortBy="morador[0].morador.unidadeHabitacional[0].unidadeHabitacional.identificacao"
+					filterBy="morador.morador[0].unidadeHabitacional[0].unidadeHabitacional.identificacao" exportable="true">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.casa']}" />
+					</f:facet>
+					<h:outputText value="#{agregado.morador[0].morador.unidadeHabitacional[0].unidadeHabitacional.identificacao}" />
+				</p:column>
+				<p:column sortBy="pessoa.nome" filterBy="pessoa.nome"
+					exportable="true">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.nome.agregado']}" />
+					</f:facet>
+					<h:outputText value="#{agregado.pessoa.nome}" />
+				</p:column>
+				<p:column sortBy="pessoa.mail" filterBy="pessoa.mail"
+					exportable="true">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.email.agregado']}" />
+					</f:facet>
+					<h:outputText value="#{agregado.pessoa.mail}" />
+				</p:column>
+				<p:column sortBy="morador[0].parentesco"
+					filterBy="morador[0].parentesco" exportable="true">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.parentesco.morador']}" />
+					</f:facet>
+					<h:outputText value="#{agregado.morador[0].parentesco}" />
+				</p:column>
+				<p:column exportable="true">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.data.br.nasc']}" />
+					</f:facet>
+					<h:outputText value="#{agregado.pessoa.dataNascimento}">
+						<f:convertDateTime locale="pt" pattern="dd/MM/yyyy"></f:convertDateTime>
+					</h:outputText>
+				</p:column>
+				<!-- BOTAO REGISTRAR OCORRENCIA -->
+				<p:column style="wigth: 50px;"
+					rendered="#{sec:areAnyGranted('ROLE_CADASTRO_OCORRENCIA, ROLE_ROOT')}"
+					exportable="false">
+					<p:commandLink onclick="dlgOcorrencia.show()" id="ocorAgregado">
+						<p:graphicImage value="../../resources/images/ico_apito.png"
+							style="text-align:center;" />
+						<f:setPropertyActionListener
+							target="#{ocorrenciaController.ocorrencia.agregadoPenalizado}"
+							value="#{agregado}" />
+					</p:commandLink>
+					<p:tooltip for="ocorAgregado" value="Registrar Ocorrencia"
+						showEffect="slide" hideEffect="slide" />
+				</p:column>
+				<!-- BOTAO EDITAR AGREGADO -->
+				<p:column
+					rendered="#{sec:areAnyGranted('ROLE_EDITAR_AGREGADO, ROLE_ROOT')}"
+					exportable="false">
+					<p:commandLink onclick="dlgeditAgregado.show()" id="editAgregado"
+						ajax="true" update=":formEditaAgregado">
+						<p:graphicImage value="../../resources/images/edit.png" width="20px"
+							height="20px" style="text-align:center;" />
+						<f:setPropertyActionListener
+							target="#{agregadoController.agregado}" value="#{agregado}" />
+					</p:commandLink>
+					<p:tooltip for="editAgregado" value="Editar Registro"
+						showEffect="slide" hideEffect="slide" />
+				</p:column>
+				<!-- BOTAO ALTERAR STATUS AGREGADO -->
+				<p:column style="width:16px"
+					rendered="#{sec:areAnyGranted('ROLE_ALTERAR_STATUS_AGREGADO, ROLE_ROOT')}"
+					exportable="false">
+					<p:commandLink immediate="true" global="false"
+						onclick="mostrarDglInativarAgregado(#{agregado.pessoa.ativo})">
+						<p:graphicImage id="imgStatus"
+							value="../../resources/images/ativo_#{agregado.pessoa.ativo}.png" width="24px"
+							height="24px">
+							<p:tooltip for="imgStatus" hideEffect="fade" showEffect="fade"
+								value="#{agregado.pessoa.ativo ? 'Agregado Ativo' : 'Agregado Inativo'}"></p:tooltip>
+						</p:graphicImage>
+						<f:setPropertyActionListener
+							target="#{agregadoController.agregado}" value="#{agregado}" />
+					</p:commandLink>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+
+		<ui:insert name="dialogOcorrencia">
+			<ui:include src="../../dialogs/dialogOcorrencia.xhtml" />
+			<ui:include src="../../dialogs/dialogEditAgregado.xhtml" />
+		</ui:insert>
+
+		<p:confirmDialog message="#{bundle['msg.conf.ativacao']}"
+			header="Inativar" severity="alert" widgetVar="dglInativarAgregado"
+			modal="true" closable="false">
+			<h:form>
+				<p:commandButton id="confirm" value="#{bundle['tit.sim']}"
+					update=":listagemForm:growlGeral :listagemForm:agregados"
+					oncomplete="dglInativarAgregado.hide()"
+					action="#{agregadoController.alterarStatus}" />
+				<p:commandButton id="decline" value="#{bundle['tit.nao']}"
+					onclick="dglInativarAgregado.hide()" />
+			</h:form>
+		</p:confirmDialog>
+		<script>
+				function mostrarDglInativarAgregado(agregadoEnable){
+					var men = '';
+					if(agregadoEnable == true){
+						men = 'Desativar';
+					}else {
+						men = 'Ativar';
+					}
+					jQuery('#dglInativarAgregado p').html('Deseja <strong>'+men+'</strong> este agregado ?');
+					
+					jQuery('#ui-dialog-title-dglInativarAgregado').html(men);
+					
+					dglInativarAgregado.show();	
+				}
+				
+				</script>
+		<h:panelGroup rendered="#{usuarioController.sistemaIsDemo}">
+			<script type="text/javascript">disponivelNosPlanos(1,1,1,1);</script>
+		</h:panelGroup>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+	<ui:define name="content">
+		<h:form id="paginaMoradorForm" styleClass="innerContentFix">
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+			<p:dataTable id="ocorrencias"
+				value="#{moradorPageController.ocorrencias}" var="ocorrencia"
+				width="100%"
+				emptyMessage="Sem ocorrência cadastradas para #{moradorPageController.morador.pessoa.nome}">
+				<f:facet name="header">
+					<h:outputText value="#{bundle['tit.ocorrencias']}" />
+				</f:facet>
+				<p:column style="width: 178px;">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.penalizado']}" />
+					</f:facet>
+					<h:panelGroup rendered="#{ocorrencia.visitante}">
+						<span style="font-weight: bold;"><h:outputText
+								value="#{bundle['tit.visitante']}:" /></span>
+						<br />
+						<h:outputText value="#{ocorrencia.pessoa.nome}" />
+					</h:panelGroup>
+					<h:panelGroup rendered="#{ocorrencia.morador}">
+						<span style="font-weight: bold;"><h:outputText
+								value="#{bundle['tit.morador']}:" /></span>
+						<br />
+						<h:outputText value="#{ocorrencia.pessoa.nome}" />
+					</h:panelGroup>
+					<h:panelGroup rendered="#{ocorrencia.prestador}">
+						<span style="font-weight: bold;"><h:outputText
+								value="#{bundle['tit.prestador']}:" /></span>
+						<br />
+						<h:outputText value="#{ocorrencia.pessoa.nome}" />
+					</h:panelGroup>
+					<h:panelGroup rendered="#{ocorrencia.agregado}">
+						<span style="font-weight: bold;"><h:outputText
+								value="#{bundle['tit.agregado']}:" /></span>
+						<br />
+						<h:outputText value="#{ocorrencia.pessoa.nome}" />
+					</h:panelGroup>
+				</p:column>
+				<p:column sortBy="#{ocorrencia.dataOcorrencia}">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.data.br.ocorrencia']}:" />
+					</f:facet>
+					<h:outputText value="#{ocorrencia.dataOcorrencia}">
+						<f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="GMT-3" />
+					</h:outputText>
+				</p:column>
+				<p:column sortBy="#{ocorrencia.dataRegistroOcorrencia}">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.data.br.registro']}:" />
+					</f:facet>
+					<h:outputText value="#{ocorrencia.dataRegistroOcorrencia}">
+						<f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="GMT-3" />
+					</h:outputText>
+				</p:column>
+				<p:column sortBy="#{ocorrencia.gravidade}">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.gravidade']}:" />
+					</f:facet>
+					<h:outputText value="#{ocorrencia.gravidade}" />
+				</p:column>
+
+				<p:column>
+					<f:facet name="header"></f:facet>
+					<p:rowToggler />
+				</p:column>
+				<p:rowExpansion>
+					<table style="border: hidden;">
+						<tr>
+							<td><span style="font-weight: bold;"><h:outputText
+										value="#{bundle['msg.gerou.notificacao']}" /></span><br /> <h:outputText
+									value="#{ocorrencia.gerouNotificacao == true ? 'Sim' : 'Não'}" />
+							</td>
+							<td><span style="font-weight: bold;"><h:outputText
+										value="#{bundle['msg.gerou.multa']}" /></span><br /> <h:outputText
+									value="#{ocorrencia.gerouMulta == true ? 'Sim' : 'Não'}" /></td>
+						</tr>
+						<tr>
+							<td colspan="2"><span style="font-weight: bold;"><h:outputText
+										value="#{bundle['tit.descricao']}:" /></span><br /> <h:outputText
+									value="#{ocorrencia.descricao}" /></td>
+						</tr>
+					</table>
+
+				</p:rowExpansion>
+			</p:dataTable>
+		</h:form>
+		<h:panelGroup rendered="#{usuarioController.sistemaIsDemo}">
+			<script type="text/javascript">
+				disponivelNosPlanos(0, 1, 1, 1);
+			</script>
+		</h:panelGroup>
+	</ui:define>
+</ui:composition>

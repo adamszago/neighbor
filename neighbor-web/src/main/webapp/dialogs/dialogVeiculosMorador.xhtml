@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+<body>
+	<ui:composition>
+		<p:dialog header="Veículos" widgetVar="dlgVeiculosMorador"
+			resizable="false" width="400" height="300" modal="true">
+			<h:form id="formVeiculosMorador">
+				<h:panelGrid columns="2" style="margin-bottom:10px">
+					<p:dataTable id="lVeiculosMorador" var="vlc" rows="5"
+						emptyMessage="Sem veículos cadastrados"
+						value="#{veiculoController.veiculosMorador}" effectSpeed="fast">
+						<p:column>
+							<f:facet name="header">  
+              				Placa  
+      					</f:facet>
+							<h:outputText value="#{vlc.placa}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">  
+              				Marca  
+      					</f:facet>
+							<h:outputText value="#{vlc.marca}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">  
+              				Modelo  
+      					</f:facet>
+							<h:outputText value="#{vlc.modelo}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">  
+              				Cor  
+      					</f:facet>
+							<h:outputText value="#{vlc.cor}" />
+						</p:column>
+					</p:dataTable>
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+	</ui:composition>
+</body>
+</html>

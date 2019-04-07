@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<ui:define name="content">
+		<h3>
+			<h:outputText value="#{bundle['tit.cadastro.condominio']}" />
+		</h3>
+		<h:form id="cadastroCondominioForm">
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+
+			<h:inputHidden id="idCondominio"
+				value="#{condominioController.condominio.pessoa.idPessoa}" />
+
+			<style>
+				.content form table td label {
+					float: left !important;
+				}
+				
+				.layoutCadMorador td {
+					padding: 7px;
+					border: none;
+				}
+				
+				.layoutCadMorador tr {
+					border: none;
+				}
+			</style>
+
+			<h:panelGrid columns="2">
+				<h:outputLabel value="#{bundle['tit.nome.condominio']}: " for="nome"
+					styleClass="label_obr" />
+				<p:inputText id="nome"
+					value="#{condominioController.condominio.pessoa.nome}"
+					styleClass="toCapitalize campo-onload" required="true" label="Nome"
+					size="60" maxlength="80" minLength="4"
+					requiredMessage="#{bundle['msg.informe.nome.morador']}"></p:inputText>
+
+				<h:outputLabel value="#{bundle['tit.nome.abreviado']}: "
+					for="nomeab" styleClass="label_obr" />
+				<p:inputText id="nomeab"
+					value="#{condominioController.condominio.nomeAbreviado}"
+					style="text-transform: lowercase" required="true" size="11"
+					maxlength="10" minLength="4"
+					requiredMessage="#{bundle['msg.informe.nome.abreviado']}"></p:inputText>
+
+				<h:outputLabel value="#{bundle['tit.cnpj']}: " for="cnpj"
+					styleClass="label_obr" />
+				<p:inputMask id="cnpj"
+					value="#{condominioController.condominio.pessoa.cnpj}"
+					required="true" mask="99.999.999/9999-99"
+					requiredMessage="#{bundle['msg.informe.cnpj']}">
+					<f:validator
+						validatorId="br.com.lphantus.neighbor.component.validator.ValidatorCNPJ" />
+				</p:inputMask>
+
+				<h:outputLabel value="#{bundle['tit.bloco']}: " for="bloco"
+					styleClass="label_obr" />
+				<p:selectBooleanCheckbox label="bloco"
+					value="#{condominioController.condominio.possuiBloco}" />
+			</h:panelGrid>
+
+			<p:panelGrid styleClass="layoutCadMorador">
+				<f:facet name="header">  
+			        #{bundle['tit.pnl.dad.endereco']}
+			    </f:facet>
+
+				<p:row>
+					<p:column>
+						<p:outputLabel value="#{bundle['lbl.cep']}: " for="cep"
+							styleClass="label_obr" />
+						<p:inputMask id="cep" mask="99999-999"
+							value="#{condominioController.condominio.endereco.cep}"
+							required="true" label="Cep" size="10" maxlength="10"
+							requiredMessage="#{bundle['msg.informe.cep.morador']}" />
+					</p:column>
+					<p:column colspan="2">
+						<p:outputLabel value="#{bundle['lbl.estado']}: " for="estado"
+							styleClass="label_obr" />
+						<p:selectOneMenu
+							value="#{condominioController.condominio.endereco.uf}"
+							id="estado" required="true" label="Estado" style="width: 100px;"
+							requiredMessage="#{bundle['msg.informe.estado.morador']}">
+							<f:selectItem itemLabel="#{bundle['select.selecione']}"
+								itemValue="" />
+							<f:selectItems value="#{condominioController.estados}" />
+						</p:selectOneMenu>
+					</p:column>
+					<p:column colspan="2">
+						<p:outputLabel value="#{bundle['lbl.cidade']}: " for="cidade"
+							styleClass="label_obr" />
+						<p:inputText id="cidade"
+							value="#{condominioController.condominio.endereco.cidade}"
+							required="true" label="Cidade" size="40" maxlength="40"
+							requiredMessage="#{bundle['msg.informe.cidade.morador']}" />
+					</p:column>
+				</p:row>
+
+				<p:row>
+					<p:column colspan="2">
+						<p:outputLabel value="#{bundle['lbl.bairro']}: " for="bairro"
+							styleClass="label_obr" />
+						<p:inputText id="bairro"
+							value="#{condominioController.condominio.endereco.bairro}"
+							required="true" label="Bairro" size="40" maxlength="40"
+							requiredMessage="#{bundle['msg.informe.bairro.morador']}" />
+					</p:column>
+					<p:column colspan="3">
+						<p:outputLabel value="#{bundle['lbl.logradouro']}: "
+							for="logradouro" styleClass="label_obr" />
+						<p:inputText id="logradouro"
+							value="#{condominioController.condominio.endereco.logradouro}"
+							required="true" label="Logradouro" size="70" maxlength="70"
+							requiredMessage="#{bundle['msg.informe.logradouro.morador']}" />
+					</p:column>
+				</p:row>
+
+				<p:row>
+					<p:column colspan="2">
+						<p:outputLabel value="#{bundle['lbl.numero']}: " for="numero"
+							styleClass="label_obr" />
+						<p:inputText id="numero"
+							value="#{condominioController.condominio.numero}" required="true"
+							label="Numero" size="8" maxlength="8"
+							requiredMessage="#{bundle['msg.informe.numero.morador']}" />
+					</p:column>
+					<p:column colspan="3">
+						<p:outputLabel value="#{bundle['lbl.complemento']}: "
+							for="complemento" />
+						<p:inputText id="complemento"
+							value="#{condominioController.condominio.complemento}"
+							label="Complemento" size="30" maxlength="30" />
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+
+			<p:commandButton value="#{bundle['btn.gravar']}"
+				actionListener="#{condominioController.gravar}" ajax="true"
+				update=":cadastroCondominioForm"
+				rendered="#{condominioController.condominio.pessoa.idPessoa == null || condominioController.condominio.pessoa.idPessoa == 0}"
+				onclick="pageLoading.show();" oncomplete="pageLoading.hide();" />
+			<p:commandButton value="#{bundle['btn.alterar']}"
+				actionListener="#{condominioController.alterar}" ajax="true"
+				update=":cadastroCondominioForm"
+				rendered="#{condominioController.condominio.pessoa.idPessoa > 0 }"
+				onclick="pageLoading.show();" oncomplete="pageLoading.hide();" />
+
+			<p:commandButton value="#{bundle['btn.limpar']}"
+				action="#{condominioController.pageNovoCondominio}" ajax="true"
+				update=":cadastroCondominioForm" process="@this"
+				onclick="pageLoading.show();" oncomplete="pageLoading.hide();" />
+
+		</h:form>
+
+	</ui:define>
+</ui:composition>

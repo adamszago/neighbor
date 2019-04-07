@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+	<ui:define name="content">
+		<h3>
+			<h:outputText value="#{bundle['tit.configuracoes.cadastro']}" />
+		</h3>
+
+		<h:form id="cadastroForm" prependId="false">
+
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+
+			<style>
+				.content form table td label {
+					float: left !important;
+				}
+				
+				.layoutCadMorador td {
+					padding: 7px;
+					border: none;
+				}
+				
+				.layoutCadMorador tr {
+					border: none;
+				}
+			</style>
+
+			<p:panelGrid styleClass="layoutCadMorador" columns="2"
+				id="regionGeral">
+				<h:outputLabel value="#{bundle['tit.data.faturas']}: "
+					for="dataFaturas" styleClass="label_obr" />
+				<p:inputMask id="dataFaturas"
+					value="#{configuracaoCondominioController.entity.dataFaturas}"
+					required="true" mask="99"
+					requiredMessage="#{bundle['msg.informe.data.faturas']}">
+				</p:inputMask>
+				
+				<p:outputLabel value="#{bundle['lbl.duplicata.dias.vencimento']}: "
+					for="diasVencto" styleClass="label_obr" />
+				<p:inputText id="diasVencto"
+					value="#{configuracaoCondominioController.entity.limiteDias}" />
+
+				<p:outputLabel value="#{bundle['lbl.duplicata.mora.recbtos']}: "
+					for="moraRecbtos" styleClass="label_obr" />
+				<p:inputText id="moraRecbtos" converter="moneyConverter"
+					value="#{configuracaoCondominioController.entity.moraOutrosRecebimentos}" />
+			
+				<p:outputLabel value="#{bundle['lbl.duplicata.multa.vencto']}: "
+					for="multaVencto" styleClass="label_obr" />
+				<p:inputText id="multaVencto" converter="moneyConverter"
+					value="#{configuracaoCondominioController.entity.multaVencimento}" />
+
+				<p:outputLabel value="#{bundle['lbl.duplicata.taxa.dia']}: "
+					for="taxaDia" styleClass="label_obr" />
+				<p:inputText id="taxaDia" converter="moneyConverter"
+					value="#{configuracaoCondominioController.entity.taxaDia}" />
+
+				<p:outputLabel value="#{bundle['lbl.duplicata.desc']}: "
+					for="desconto" styleClass="label_obr" />
+				<p:inputText id="desconto" converter="moneyConverter"
+					value="#{configuracaoCondominioController.entity.desconto}" />
+
+				<p:outputLabel value="#{bundle['lbl.duplicata.abat']}: "
+					for="abatimento" styleClass="label_obr" />
+				<p:inputText id="abatimento" converter="moneyConverter"
+					value="#{configuracaoCondominioController.entity.abatimento}" />
+
+			</p:panelGrid>
+
+			<p:panelGrid styleClass="layoutCadMorador" columns="1">
+				<ui:remove>
+					<p:commandButton value="#{bundle['btn.gravar']}" id="btnGravar"
+						action="#{configuracaoCondominioController.gravarCarteira}" ajax="false"
+						update=":cadastroForm"
+						rendered="#{configuracaoCondominioController.entity.id == null || configuracaoCondominioController.entity.id == 0}"
+						onclick="pageLoading.show();" oncomplete="pageLoading.hide();" />
+				</ui:remove>
+
+				<p:commandButton value="#{bundle['btn.alterar']}"
+					action="#{configuracaoCondominioController.gravar}" ajax="false"
+					update=":cadastroForm" onclick="pageLoading.show();"
+					oncomplete="pageLoading.hide();" />
+
+				<ui:remove>
+					<p:commandButton value="#{bundle['btn.limpar']}"
+						action="#{configuracaoCondominioController.limparObjetoCarteira}" ajax="false"
+						process="@this" onclick="pageLoading.show();"
+						update=":cadastroForm" oncomplete="pageLoading.hide();" />
+				</ui:remove>
+			</p:panelGrid>
+		</h:form>
+
+		<script>
+			jQuery(document).ready(function() {
+				aplicaMascaraMonetaria("#moraRecbtos");
+				aplicaMascaraMonetaria("#multaVencto");
+				aplicaMascaraMonetaria("#taxaDia");
+				aplicaMascaraMonetaria("#desconto");
+				aplicaMascaraMonetaria("#abatimento");
+			});
+		</script>
+
+	</ui:define>
+</ui:composition>

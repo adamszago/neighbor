@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+	<ui:define name="content">
+		<h3>Listagem de Usuários - Área Root</h3>
+		<h:form id="listagemUsuarioForm">
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+
+
+			<h:panelGrid columns="1" id="listaUsuarios">
+				<h:panelGroup width="100%">
+
+					<p:dataTable id="usuarios" value="#{acessoRootController.usuarios}"
+						var="usu" width="100%" emptyMessage="Sem Usuários"
+						paginator="true" rows="10"
+						rowStyleClass="#{usu.pessoa.ativo == true ? null : 'inativo'}">
+						<f:facet name="header">  
+					    	Usuários  
+					    </f:facet>
+
+						<!-- <p:column sortBy="#{usu.idUsuario}">  
+				          	<f:facet name="header">Id</f:facet>
+				          	<h:outputText value="#{usu.idUsuario}"  />
+				      	</p:column> -->
+						<p:column sortBy="login" filterBy="login">
+							<f:facet name="header">login</f:facet>
+							<h:outputText value="#{usu.login}" />
+						</p:column>
+						<p:column sortBy="pessoa.nome" filterBy="pessoa.nome">
+							<f:facet name="header">Nome:</f:facet>
+							<h:outputText value="#{usu.pessoa.nome}" />
+						</p:column>
+						<p:column sortBy="pessoa.cpf" filterBy="pessoa.cpf">
+							<f:facet name="header">Cpf:</f:facet>
+							<h:outputText value="#{usu.pessoa.cpf}" />
+						</p:column>
+						<p:column sortBy="condominio.pessoa.nome"
+							filterBy="condominio.pessoa.nome">
+							<f:facet name="header">Condomínio:</f:facet>
+							<h:outputText value="#{usu.condominio.pessoa.idPessoa}-#{usu.condominio.pessoa.nome}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">Modulo</f:facet>
+							<p:rowToggler />
+						</p:column>
+						<p:column>
+							<f:facet name="header"></f:facet>
+							<h:commandLink action="#{acessoRootController.editarUsuario}"
+								update=":cadastroUsuarioForm" onclick="pageLoading.show();"
+								oncomplete="pageLoading.hide();">
+
+								<p:graphicImage id="editarUsuario" value="../../resources/images/edit.png"
+									width="20px" height="20px" style="text-align:center;" />
+								<p:tooltip for="editarUsuario" hideEffect="fade"
+									showEffect="fade" value="Editar Usuário"></p:tooltip>
+								<f:setPropertyActionListener
+									target="#{acessoRootController.usuario}" value="#{usu}" />
+							</h:commandLink>
+						</p:column>
+						<p:column>
+							<f:facet name="header"></f:facet>
+							<p:commandLink onclick="mostrarDglInativar(#{usu.pessoa.ativo})">
+								<p:graphicImage id="ativarDesativar"
+									value="../../resources/images/ativo_#{usu.pessoa.ativo == true ? 'false' : 'true'}.png"
+									width="20px" height="20px" style="text-align:center;" />
+								<p:tooltip for="ativarDesativar" hideEffect="fade"
+									showEffect="fade"
+									value="#{usu.pessoa.ativo == true ? 'Desativar' : 'Ativar'}"></p:tooltip>
+								<f:setPropertyActionListener
+									target="#{acessoRootController.usuario}" value="#{usu}" />
+							</p:commandLink>
+						</p:column>
+
+						<p:rowExpansion>
+							<div style="text-align: center;">
+								<h:outputText value="#{usu.moduloAcesso.nome}" />
+								-
+								<h:outputText value="#{usu.moduloAcesso.descricao}" />
+							</div>
+						</p:rowExpansion>
+					</p:dataTable>
+				</h:panelGroup>
+			</h:panelGrid>
+		</h:form>
+
+		<p:confirmDialog message="Confirma ativação/desativação do registro?"
+			header="Inativar" severity="alert" widgetVar="dglInativar"
+			modal="true" closable="false">
+			<h:form>
+				<p:commandButton id="confirm" value="Sim"
+					update=":listagemUsuarioForm" oncomplete="dglInativar.hide()"
+					actionListener="#{acessoRootController.inativarUsuario}" />
+				<p:commandButton id="decline" value="Não"
+					oncomplete="dglInativar.hide()"
+					update=":listagemUsuarioForm:growlGeral"
+					actionListener="#{acessoRootController.limparUsaurio}" />
+			</h:form>
+		</p:confirmDialog>
+		<script>
+	function mostrarDglInativar(usuarioEnable){
+		var men = '';
+		if(usuarioEnable == true){
+			men = 'Desativar';
+		}else {
+			men = 'Ativar';
+		}
+		jQuery('#dglInativar p').html('Deseja <strong>'+men+'</strong> este usuário ?');
+		
+		jQuery('#ui-dialog-title-dglInativar').html(men);
+		
+		dglInativar.show();	
+	}
+	
+	</script>
+	</ui:define>
+</ui:composition>

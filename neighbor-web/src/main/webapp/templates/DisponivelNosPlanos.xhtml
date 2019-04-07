@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"  >
+    <body>
+	    <ui:composition>
+	    
+			<!-- inicio -->
+
+			<div id="disponivel-nos-planos" class="menu">
+				<div class="item" style="width: 52px; overflow: hidden;">
+					<a class="link icon_medal1" style="-webkit-transform: matrix(0.7660444431189638, -0.6427876096865273, 0.6427876096865273, 0.7660444431189638, 0, 0) rotate(40deg);"></a>
+					<div class="item_content" style="display: none;">
+						<a href="http://www.lphantus.com.br/site/lpn/" target="lpn">
+						<h2>1. BRONZE - MAMUTE</h2>
+						<p style="display: none;">
+							A prtir de R$200
+						</p>
+						</a>
+					</div>
+				</div>
+				<div class="item" style="width: 52px; overflow: hidden;">
+					<a class="link icon_medal2" style="-webkit-transform: matrix(0.7660444431189405, -0.6427876096865073, 0.6427876096865073, 0.7660444431189405, 0, 0) rotate(40deg);"></a>
+					<div class="item_content" style="display: none;">
+						<a href="http://www.lphantus.com.br/site/lpn/" target="lpn">
+						<h2>2. PRATA - ESTEGODONTE</h2>
+						<p style="display: none;">
+							A prtir de R$600
+						</p>
+						</a>
+					</div>
+				</div>
+				<div class="item" style="overflow: hidden; width: 52px;">
+					<a class="link icon_medal3" style="-webkit-transform: matrix(0.7660444431189504, -0.6427876096865143, 0.6427876096865143, 0.7660444431189504, 0, 0) rotate(40deg);"></a>
+					<div class="item_content" style="display: none;">
+						<a href="http://www.lphantus.com.br/site/lpn/" target="lpn">
+						<h2>3. OURO - MASTODONTE</h2>
+						<p style="display: none;">
+							A prtir de R$800
+						</p>
+						</a>
+					</div>
+				</div>
+				<div class="item" style="width: 52px; overflow: hidden;">
+					<a class="link icon_medal4" style="-webkit-transform: matrix(0.7660444431189576, -0.6427876096865206, 0.6427876096865206, 0.7660444431189576, 0, 0) rotate(40deg);"></a>
+					<div class="item_content" style="display: none;">
+						<a href="http://www.lphantus.com.br/site/lpn/" target="lpn">
+						<h2>4. DIAMANTE - ELEFANTE</h2>
+						<p style="display: none;">
+							A prtir de R$1000
+						</p>
+						</a>
+					</div>
+				</div>
+			</div>
+<!-- 			<script type="text/javascript" src="../../resources/scripts/jquery.min.js"></script> -->
+<!-- 			<script type="text/javascript" src="../../resources/scripts/jquery-css-transform.min.js"></script> -->
+<!-- 			<script type="text/javascript" src="../../resources/scripts/jquery-animate-css-rotate-scale.min.js"></script> -->
+			<script>
+				$('.item').hover(
+					function(){
+						var $this = $(this);
+						expand($this);
+					},
+					function(){
+						var $this = $(this);
+						collapse($this);
+					}
+				);
+				function expand($elem){
+					var angle = 0;
+					var t = setInterval(function () {
+						if(angle == 1440){
+							clearInterval(t);
+							return;
+						}
+						angle += 40;
+						$('.link',$elem).stop().animate({rotate: '+=-40deg'}, 0);
+					},10);
+					$elem.stop().animate({width:'250px'}, 1000)
+					.find('.item_content').fadeIn(400,function(){
+						$(this).find('p').stop(true,true).fadeIn(600);
+					});
+				}
+				function collapse($elem){
+					var angle = 1440;
+					var t = setInterval(function () {
+						if(angle == 0){
+							clearInterval(t);
+							return;
+						}
+						angle -= 40;
+						$('.link',$elem).stop().animate({rotate: '+=40deg'}, 0);
+					},10);
+					$elem.stop().animate({width:'52px'}, 1000)
+					.find('.item_content').stop(true,true).fadeOut().find('p').stop(true,true).fadeOut();
+				}
+				function disponivelNosPlanos(p1,p2,p3,p4){
+					if(!p1) $('.icon_medal1').parent().addClass('item_inativo');
+					if(!p2) $('.icon_medal2').parent().addClass('item_inativo');
+					if(!p3) $('.icon_medal3').parent().addClass('item_inativo');
+					if(!p4) $('.icon_medal4').parent().addClass('item_inativo');
+					if(p1 + p2  +p3 + p4 == 0) $('#disponivel-nos-planos').addClass('dn');
+				}
+			</script>
+
+			<!-- fim -->
+				
+	    </ui:composition>
+    </body>
+</html>

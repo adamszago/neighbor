@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings version="2.0"
+	xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_1_0.xsd">
+
+	<named-query name="ReservaTemp.verificaDisponibilidade">
+		<query>
+			<![CDATA[
+				SELECT reserva 
+				FROM ReservaTemp reserva 
+				INNER JOIN reserva.morador morador 
+				INNER JOIN reserva.condominio condominio 
+				INNER JOIN reserva.itemReserva itemReserva 
+				WHERE itemReserva.id = :itemReserva 
+				AND reserva.dataReserva = :dataReserva 
+				AND condominio.idPessoa = :idPessoa
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="ReservaTemp.verificarCarencia">
+		<query>
+			<![CDATA[
+				SELECT reserva 
+				FROM ReservaTemp reserva 
+				INNER JOIN reserva.morador morador 
+				INNER JOIN reserva.condominio condominio 
+				INNER JOIN reserva.itemReserva itemReserva 
+				WHERE morador.idPessoa = :idMorador 
+				AND reserva.dataReserva BETWEEN  :dataInicial 
+				AND :dataFinal and condominio.idPessoa = :idCondominio
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="ReservaTemp.verificarReservaDataCliente">
+		<query>
+			<![CDATA[
+				SELECT reserva 
+				FROM ReservaTemp reserva 
+				INNER JOIN reserva.morador morador 
+				INNER JOIN reserva.condominio condominio 
+				INNER JOIN reserva.itemReserva itemReserva 
+				WHERE morador.idPessoa = :idMorador 
+				AND reserva.dataReserva = :dataReserva 
+				AND condominio.idPessoa = :idCondominio
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="ReservaTemp.listarReservaPorMorador">
+		<query>
+			<![CDATA[
+				SELECT reserva 
+				FROM ReservaTemp reserva 
+				INNER JOIN reserva.morador morador 
+				INNER JOIN reserva.condominio condominio 
+				INNER JOIN reserva.itemReserva itemReserva 
+				WHERE morador.idPessoa = :idMorador 
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="ReservaTemp.itemReservaEstaPendenteAprovacaoNaData">
+		<query>
+			<![CDATA[
+				SELECT reserva 
+				FROM ReservaTemp reserva 
+				INNER JOIN reserva.morador morador 
+				INNER JOIN reserva.condominio condominio 
+				INNER JOIN reserva.itemReserva itemReserva 
+				WHERE itemReserva.id = :idReserva 
+				AND reserva.dataReserva = :data 
+				AND condominio.idPessoa = :idPessoa
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="ReservaTemp.itemReservaEstaPendenteMorador">
+		<query>
+			<![CDATA[
+				SELECT reserva 
+				FROM ReservaTemp reserva 
+				INNER JOIN reserva.morador morador 
+				INNER JOIN reserva.condominio condominio 
+				INNER JOIN reserva.itemReserva itemReserva 
+				WHERE itemReserva.id = :idItem 
+				AND morador.idPessoa = :idMorador 
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="ReservaTemp.buscaReservasPendentesAprovacao">
+		<query>
+			<![CDATA[
+				SELECT reserva 
+				FROM ReservaTemp reserva 
+				INNER JOIN reserva.morador morador 
+				INNER JOIN reserva.condominio condominio 
+				WHERE (:idCondominio IS NULL OR condominio.idPessoa = :idCondominio )
+			]]>
+		</query>
+	</named-query>
+
+</entity-mappings>

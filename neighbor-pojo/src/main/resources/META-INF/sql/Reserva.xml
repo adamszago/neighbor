@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings version="2.0"
+	xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_1_0.xsd">
+
+	<named-query name="Reserva.verificaDisponibilidade">
+		<query>
+			<![CDATA[
+				SELECT reserva 
+				FROM Reserva reserva 
+				INNER JOIN reserva.condominio condominio 
+				INNER JOIN reserva.itemReserva itemReserva 
+				WHERE itemReserva.id = :itemReserva 
+				AND reserva.dataReserva = :dataReserva 
+				AND condominio.idPessoa = :idPessoa
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Reserva.verificarCarencia">
+		<query>
+			<![CDATA[
+				SELECT reserva 
+				FROM Reserva reserva 
+				INNER JOIN reserva.morador morador 
+				INNER JOIN reserva.condominio condominio 
+				WHERE morador.idPessoa = :idPessoa 
+				AND reserva.dataReserva BETWEEN  :dataInicial AND :dataFinal 
+				AND condominio.idPessoa = :idCondominio
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Reserva.verificarReservaDataCliente">
+		<query>
+			<![CDATA[
+				SELECT reserva 
+				FROM Reserva reserva 
+				INNER JOIN reserva.condominio condominio 
+				INNER JOIN reserva.morador morador 
+				WHERE morador.idPessoa = :idPessoa 
+				AND reserva.dataReserva = :dataReserva 
+				AND condominio.idPessoa = :idCondominio 
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Reserva.listarReservaPorMorador">
+		<query>
+			<![CDATA[
+				SELECT reserva 
+				FROM Reserva reserva 
+				INNER JOIN reserva.morador morador 
+				INNER JOIN reserva.condominio condominio 
+				WHERE (:idMorador IS NULL OR morador.idPessoa = :idMorador) 
+				AND (:idCondominio IS NULL OR condominio.idPessoa = :idCondominio) 
+				ORDER BY reserva.dataReserva DESC
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Reserva.listarReservaPorCondominio">
+		<query>
+			<![CDATA[
+				SELECT reserva 
+				FROM Reserva reserva 
+				INNER JOIN reserva.morador morador 
+				INNER JOIN reserva.condominio condominio 
+				WHERE (:idPessoa IS NULL OR condominio.idPessoa = :idPessoa) 
+				ORDER BY reserva.dataReserva DESC 
+			]]>
+		</query>
+	</named-query>
+
+</entity-mappings>

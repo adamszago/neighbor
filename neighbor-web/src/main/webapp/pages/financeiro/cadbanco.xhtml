@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:sec="http://www.springframework.org/security/tags" >
+	<ui:define name="content">
+		<h3>
+			<h:outputText value="#{bundle['tit.banco.cadastro']}" />
+		</h3>
+
+		<h:form id="cadastroForm">
+
+			<style>
+				.content form table td label {
+					float: left !important;
+				}
+				
+				.layoutCadMorador td {
+					padding: 7px;
+					border: none;
+				}
+				
+				.layoutCadMorador tr {
+					border: none;
+				}
+			</style>
+			
+			<ui:insert  >
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+			
+			<p:panelGrid styleClass="layoutCadMorador">
+				<p:row>
+					<p:column>
+						<p:outputLabel value="#{bundle['lbl.codigo.banco']}: "
+							for="codigobanco" styleClass="label_obr" />
+					</p:column>
+					<p:column>
+						<p:inputText id="codigobanco"  value="#{bancoController.entity.codigoBanco}" disabled="#{bancoController.entity.codigoBanco > 0}"></p:inputText>
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel value="#{bundle['lbl.nome.banco']}: "
+							for="nomebanco" styleClass="label_obr" />
+					</p:column>
+					<p:column>
+						<p:inputText id="nomebanco"  value="#{bancoController.entity.nomeBanco}"></p:inputText>
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel value="#{bundle['lbl.sigla.banco']}: "
+							for="siglabanco" styleClass="label_obr" />
+					</p:column>
+					<p:column>
+						<p:inputText id="siglabanco"  value="#{bancoController.entity.sigla}"></p:inputText>
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel value="#{bundle['lbl.ativo']}: "
+							for="ativobanco" styleClass="label_obr" />
+					</p:column>
+					<p:column>
+						<p:selectBooleanCheckbox id="ativobanco" value="#{bancoController.entity.ativo}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+					</p:column>
+					<p:column>
+						<h:outputText id="counter" />
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+
+			<p:panelGrid styleClass="layoutCadMorador" columns="2">
+				<p:commandButton value="#{bundle['btn.gravar']}" id="btnGravar"
+					action="#{bancoController.gravar}" ajax="true" update=":cadastroForm"
+					rendered="#{bancoController.entity.codigoBanco == null || bancoController.entity.codigoBanco == 0}"
+					onclick="pageLoading.show();" oncomplete="pageLoading.hide();" />
+
+				<p:commandButton value="#{bundle['btn.alterar']}"
+					action="#{bancoController.alterarBanco}" ajax="true"
+					rendered="#{bancoController.entity.codigoBanco > 0}" update=":cadastroForm"
+					onclick="pageLoading.show();" oncomplete="pageLoading.hide();" />
+
+				<p:commandButton value="#{bundle['btn.limpar']}"
+					action="#{bancoController.limparObjetoBanco}" ajax="true"
+					process="@this" onclick="pageLoading.show();" update=":cadastroForm"
+					oncomplete="pageLoading.hide();" />
+			</p:panelGrid>
+		</h:form>
+
+	</ui:define>
+</ui:composition>

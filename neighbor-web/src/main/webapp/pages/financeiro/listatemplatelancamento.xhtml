@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<ui:define name="content" style="border:1px solid green">
+
+		<h:form id="listagemForm" styleClass="innerContentFix">
+
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+
+			<p:dataTable id="listaLancamento" var="lancamento"
+				value="#{templateLancamentoController.templates}" paginator="true"
+				rows="10" emptyMessage="#{bundle['msg.sem.registros.cadastrados']}">
+				
+				<f:facet name="header">
+					<h:outputText value="#{bundle['tit.lancamento.cadastro.automatico']}" />
+				</f:facet>
+
+				<p:column sortBy="repeticao"
+					filterBy="repeticao" style="text-align: center;">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.repeticao']}" />
+					</f:facet>
+					<h:outputText id="campoData" value="#{lancamento.repeticao}">
+					</h:outputText>
+				</p:column>
+
+				<p:column sortBy="tipoLancamento.nome"
+					filterBy="tipoLancamento.nome"
+					style="text-align: center;">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.tipo.lancamento']}" />
+					</f:facet>
+					<h:outputText id="campoLancamentoTipoNome"
+						value="#{lancamento.tipoLancamento.nome}" />
+				</p:column>
+
+				<p:column sortBy="valor"
+					filterBy="valor">
+					<f:facet name="header" style="text-align: center;">
+						<h:outputText value="#{bundle['tit.valor']}" />
+					</f:facet>
+					<h:outputText id="campoValor" value="#{lancamento.valor}"
+						style="text-align: right;">
+						<f:converter converterId="moneyConverter" />
+					</h:outputText>
+				</p:column>
+
+				<!-- BOTAO EDITAR -->
+				<p:column style="width:50px;">
+					<h:commandLink id="btnEditar" immediate="true"
+						onclick="pageLoading.show();" oncomplete="pageLoading.hide();"
+						action="#{templateLancamentoController.editarTemplateLancamento}">
+						<p:graphicImage value="../../resources/images/edit1.png"
+							style="text-align:center;" />
+						<f:setPropertyActionListener
+							target="#{templateLancamentoController.template}"
+							value="#{lancamento}" />
+					</h:commandLink>
+					<p:tooltip for="btnEditar" value="Editar Lançamento" />
+				</p:column>
+
+				<!-- BOTAO ALTERAR STATUS -->
+				<p:column styleClass="gridTdIco">
+					<f:facet name="header">
+						Status  <br />
+						<p:selectOneMenu id="selectStatus"
+							value="#{templateLancamentoController.valueSelectStatus}"
+							styleClass="selectStatus" onchange="pageLoading.show();"
+							style="min-width:100px">
+							<f:selectItem itemLabel="#{bundle['select.stt.todos']}"
+								itemValue="TODOS" />
+							<f:selectItem itemLabel="#{bundle['select.stt.ativos']}"
+								itemValue="ATIVOS" />
+							<f:selectItem itemLabel="#{bundle['select.stt.inativos']}"
+								itemValue="INATIVOS" />
+							<p:ajax update=":listagemForm"
+								listener="#{templateLancamentoController.gerarListaTemplate}"
+								oncomplete="pageLoading.hide();" />
+						</p:selectOneMenu>
+					</f:facet>
+					<p:commandLink onclick="pageLoading.show();"
+						oncomplete="pageLoading.hide(); dglAtivarDesativar.show();"
+						update=":dialogAtivarDesativar" immediate="true">
+						<p:graphicImage id="ativarDesativar"
+							value="../../resources/images/ativo_#{lancamento.ativo == true ? 'false' : 'true'}.png"
+							width="20px" height="20px" style="text-align:center;" />
+						<p:tooltip for="ativarDesativar" hideEffect="fade"
+							showEffect="fade"
+							value="#{lancamento.ativo == true ? 'Desativar Lancamento' : 'Ativar Lancamento'}" />
+						<f:setPropertyActionListener
+							target="#{templateLancamentoController.template}"
+							value="#{lancamento}" />
+					</p:commandLink>
+				</p:column>
+
+			</p:dataTable>
+
+		</h:form>
+
+		<p:dialog id="dialogAtivarDesativar"
+			header="#{templateLancamentoController.template.ativo ? 'Desativar' : 'Ativar'}"
+			widgetVar="dglAtivarDesativar" modal="true" closable="false">
+			<h:form id="formAtivarDesativar">
+
+				<div>Confirma #{templateLancamentoController.template.ativo ?
+					'desativação' : 'ativação'} do lançamento?</div>
+				<br />
+				<strong>#{templateLancamentoController.template.repeticao},
+					#{templateLancamentoController.template.valor}</strong>
+
+				<div class="botoesDialog" style="width: 114px;">
+					<p:commandButton id="confirm" value="#{bundle['btn.sim']}"
+						update=":listagemForm" onclick="pageLoading.show();"
+						oncomplete="dglAtivarDesativar.hide();pageLoading.hide();"
+						action="#{templateLancamentoController.ativarDesativar}"
+						global="false" />
+					<p:commandButton id="decline" value="#{bundle['btn.nao']}"
+						onclick="dglAtivarDesativar.hide();" immediate="true"
+						global="false"
+						action="#{templateLancamentoController.limparObjetoTemplate}" />
+				</div>
+			</h:form>
+		</p:dialog>
+	</ui:define>
+</ui:composition>

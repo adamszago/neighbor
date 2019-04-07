@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:sec="http://www.springframework.org/security/tags" >
+	<ui:define name="content">
+	<h3>Cadastro de Módulos de Acesso - Área Root</h3>
+	<h:form id="cadastroModuloAcessoForm" >
+		<ui:insert   >
+			<ui:include src="../../templates/growlGeral.xhtml" />
+		</ui:insert>
+		
+		<h:panelGrid columns="2">
+		
+			<h:outputLabel value="Nome do Módulo de Acesso: " for="nome" />
+			<p:inputText id="nome" value="#{acessoRootController.moduloAcesso.nome}" styleClass="toCapitalize"
+				required="true" label="Nome" size="30"  maxlength="30" requiredMessage="O Nome é obrigatório"/>
+	
+			<h:outputLabel value="Descrição: " for="descricao" />
+			<p:inputText id="descricao" value="#{acessoRootController.moduloAcesso.descricao}"
+				required="true" label="Descrição" size="60" maxlength="80" requiredMessage="A Descrição é obrigatória"/>
+				
+		</h:panelGrid>
+		
+		<br/><br/>
+		
+		<h:panelGrid columns="1" id="arvorePermissoes">
+			<h3>Permissões:</h3>
+			<p:tree value="#{acessoRootController.treePermissoes}" var="permissao" id="checkboxTree"   
+            selectionMode="checkbox"  expandAnim="FADE_IN" collapseAnim="FADE_OUT"
+            selection="#{acessoRootController.selectedPermissoes}" expanded="TRUE" propagateSelectionUp="TRUE"
+            propagateSelectionDown="TRUE" >  
+  
+		        <p:treeNode>  
+		            <h:outputText value="#{permissao}" />  
+		        </p:treeNode>  
+    		</p:tree> 
+		</h:panelGrid>
+		
+		<br/><br/>
+		
+		<h:panelGrid columns="2">
+			<p:commandButton value="Gravar"	 actionListener="#{acessoRootController.gravarModuloAcesso}" ajax="true" 
+							update=":cadastroModuloAcessoForm" 
+							rendered="#{acessoRootController.moduloAcesso.idModuloAcesso == null || acessoRootController.moduloAcesso.idModuloAcesso == 0}" 
+							onclick="pageLoading.show();" oncomplete="pageLoading.hide();" />
+							
+			<p:commandButton value="Alterar" actionListener="#{acessoRootController.alterarModuloAcesso}" ajax="true" 
+							update=":cadastroModuloAcessoForm" 
+							rendered="#{acessoRootController.moduloAcesso.idModuloAcesso > 0 }" 
+							onclick="pageLoading.show();" oncomplete="pageLoading.hide();" />
+				
+			<p:commandButton value="Limpar" action="#{acessoRootController.novoModuloAcesso}" ajax="true" process="@this"
+								update=":cadastroModuloAcessoForm" 
+								onclick="pageLoading.show();" oncomplete="pageLoading.hide();" />	
+		</h:panelGrid>
+	</h:form>
+	</ui:define>
+</ui:composition>

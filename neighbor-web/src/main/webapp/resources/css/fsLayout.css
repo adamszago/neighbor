@@ -1,0 +1,906 @@
+#header {
+	margin: 15px 0;
+	background: white;
+	border: 1px solid #dbdbdb;
+	border-radius: 10px;
+	-webkit-box-shadow: 0px 0px 15px 0px #FFF;
+	-moz-box-shadow: 0px 0px 15px 0px #FFF;
+	box-shadow: 0px 0px 15px 0px #FFF;
+}
+
+#header .ui-menu.ui-menubar {
+	border: 0 !important;
+}
+
+.boxLogin, #conteudo {
+	margin: 10px 0;
+	background: white;
+	border: 1px solid #CCC;
+	border-radius: 10px;
+	padding: 20px 20px 60px;
+	min-height: 200px;
+	-webkit-box-shadow: 0px 0px 15px 0px #FFF;
+	-moz-box-shadow: 0px 0px 15px 0px #FFF;
+	box-shadow: 0px 0px 15px 0px #FFF;
+}
+
+#listaNavegadores {
+	color: #333
+}
+
+#listaNavegadores h2 {
+	font-size: 16px;
+	font-weight: bold
+}
+
+#listaNavegadores ul {
+	width: 988px;
+	margin-top: 30px
+}
+
+#listaNavegadores li {
+	width: 345px;
+	float: left;
+	height: 65px;
+	padding: 0px 90px 0 55px;
+	margin-bottom: 30px;
+}
+
+#listaNavegadores .firefox {
+	background: url(../images/ico_firefox.gif) no-repeat
+}
+
+#listaNavegadores .chrome {
+	background: url(../images/ico_chrome.gif) no-repeat
+}
+
+#listaNavegadores .ie8 {
+	background: url(../images/ico_ie8.gif) no-repeat
+}
+
+#listaNavegadores .safari {
+	background: url(../images/ico_safari.gif) no-repeat
+}
+
+#listaNavegadores .opera {
+	background: url(../images/ico_opera.gif) no-repeat
+}
+
+#listaNavegadores li {
+	text-align: left
+}
+
+#listaNavegadores li a {
+	font-weight: bold;
+	color: #107fbf;
+	text-decoration: none;
+	font-size: 12px
+}
+
+#listaNavegadores li a span {
+	font-weight: bold;
+	font-size: 14px;
+	color: #333 !important
+}
+
+#listaNavegadores li a:hover span, #listaNavegadores li a:hover {
+	text-decoration: underline
+}
+
+#listaNavegadores * {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	list-style: none;
+	text-decoration: none
+}
+
+#listaNavegadores 
+#listaNavegadores a {
+	color: #333
+}
+
+#listaNavegadores a:hover {
+	text-decoration: underline;
+	color: #333
+}
+
+.s4-notdlg a img, /* botoes logo IE */ #listagemForm a img,
+	/* botoes logo IE */ .borderNone {
+	border: 0;
+	outline: none;
+}
+
+.inputNomeDono {
+	border: 0;
+	-moz-box-shadow: inset 0 0 0 #fff;
+	-webkit-box-shadow: inset 0 0 0 #fff;
+	box-shadow: inset 0 0 0 #fff
+}
+
+#btnLogin {
+	padding: 8px 15px;
+}
+
+.formLogin {
+	margin: 0 auto;
+	width: 284px;
+}
+
+.containerRedefinirSenha {
+	margin: 0 auto;
+}
+
+.cadastro {
+	width: 700px;
+	text-align: left;
+}
+
+/* TODO: VERIFICAR @media screen and (-webkit-min-device-pixel-ratio:0) {
+	.s4-ca {
+		width: 490px !IMPORTANT;
+	}
+	.ms-wpselectlinkfocus {
+		margin-left: 70px;
+		float: left;
+	}
+} */
+
+.s4-specialNavLinkList {
+	display: none;
+}
+
+/* TODO: VERIFICAR .displayNone .hideRoodNode {
+	display: none;
+} */
+
+.s4-titletable {
+	color: #94969D /*#00968C*/;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+}
+
+.s4-titletable a {
+	font-size: 14px !important;
+	cursor: text;
+}
+
+.s4-titletable a:hover {
+	color: #94969D !important;
+	font-size: 14px !important;
+	text-decoration: none;
+	cursor: text;
+}
+
+.ms-bodyareaframe {
+	padding: 8px;
+	border: none;
+}
+
+.tag {
+	color: #800000;
+}
+
+.pln {
+	color: #000000;
+}
+
+.atn {
+	color: #ff0000;
+}
+
+.pun {
+	color: #000000;
+}
+
+.atv {
+	color: #0000ff;
+}
+
+.kwd {
+	color: #00008b;
+}
+
+.str {
+	color: #800000;
+}
+
+.lit {
+	color: #800000;
+}
+
+.s4-titlerowhidetitle {
+	display: none;
+}
+
+.s4-ribbonrowhidetitle {
+	height: 135px;
+}
+
+.ctl00_PlaceHolderMain_Main_0 {
+	border-color: Black;
+	border-width: 1px;
+	border-style: Solid;
+}
+
+.ctl00_PlaceHolderMain_CentralAtendimentoZone_0 {
+	border-color: Black;
+	border-width: 1px;
+	border-style: Solid;
+}
+
+.ctl00_wpz_0 {
+	border-color: Black;
+	border-width: 1px;
+	border-style: Solid;
+}
+
+.atendimento {
+	DISPLAY: none
+}
+
+.ms-formbody, .ms-formlabel {
+	border-top-style: none;
+	background-color: transparent;
+	border-bottom-width: 0px;
+}
+
+.ms-formline {
+	display: none;
+}
+
+.ms-PartSpacingVertical {
+	display: none;
+}
+
+.rodape_atendimento {
+	float: left;
+	/* TODO: VERIFICAR margin-top: */
+}
+
+.ms-WPBody {
+	max-width: 535px !Important;
+}
+
+.ms-formtable {
+	max-width: 465px !Important;
+}
+
+#WebPartWPQ4 {
+	max-width: 490px !Important;
+}
+
+#menuFlu {
+	right: 0px;
+	margin: 0;
+	padding: 0;
+	position: absolute;
+	top: 50px;
+	width: 150px;
+}
+
+#menuFlu ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+#menuFlu ul li {
+	margin-bottom: 2px;
+}
+
+#menuFlu ul li a {
+	background-color: #333;
+	border: 1px solid #999;
+	color: #FFF;
+	display: block;
+	padding: 5px 5px 5px 15px;
+	text-decoration: none;
+}
+
+#menuFlu ul li a:hover {
+	background-color: #ccc;
+	color: #333;
+}
+/* menuLeft
+.innerContentFix {padding-left: 200px; width: 680px;}
+*/
+.ui-widget {
+	font-size: 12px;
+}
+
+.ui-widget-content {
+	color: #999 !important;
+	list-style: none outside none;
+	margin: 0;
+	/*padding:4x 0px 4px 6px;*/
+	padding: 0;
+	height: auto !important;
+}
+
+.ui-tooltip {
+	padding: 3px 5px;
+}
+
+.ui-datalist-content {
+	border: 0;
+	padding: 0 10px;
+}
+
+.ui-expanded-row-content td {
+	padding: 5px;
+}
+
+.ui-accordion .ui-accordion-content {
+	margin: 0;
+}
+
+/* Centraliza botoes rowToggler */
+#cadastroUsuarioForm .ui-row-toggler, #listagemUsuarioForm .ui-row-toggler,
+	#listagemModuloAcessoForm .ui-row-toggler {
+	margin: auto
+}
+
+.lido {
+	color: #ccc !important;
+}
+
+.toCapitalize {
+	text-transform: capitalize;
+}
+
+.toUppercase {
+	text-transform: uppercase;
+}
+
+.toLowercase {
+	text-transform: lowercase;
+}
+
+.btnWebcamFechar {
+	margin-left: 448px
+}
+
+.inativo, .inativo td {
+	color: #ccc !important;
+}
+
+h3 {
+	color: #94969D;
+	margin: 10px 0 10px;
+	text-align: left;
+}
+
+.align-left {
+	text-align: left;
+}
+
+img.lphant {
+	border: 0;
+	border-right: 17px solid #FFFFFF;
+}
+
+.listaMail {
+	word-wrap: break-word;
+	width: 203px;
+	display: block
+}
+
+.ui-datatable .ui-column-filter {
+	width: 100%
+}
+
+.content table tr td {
+	text-align: left
+}
+
+.content table tr td.gridTdIco {
+	width: 16px;
+	text-align: center
+}
+
+.ui-datatable .ui-datatable-data td, .ui-datatable .ui-datatable-data-empty td
+	{
+	padding: 5px;
+	color: #222;
+}
+
+.ui-datatable .ui-datatable-data td ul, .ui-datatable .ui-datatable-data-empty td ul
+	{
+	list-style: none;
+}
+
+.ui-datatable tr.ui-state-hover {
+	background: #FFF !important;
+	cursor: default !important;
+}
+
+.ui-datatable tr.ui-state-highlight {
+	background: #FFF; /*background:#A0E5E5 !important;*/
+	border: 1px solid #AAAAAA;
+}
+
+.ui-datatable tr.ui-selected {
+	background: #56BDC5 !important;
+}
+
+.ui-datatable tr.ui-selected td {
+	color: #FFF
+}
+
+#logoLphantus {
+	left: 50%;
+	margin-left: 350px;
+	margin-top: -35px;
+	position: absolute;
+}
+/*
+.ui-datatable .ui-datatable-odd {
+    background: #F9F9F9 !important;
+}
+*/
+.lida {
+	color: #CCC
+}
+
+/* Fix espacamento da arvore de modulos */
+.ygtv-checkbox .ygtv-highlight1 .ygtvcontent, .ygtv-checkbox .ygtv-highlight0 .ygtvcontent
+	{
+	padding-left: 18px !important
+}
+
+/* Fix abas da pagina do morador */
+#paginaMoradorForm .ui-helper-clearfix:after {
+	display: inline !important;
+}
+
+#paginaMoradorForm .ui-tabs .ui-tabs-nav {
+	padding-bottom: 14px !important
+}
+
+.ui-datepicker th {
+	font-size: 10px;
+}
+/* hack tooltip do popup adicionar morador em seguranca-cadastro de usuario */
+#formSindicoMorador {
+	overflow: hidden;
+	position: relative;
+}
+
+div .content {
+	min-height: 405px;
+	padding-top: 20px;
+}
+
+.devedor {
+	background: #E02323 !important;
+	color: white !important;
+}
+
+form#cadastroModuloAcessoForm .ui-widget-content {
+	border: 0 none;
+	width: 610px;
+}
+
+.asterisco_obr {
+	font-weight: bold;
+	color: red;
+}
+
+.content form table {
+	position: relative;
+}
+
+.content form table td label {
+	float: right;
+}
+
+.label_obr {
+	font-weight: bold;
+}
+
+.label_obr:before {
+	content: "*";
+	color: red;
+}
+
+.ui-outputlabel-rfi {
+	display: none;
+}
+
+/* Box Intro */
+div .inner {
+	position: absolute;
+	color: #2F3A4D;
+	font-size: 14px;
+	padding: 10px;
+}
+
+div.boxintro_start {
+	width: 447px;
+	height: 184px;
+	background: transparent url(../images/boxintro_bemvindo.png) no-repeat
+		top left;
+	position: relative;
+}
+
+div.boxintro_home {
+	width: 309px;
+	height: 188px;
+	background: transparent url(../images/boxintro_home.png) no-repeat top
+		left;
+	position: absolute;
+	display: none;
+	top: 120px;
+	left: 353px;
+}
+
+div.boxintro_moradores {
+	width: 240px;
+	height: 158px;
+	background: transparent url(../images/boxintro_moradores.png) no-repeat
+		top left;
+	position: absolute;
+	display: none;
+	top: 117px;
+	left: 384px;
+}
+
+div.boxintro_agregados {
+	width: 317px;
+	height: 105px;
+	background: transparent url(../images/boxintro_agregados.png) no-repeat
+		top left;
+	position: absolute;
+	display: none;
+	top: 173px;
+	left: 210px;
+}
+
+div.boxintro_visitantes {
+	width: 240px;
+	height: 163px;
+	background: transparent url(../images/boxintro_visitantes.png) no-repeat
+		top left;
+	position: absolute;
+	display: none;
+	top: 117px;
+	left: 497px;
+}
+
+div.boxintro_prestadores {
+	width: 240px;
+	height: 163px;
+	background: transparent url(../images/boxintro_prestadores.png)
+		no-repeat top left;
+	position: absolute;
+	display: none;
+	top: 117px;
+	left: 492px;
+}
+
+div.boxintro_animais {
+	width: 263px;
+	height: 163px;
+	background: transparent url(../images/boxintro_animais.png) no-repeat
+		top left;
+	position: absolute;
+	display: none;
+	top: 116px;
+	left: 596px;
+}
+
+div.boxintro_agenda {
+	width: 300px;
+	height: 119px;
+	background: transparent url(../images/boxintro_agenda.png) no-repeat top
+		left;
+	position: absolute;
+	display: none;
+	top: 169px;
+	left: 300px;
+}
+
+div.boxintro_ocorrencia {
+	width: 300px;
+	height: 119px;
+	background: transparent url(../images/boxintro_ocorrencia.png) no-repeat
+		top left;
+	position: absolute;
+	display: none;
+	top: 166px;
+	left: 358px;
+}
+
+div.boxintro_email {
+	width: 300px;
+	height: 119px;
+	background: transparent url(../images/boxintro_ocorrencia.png) no-repeat
+		top left;
+	position: absolute;
+	display: none;
+	top: 166px;
+	left: 416px;
+}
+
+div.boxintro_escreveremail {
+	width: 300px;
+	height: 119px;
+	background: transparent url(../images/boxintro_ocorrencia.png) no-repeat
+		top left;
+	position: absolute;
+	display: none;
+	top: 166px;
+	left: 456px;
+}
+
+div.boxintro_menu {
+	width: 322px;
+	height: 306px;
+	background: transparent url(../images/boxintro_menu.png) no-repeat top
+		left;
+	position: absolute;
+	display: none;
+	top: 186px;
+	left: 260px;
+}
+
+div.boxintro_fim {
+	width: 372px;
+	height: 187px;
+	background: transparent url(../images/boxintro_fim.png) no-repeat top
+		left;
+	position: absolute;
+	display: none;
+	top: 187px;
+	left: 437px;
+}
+
+div.boxintro_start .inner {
+	top: 10px;
+	left: 160px;
+}
+
+div.boxintro_home .inner {
+	top: 80px;
+	left: 10px;
+}
+
+div.boxintro_moradores .inner {
+	top: 69px;
+	left: 0px;
+}
+
+div.boxintro_agregados .inner {
+	top: 25px;
+	left: 70px;
+}
+
+div.boxintro_visitantes .inner {
+	top: 66px;
+	left: 0px;
+}
+
+div.boxintro_prestadores .inner {
+	top: 66px;
+	left: 0px;
+}
+
+div.boxintro_animais .inner {
+	top: 66px;
+	left: 0px;
+	width: 217px;
+}
+
+div.boxintro_agenda .inner {
+	top: 15px;
+	left: 61px;
+}
+
+div.boxintro_ocorrencia .inner {
+	top: 15px;
+	left: 47px;
+	width: 213px
+}
+
+div.boxintro_email .inner, div.boxintro_escreveremail .inner {
+	top: 15px;
+	left: 47px;
+	width: 213px
+}
+
+div.boxintro_menu .inner {
+	top: 47px;
+	left: 84px;
+	width: 213px
+}
+
+div.boxintro_fim .inner {
+	top: 59px;
+	left: 0px;
+	width: 213px
+}
+
+div.boxintro_start img.btnNext {
+	position: absolute;
+	bottom: 57px;
+	right: 9px;
+}
+
+div.boxintro_start img.btnClose {
+	position: absolute;
+	top: 6px;
+	right: 7px;
+}
+
+div.boxintro_home img.btnNext {
+	position: absolute;
+	bottom: 9px;
+	right: 9px;
+}
+
+div.boxintro_moradores img.btnNext {
+	position: absolute;
+	bottom: 9px;
+	right: 9px;
+}
+
+div.boxintro_agregados img.btnNext {
+	position: absolute;
+	bottom: 9px;
+	right: 9px;
+}
+
+div.boxintro_visitantes img.btnNext {
+	position: absolute;
+	bottom: 9px;
+	right: 9px;
+}
+
+div.boxintro_prestadores img.btnNext {
+	position: absolute;
+	bottom: 9px;
+	right: 9px;
+}
+
+div.boxintro_animais img.btnNext {
+	position: absolute;
+	bottom: 9px;
+	right: 33px;
+}
+
+div.boxintro_agenda img.btnNext {
+	position: absolute;
+	bottom: 9px;
+	right: 9px;
+}
+
+div.boxintro_ocorrencia img.btnNext {
+	position: absolute;
+	bottom: 19px;
+	right: 29px;
+}
+
+div.boxintro_email img.btnNext, div.boxintro_escreveremail img.btnNext {
+	position: absolute;
+	bottom: 19px;
+	right: 29px;
+}
+
+div.boxintro_menu img.btnNext {
+	position: absolute;
+	bottom: 163px;
+	right: 9px;
+}
+
+div.boxintro_fim a {
+	color: blue
+}
+
+div.boxintro_fim img.btnClose {
+	position: absolute;
+	top: 71px;
+	right: 141px;
+}
+
+.ui-helper-clearfix:after {
+	clear: both;
+	content: ".";
+	/*display: inline!important;*/
+	height: 0;
+	visibility: hidden;
+}
+
+.ui-tabs.ui-tabs-top>.ui-tabs-nav {
+	height: 30px;
+}
+
+h3, .ui-datatable .ui-datatable-header {
+	font-size: 20px;
+	font-style: italic;
+	color: #2F3A4D;
+	-moz-text-shadow: inset 0 0 0 #2F3A4D;
+	-webkit-text-shadow: inset 0 0 0 #2F3A4D;
+	text-shadow: #fff 1px 2px 2px;
+	text-align: center;
+}
+
+.datatableHeaderPadrao2 .ui-datatable-header {
+	font-size: 15px;
+}
+
+.gridPadrao1 td {
+	border: none;
+}
+
+.gridPadrao1 tr {
+	border: none;
+}
+
+.gridPadrao1 label {
+	float: left !important;
+}
+
+.ui-datatable-scrollable .ui-datatable-scrollable-header-box,
+	.ui-datatable-scrollable .ui-datatable-scrollable-footer-box {
+	padding-right: 0 !important;
+}
+/* menuLeft
+.ui-datatable table {
+	width: 677px;
+	position:absolute;
+}
+*/
+.corpoMesagem {
+	display: table-cell;
+	vertical-align: middle;
+	height: 248px;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+.userLogged {
+	width: 615px;
+}
+
+/*===================== 
+	DIALOGS 
+=======================*/
+.dialogLoading .ui-dialog-titlebar span {
+	font-size: 12px !important;
+}
+
+.botoesDialog {
+	margin: 0 auto;
+	margin-top: 19px;
+}
+
+.botoesDialog button {
+	margin-top: 17px;
+	margin: 0 auto;
+	margin-right: 2px;
+}
+/*===================== 
+	DATA TABLE 
+=======================*/
+.textoCentro {
+	text-align: center !important;
+}
+
+/*===================== 
+	FOOTER 
+=======================*/
+#footer {
+	bottom: 0;
+	position: absolute;
+	left: 36%;
+}
+
+/*===================== 
+	OVERLAY 
+=======================*/
+.ui-widget-overlay {
+	opacity: .50 !important;
+}

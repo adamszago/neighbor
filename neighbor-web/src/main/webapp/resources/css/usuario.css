@@ -1,0 +1,27 @@
+.usuarioLogado {
+	/* 	width: 288px; */
+	
+}
+
+.usuarioLogado #nomeUsuarioLogado {
+	font-size: 10px;
+}
+
+.usuarioLogado #loginUsuarioLogado {
+	font-size: 10px;
+	font-weight: bold;
+}
+
+.usuarioLogado #nomeCondominio {
+	font-size: 12px;
+	font-weight: bold;
+}
+
+.usuarioLogado #logout a {
+	font-size: 10px;
+}
+
+.usuarioLogado .imgLogout {
+	float: none;
+	margin-left: 4px;
+}

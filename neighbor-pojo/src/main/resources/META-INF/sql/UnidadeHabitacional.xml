@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings version="2.0"
+	xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_1_0.xsd">
+
+	<named-query name="UnidadeHabitacional.buscarUnidadeHabitacionalMorador">
+		<query>
+			<![CDATA[
+				SELECT unidade 
+				FROM UnidadeHabitacional unidade 
+				INNER JOIN unidade.moradores uniList 
+				INNER JOIN uniList.morador morador 
+				WHERE unidade.ativo = true 
+				AND (uniList.dataFim IS NULL OR uniList.dataFim >= CURRENT_DATE) 
+				AND morador.idPessoa = :idPessoa
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="UnidadeHabitacional.obterUltimaUnidadeInserida">
+		<query>
+			<![CDATA[
+				SELECT MAX(u.idUnidade) FROM UnidadeHabitacional u
+			]]>
+		</query>
+	</named-query>
+	
+</entity-mappings>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<ui:define name="content">
+		<h3>
+			<h:outputText value="#{bundle['tit.cadastro.sindico']}" />
+		</h3>
+		<h:form id="cadastroSindicoForm">
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+
+			<h:inputHidden id="idSindico" value="#{sindicoController.sindico.id}" />
+
+
+			<h:panelGrid>
+				<p:commandLink onclick="dlgSindicoMorador.show();"
+					id="sindicoMorador">
+					<p:graphicImage value="../../resources/images/lupa.png"
+						width="20px" height="20px" />
+					<span style="margin-left: 5px; margin-top: 5px; position: absolute"><h:outputText
+							value="#{bundle['tit.sindico.morador']}" /></span>
+				</p:commandLink>
+			</h:panelGrid>
+
+			<h:panelGrid columns="2">
+				<h:outputLabel value="#{bundle['tit.nome.sindico']}: " for="nome" />
+				<p:inputText id="nome" value="#{sindicoController.sindico.nome}"
+					styleClass="toCapitalize campo-onload" required="true" label="Nome"
+					size="60" maxlength="80" minLength="4"
+					requiredMessage="#{bundle['msg.informe.nome.morador']}" />
+
+				<h:outputLabel value="#{bundle['tit.email.sindico']}: " for="mail" />
+				<h:panelGroup>
+					<p:inputText id="mail" value="#{sindicoController.sindico.email}"
+						styleClass="toLowercase" required="true" label="E-mail" size="60"
+						maxlength="80" requiredMessage="#{bundle['msg.email.requerido']}">
+						<f:validator
+							validatorId="br.com.lphantus.neighbor.component.validator.ValidatorEmail" />
+					</p:inputText>
+					<p:message for="mail" />
+				</h:panelGroup>
+
+				<h:outputLabel value="#{bundle['lbl.cpf']}: " for="cpf" />
+				<p:inputMask id="cpf" value="#{sindicoController.sindico.cpf}"
+					required="true" label="CPF" mask="999.999.999-99"
+					requiredMessage="#{bundle['msg.informe.cpf']}">
+					<f:validator
+						validatorId="br.com.lphantus.neighbor.component.validator.ValidatorCPF" />
+				</p:inputMask>
+
+			</h:panelGrid>
+			<h:panelGrid id="datasMandato" columns="4">
+				<h:outputLabel value="#{bundle['tit.mandato.inicio']}: "
+					for="dataInicio" />
+				<p:calendar value="#{sindicoController.sindico.inicioMandato}"
+					id="dataInicio" navigator="true" mindate="1/1/2010"
+					maxdate="1/1/2030" locale="pt" pattern="dd/MM/yyyy" />
+				<h:outputLabel value="#{bundle['tit.mandato.fim']}: " for="dataFim" />
+				<p:calendar value="#{sindicoController.sindico.fimMandato}"
+					id="dataFim" navigator="true"
+					mindate="#{sindicoController.dataMinima}" maxdate="1/1/2030"
+					locale="pt" pattern="dd/MM/yyyy" />
+			</h:panelGrid>
+
+			<h:panelGrid columns="2">
+				<p:commandButton value="#{bundle['btn.gravar']}"
+					actionListener="#{sindicoController.gravar}" ajax="true"
+					update=":cadastroSindicoForm"
+					rendered="#{sindicoController.sindico.id == null || sindicoController.sindico.id == 0}" />
+				<p:commandButton value="#{bundle['btn.alterar']}"
+					actionListener="#{sindicoController.alterar}" ajax="true"
+					update=":cadastroSindicoForm :growlGeral"
+					rendered="#{sindicoController.sindico.id > 0 }" />
+				<p:commandButton value="#{bundle['btn.limpar']}"
+					action="#{sindicoController.novoSindico}" ajax="true"
+					update=":cadastroSindicoForm" />
+			</h:panelGrid>
+		</h:form>
+
+		<ui:insert name="dialogsExtras">
+			<ui:include src="../../dialogs/dialogSindicoMorador.xhtml" />
+		</ui:insert>
+
+	</ui:define>
+</ui:composition>

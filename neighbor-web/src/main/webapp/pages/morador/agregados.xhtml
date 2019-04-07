@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+	<ui:define name="content">
+		<h:form id="paginaMoradorForm" styleClass="innerContentFix">
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+
+			<p:dataTable id="agregadosMorador" var="moradorAgregado"
+				value="#{moradorPageController.agregados}"
+				rowKey="#{moradorAgregado.agregado.pessoa.idPessoa}"
+				paginator="true" rows="5"
+				emptyMessage="Sem Agregados para #{moradorPageController.morador.pessoa.nome}"
+				style="width: 100%">
+				<f:facet name="header">
+					<h:outputText value="#{bundle['tit.agregados.cadastrados']}" />
+				</f:facet>
+				<p:column sortBy="agregado.pessoa.nome"
+					filterBy="agregado.pessoa.nome">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.nome.agregado']}" />
+					</f:facet>
+					<h:outputText value="#{moradorAgregado.agregado.pessoa.nome}" />
+				</p:column>
+				<p:column sortBy="agregado.pessoa.mail"
+					filterBy="agregado.pessoa.mail">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.email.agregado']}" />
+					</f:facet>
+					<h:outputText value="#{moradorAgregado.agregado.pessoa.mail}" />
+				</p:column>
+				<p:column sortBy="parentesco"
+					filterBy="parentesco">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.parentesco.morador']}" />
+					</f:facet>
+					<h:outputText value="#{moradorAgregado.parentesco}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.data.br.nasc']}" />
+					</f:facet>
+					<h:outputText
+						value="#{moradorAgregado.agregado.pessoa.dataNascimento}">
+						<f:convertDateTime locale="pt" pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+		<h:panelGroup rendered="#{usuarioController.sistemaIsDemo}">
+			<script type="text/javascript">
+				disponivelNosPlanos(0, 1, 1, 1);
+			</script>
+		</h:panelGroup>
+	</ui:define>
+</ui:composition>

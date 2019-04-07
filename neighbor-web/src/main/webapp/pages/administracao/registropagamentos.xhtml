@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+	<ui:define name="content">
+		<h3>
+			<h:outputText value="#{bundle['tit.manut.adimplencia']}" />
+		</h3>
+
+		<h:form enctype="multipart/form-data">
+
+			<p:messages showDetail="true" />
+
+			<p:fileUpload value="#{contasController.arquivoPagamento}"
+				mode="simple" />
+
+			<p:commandButton value="Submit" ajax="false"
+				actionListener="#{contasController.upload}" />
+
+		</h:form>
+
+		<h:form id="registroPagamentosF" enctype="multipart/form-data">
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+
+			<h5>Para busca personalizada insira hífen para intervalo ou
+				virgula para casas separadas.</h5>
+			<h5>Exemplo: casa 10 até casa 235: 10-235</h5>
+			<h5>ou casas específicas: 10,456, 253, 45, 768, 310, 252, 247</h5>
+			<h:panelGrid columns="3" id="pnlPagamentoManual">
+				<h:outputLabel for="inputCasas" id="lblCasas" value="Casas:" />
+				<p:inputText value="#{contasController.casas}" size="50"
+					id="inputCasas" styleClass="campo-onload" />
+				<p:commandLink actionListener="#{contasController.consultar}"
+					update=":registroPagamentosF:listagemInadimplentes">
+					<p:graphicImage url="../../resources/images/lupa.png" />
+				</p:commandLink>
+
+			</h:panelGrid>
+
+			<p:dataTable value="#{contasController.moradores}" var="morador"
+				paginator="true" rowKey="#{morador.idMorador}" rows="20"
+				selection="#{contasController.moradoresSelecionados}"
+				id="listagemInadimplentes" styleClass="innerContentFix">
+				<p:column selectionMode="multiple" style="width:18px" />
+				<p:column style="width:16px">
+					<p:graphicImage id="imgAdimplente"
+						value="../../resources/images/adimplente_#{morador.adimplente}.png"
+						width="24px" height="24px">
+						<p:tooltip for="imgAdimplente" hideEffect="fade" showEffect="fade"
+							value="Adimplência"></p:tooltip>
+					</p:graphicImage>
+				</p:column>
+				<p:column sortBy="#{morador.pessoa.nome}" filterBy="#{morador.pessoa.nome}">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['lbl.nome']}" />
+					</f:facet>
+					<h:outputText value="#{morador.pessoa.nome}" />
+				</p:column>
+				<p:column sortBy="#{morador.casa}" filterBy="#{morador.casa}">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['lbl.casa']}" />
+					</f:facet>
+					<h:outputText value="#{morador.casa}" />
+				</p:column>
+				<f:facet name="footer">
+					<p:commandButton id="ativoComando"
+						value="#{bundle['tit.adimplente']}" update=":registroPagamentosF"
+						action="#{contasController.ativar}" onclick="pageLoading.show();"
+						oncomplete="pageLoading.hide();" />
+					<p:commandButton id="inativoComando"
+						value="#{bundle['tit.inadimplente']}"
+						update=":registroPagamentosF"
+						action="#{contasController.inativar}"
+						onclick="pageLoading.show();" oncomplete="pageLoading.hide();" />
+				</f:facet>
+			</p:dataTable>
+		</h:form>
+	</ui:define>
+</ui:composition>

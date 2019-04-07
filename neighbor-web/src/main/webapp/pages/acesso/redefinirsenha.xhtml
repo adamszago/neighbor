@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/LayoutVazio.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+
+	<ui:define name="content">
+		<h:form id="recuperacaoUsuarioSenhaForm">
+
+			<div class="innerContentFix">
+				<p:growl id="growlGeral" showDetail="false" sticky="false"
+					errorIcon="../../resources/images/info_red.png" life="100000" />
+			</div>
+			<div class="containerRedefinirSenha">
+				<br /> <br />
+				<div class="formLogin">
+					<img id="logo" border="0"
+						style="height: auto; width: auto; margin-left: 28px;"
+						alt="Lphantus Neighbor"
+						src="../../resources/images/logo_neighbor.gif" />
+					<h2>Esqueceu seu login ou senha?</h2>
+					<h:outputText
+						value="Digite abaixo seu login ou email para que uma nova senha seja enviada para seu email:" />
+					<br /> <br />
+					<h:outputLabel value="Login: " for="login" />
+					<p:inputText value="#{usuarioController.usuario.login}" id="login" />
+					<br />
+					<h:outputText value=" &nbsp; &nbsp; &nbsp; ou" />
+					<br />
+					<h:outputLabel value="Email: " for="email" />
+					<p:inputText value="#{usuarioController.usuario.email}" id="email" />
+					<br /> <br />
+					<p:commandButton value="Enviar"
+						actionListener="#{usuarioController.enviarEmailRecuperacao}"
+						ajax="true" update=":recuperacaoUsuarioSenhaForm"
+						onclick="pageLoading.show();" oncomplete="pageLoading.hide();" />
+
+					<p:commandButton value="Voltar" style="margin-left: 10px;"
+						onclick="window.history.back();" />
+
+				</div>
+			</div>
+		</h:form>
+	</ui:define>
+</ui:composition>

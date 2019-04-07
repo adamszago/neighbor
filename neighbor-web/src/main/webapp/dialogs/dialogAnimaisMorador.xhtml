@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+<body>
+	<ui:composition>
+		<p:dialog header="Animais" widgetVar="dlgAnimaisMorador"
+			resizable="false" width="400" height="300" modal="true">
+			<h:form id="formAnimaisMorador">
+				<h:panelGrid columns="2" style="margin-bottom:10px">
+					<p:dataTable id="lAnimaisMorador"
+						emptyMessage="Sem animais cadastrados!" var="anm" rows="5"
+						value="#{animalController.animaisMorador}" effectSpeed="fast">
+						<p:column>
+							<f:facet name="header">  
+              				Nome  
+      					</f:facet>
+							<h:outputText value="#{anm.nome}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">  
+              				Raça  
+      					</f:facet>
+							<h:outputText value="#{anm.raca}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">  
+              				Tipo Animal  
+      					</f:facet>
+							<h:outputText value="#{anm.tipoAnimal}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">  
+              				Porte  
+      					</f:facet>
+							<h:outputText value="#{anm.porte}" />
+						</p:column>
+					</p:dataTable>
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+	</ui:composition>
+</body>
+</html>

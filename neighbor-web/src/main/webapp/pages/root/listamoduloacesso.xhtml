@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+	<ui:define name="content">
+		<h3>
+			<h:outputText value="#{bundle['tit.list.mod.acesso']}" />
+		</h3>
+		<h:form id="listagemModuloAcessoForm">
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+
+
+			<h:panelGrid columns="1" id="listaModulosAcesso">
+				<h:panelGroup width="100%">
+
+					<p:dataTable id="modulosAcesso"
+						value="#{acessoRootController.modulosAcesso}" var="mo"
+						width="100%" emptyMessage="#{bundle['msg.sem.modulos.acesso']}">
+						<f:facet name="header">
+							<h:outputText value="#{bundle['tit.modulos.acesso']}" />
+						</f:facet>
+
+						<!-- <p:column sortBy="#{mo.idModuloAcesso}">  
+				          	<f:facet name="header">Id</f:facet>
+				          	<h:outputText value="#{mo.idModuloAcesso}"  />
+				      	</p:column> -->
+						<p:column sortBy="#{mo.nome}">
+							<f:facet name="header">
+								<h:outputText value="#{bundle['tit.nome']}" />
+							</f:facet>
+							<h:outputText value="#{mo.nome}" />
+						</p:column>
+						<p:column sortBy="#{mo.descricao}">
+							<f:facet name="header">
+								<h:outputText value="#{bundle['tit.descricao']}" />
+							</f:facet>
+							<h:outputText value="#{mo.descricao}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="#{bundle['tit.permissoes']}" />
+							</f:facet>
+							<p:rowToggler />
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="#{bundle['tit.alterar']}" />
+							</f:facet>
+							<h:commandLink
+								action="#{acessoRootController.editarModuloAcesso}"
+								onclick="pageLoading.show();" oncomplete="pageLoading.hide();">
+
+								<p:graphicImage id="editarModuloAcesso"
+									value="../../resources/images/edit.png" width="20px" height="20px"
+									style="text-align:center;" />
+								<p:tooltip for="editarModuloAcesso" hideEffect="fade"
+									showEffect="fade" value="Editar Informações"></p:tooltip>
+								<f:setPropertyActionListener
+									target="#{acessoRootController.moduloAcesso}" value="#{mo}" />
+							</h:commandLink>
+						</p:column>
+						<p:rowExpansion>
+							<p:dataList value="#{mo.permissoesList}" var="pe" itemType="disc">  
+							    #{pe.label} -  #{pe.descricao}  
+							</p:dataList>
+						</p:rowExpansion>
+					</p:dataTable>
+				</h:panelGroup>
+			</h:panelGrid>
+			<p:confirmDialog message="Confirma exclusão do Registro ?"
+				header="Excluir" severity="alert" widgetVar="confirmaExclusao"
+				modal="true">
+
+				<p:commandButton id="confirm" value="Sim"
+					update=":listagemModuloAcessoForm"
+					oncomplete="confirmaExclusao.hide()"
+					actionListener="#{acessoRootController.excluirModuloAcesso}" />
+				<p:commandButton id="decline" value="Não"
+					onclick="confirmaExclusao.hide()" type="button" />
+
+			</p:confirmDialog>
+		</h:form>
+	</ui:define>
+</ui:composition>

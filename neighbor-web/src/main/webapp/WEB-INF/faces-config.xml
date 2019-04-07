@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faces-config xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_2.xsd"
+	version="2.2">
+
+	<!-- Configuracao para sobrescrever o datatable do primefaces -->
+	<component>
+		<component-type>org.primefaces.component.DataTable</component-type>
+		<component-class>br.com.lphantus.neighbor.component.DataTableOnChange</component-class>
+	</component>
+
+	<!-- Fim configuracao -->
+	<navigation-rule>
+		<from-view-id>/*.xhtml</from-view-id>
+		<navigation-case>
+			<from-action>#{moradorController.novoMorador}</from-action>
+			<from-outcome>novoMorador</from-outcome>
+			<to-view-id>/pages/cadastros/cadmorador.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>/pages/listagem/listaveiculos.xhtml</from-view-id>
+		<navigation-case>
+			<from-action>#{veiculoController.editarVeiculo}</from-action>
+			<from-outcome>editarVeiculo</from-outcome>
+			<to-view-id>/pages/cadastros/cadveiculo.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>/pages/administracao/listasindicos.xhtml</from-view-id>
+		<navigation-case>
+			<from-action>#{sindicoController.editarSindico}</from-action>
+			<from-outcome>editarSindico</from-outcome>
+			<to-view-id>/pages/administracao/cadsindico.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>/pages/administracao/listacondominio.xhtml</from-view-id>
+		<navigation-case>
+			<from-action>#{condominioController.editarCondominio}</from-action>
+			<from-outcome>editarcondominio</from-outcome>
+			<to-view-id>/pages/administracao/cadcondominio.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>/pages/listagem/listaanimais.xhtml</from-view-id>
+		<navigation-case>
+			<from-action>#{animalController.editarAnimal}</from-action>
+			<from-outcome>editarAnimal</from-outcome>
+			<to-view-id>/pages/cadastros/cadanimalestimacao.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>/pages/administracao/listaitemreserva.xhtml</from-view-id>
+		<navigation-case>
+			<from-action>#{itemReservaController.editarItemReserva}</from-action>
+			<from-outcome>editarItemReserva</from-outcome>
+			<to-view-id>/pages/administracao/caditemreserva.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>/pages/administracao/listausuario.xhtml</from-view-id>
+		<navigation-case>
+			<from-action>#{usuarioController.editarUsuario}</from-action>
+			<from-outcome>editarUsuario</from-outcome>
+			<to-view-id>/pages/administracao/cadusuario.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>/pages/root/listausuario.xhtml</from-view-id>
+		<navigation-case>
+			<from-action>#{usuarioController.editarUsuarioRoot}</from-action>
+			<from-outcome>editarUsuarioRoot</from-outcome>
+			<to-view-id>/pages/root/cadusuario.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>/pages/listagem/listaprestador.xhtml</from-view-id>
+		<navigation-case>
+			<from-action>#{prestadorServicoController.editarPrestador}</from-action>
+			<from-outcome>editarPrestador</from-outcome>
+			<to-view-id>/pages/cadastros/cadprestador.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>/pages/listagem/listavisitante.xhtml</from-view-id>
+		<navigation-case>
+			<from-action>#{visitanteController.editarVisitante}</from-action>
+			<from-outcome>editarVisitante</from-outcome>
+			<to-view-id>/pages/cadastros/cadvisitante.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>/pages/financeiro/listalancamento.xhtml</from-view-id>
+		<navigation-case>
+			<from-action>#{lancamentoController.editarLancamento}</from-action>
+			<from-outcome>editarLancamento</from-outcome>
+			<to-view-id>/pages/financeiro/cadlancamento.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>/pages/root/listamoduloacesso.xhtml</from-view-id>
+		<navigation-case>
+			<from-action>#{moduloAcessoController.editarModuloAcessoRoot}</from-action>
+			<from-outcome>editarModuloAcesso</from-outcome>
+			<to-view-id>/pages/root/cadmoduloacesso.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>/pages/cadastros/cadvisitante.xhtml</from-view-id>
+		<navigation-case>
+			<from-action>#{visitanteController.gravar}</from-action>
+			<from-outcome>visitanteCadastrado</from-outcome>
+			<to-view-id>/pages/listagem/listavisitante.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>/pages/cadastros/cadvisitante.xhtml</from-view-id>
+		<navigation-case>
+			<from-action>#{visitanteController.alterar}</from-action>
+			<from-outcome>visitanteCadastrado</from-outcome>
+			<to-view-id>/pages/listagem/listavisitante.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>/pages/cadastros/cadprestador.xhtml</from-view-id>
+		<navigation-case>
+			<from-action>#{prestadorServicoController.gravar}</from-action>
+			<from-outcome>prestadorCadastrado</from-outcome>
+			<to-view-id>/pages/listagem/listaprestador.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>/pages/cadastros/cadprestador.xhtml</from-view-id>
+		<navigation-case>
+			<from-action>#{prestadorServicoController.alterar}</from-action>
+			<from-outcome>prestadorCadastrado</from-outcome>
+			<to-view-id>/pages/listagem/listaprestador.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>/pages/financeiro/cadlancamento.xhtml</from-view-id>
+		<navigation-case>
+			<from-action>#{lancamentoController.gravarLancamentoReceber}</from-action>
+			<from-outcome>lancamentoCadastrado</from-outcome>
+			<to-view-id>/pages/financeiro/listalancamento.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>/pages/financeiro/cadlancamento.xhtml</from-view-id>
+		<navigation-case>
+			<from-action>#{lancamentoController.alterar}</from-action>
+			<from-outcome>lancamentoAlterado</from-outcome>
+			<to-view-id>/pages/financeiro/listalancamento.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>/pages/*</from-view-id>
+		<navigation-case>
+			<from-action>#{usuarioController.logout}</from-action>
+			<from-outcome>loginForm</from-outcome>
+			<to-view-id>/pages/acesso/login.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+
+	<!-- Configuracao para integracao do Spring com JSF -->
+	<application>
+		<el-resolver>org.springframework.web.jsf.el.SpringBeanFacesELResolver</el-resolver>
+		<resource-bundle>
+			<base-name>messages</base-name>
+			<var>bundle</var>
+		</resource-bundle>
+		<locale-config>
+			<default-locale>pt_BR</default-locale>
+			<supported-locale>pt</supported-locale>
+			<supported-locale>en_US</supported-locale>
+		</locale-config>
+	</application>
+
+	<!-- EXCEPTION HANDLER JSF 2 -->
+	<factory>
+		<exception-handler-factory>br.com.lphantus.neighbor.exception.CustomExceptionHandlerFactory</exception-handler-factory>
+	</factory>
+
+	<!-- Renderer -->
+	<!-- <render-kit> -->
+	<!-- <renderer> -->
+	<!-- <component-family>org.primefaces.component</component-family> -->
+	<!-- <renderer-type>org.primefaces.component.FileUploadRenderer</renderer-type> -->
+	<!-- <renderer-class>br.com.lphantus.neighbor.component.renderer.FileUploadRenderer</renderer-class> -->
+	<!-- </renderer> -->
+	<!-- </render-kit> -->
+
+</faces-config>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings version="2.0"
+	xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_1_0.xsd">
+
+	<named-query name="Carteira.buscarPorParametros">
+		<query>
+			<![CDATA[
+				SELECT carteira 
+				FROM Carteira carteira 
+				INNER JOIN carteira.condominio condominio 
+				WHERE (:ativo IS NULL OR carteira.ativo = :ativo) 
+				AND (:idCondominio IS NULL OR condominio.idPessoa = :idCondominio) 
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Carteira.buscaCarteiraMovimentacao">
+		<query>
+			<![CDATA[
+				SELECT carteira.saldo 
+				FROM Movimentacao movimentacao 
+				INNER JOIN movimentacao.carteira carteira 
+				WHERE movimentacao.id = :idMovimentacao
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Carteira.atualizarCaixa">
+		<query>
+			<![CDATA[
+				UPDATE Carteira carteira 
+				SET carteira.saldo = :novoSaldo 
+				WHERE carteira.id = :idCarteira
+			]]>
+		</query>
+	</named-query>
+
+</entity-mappings>

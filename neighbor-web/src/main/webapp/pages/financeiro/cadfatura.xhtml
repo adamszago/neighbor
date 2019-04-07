@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+	<ui:define name="content">
+		<h3>
+			<h:outputText value="#{bundle['tit.faturas.cadastro']}" />
+		</h3>
+
+		<h:form id="cadastroForm" prependId="false">
+
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+
+			<h:panelGroup>
+				<div style="width: 600px">
+					<p:dataTable id="pessoas" var="pessoa"
+						value="#{faturaController.pessoas}" rowKey="#{pessoa.idPessoa}"
+						paginator="true" rows="5"
+						rendered="#{faturaController.entity.id == null || faturaController.entity.id == 0}"
+						selection="#{faturaController.pessoaSelecionada}"
+						selectionMode="single">
+
+						<p:ajax event="rowSelect"
+							listener="#{faturaController.onRowSelect}"
+							update=":cadastroForm:growlGeral :cadastroForm:lancamentos" />
+						<p:ajax event="rowUnselect"
+							listener="#{faturaController.onRowUnselect}"
+							update=":cadastroForm:growlGeral :cadastroForm:lancamentos" />
+
+						<p:column headerText="#{bundle['lbl.cpf']}"
+							filterBy="cpf">  
+				            #{pessoa.cpf}
+				        </p:column>
+
+						<p:column headerText="#{bundle['lbl.nome']}"
+							filterBy="nome">  
+				            #{pessoa.nome}
+				        </p:column>
+					</p:dataTable>
+				</div>
+				<div style="width: 600px">
+					<p:dataTable id="pessoasNaoSelect" var="pessoa"
+						value="#{faturaController.pessoas}" rowKey="#{pessoa.idPessoa}"
+						paginator="true" rows="5"
+						rendered="#{faturaController.entity.id > 0}">
+
+						<p:column headerText="#{bundle['lbl.cpf']}">  
+				            #{pessoa.cpf}
+				        </p:column>
+
+						<p:column headerText="#{bundle['lbl.nome']}">  
+				            #{pessoa.nome}
+				        </p:column>
+					</p:dataTable>
+				</div>
+
+				<h:panelGrid columns="2">
+					<p:outputLabel value="#{bundle['lbl.fatura.nome']}: "
+						for="nomeFatura" styleClass="label_obr" />
+					<p:inputText id="nomeFatura"
+						value="#{faturaController.entity.nome}" />
+
+					<ui:remove>
+						<p:outputLabel value="#{bundle['lbl.fatura.data.cadastro']}: "
+							for="dataCadFatura" styleClass="label_obr" />
+						<p:calendar id="dataCadFatura" disabled="true"
+							value="#{faturaController.entity.dataCadastro}" navigator="true"
+							mindate="1/1/1930" maxdate="1/1/2030" locale="pt"
+							pattern="dd/MM/yyyy" readonlyInput="true" />
+					</ui:remove>
+
+					<p:outputLabel value="#{bundle['lbl.fatura.data']}: "
+						for="dataFatura" styleClass="label_obr" />
+					<p:calendar id="dataFatura" value="#{faturaController.entity.data}"
+						navigator="true" mindate="1/1/1930" maxdate="1/1/2030" locale="pt"
+						pattern="dd/MM/yyyy" readonlyInput="true" />
+
+					<p:outputLabel value="#{bundle['lbl.fatura.valor']}: "
+						for="valorFatura" styleClass="label_obr" />
+					<p:inputText id="valorFatura" disabled="true"
+						converter="moneyConverter"
+						value="#{faturaController.entity.valor}" />
+
+					<ui:remove>
+						<p:dataTable id="lancamentos" var="lancamento"
+							value="#{faturaController.lancamentos}"
+							disabled="#{faturaController.entity.id > 0}" paginator="true"
+							rows="5" selection="#{faturaController.lancamentosSelecionados}"
+							selectionMode="multiple">
+
+							<p:ajax event="rowSelect"
+								listener="#{faturaController.onRowSelectLancamento}"
+								update=":cadastroForm:growlGeral :cadastroForm:valorFatura" />
+							<p:ajax event="rowUnselect"
+								listener="#{faturaController.onRowUnselectLancamento}"
+								update=":cadastroForm:growlGeral :cadastroForm:valorFatura" />
+
+							<p:column headerText="#{bundle['lbl.lancamento.nome']}"
+								filterBy="nome">  
+					            	#{lancamento.nome}
+					        	</p:column>
+
+							<p:column headerText="#{bundle['lbl.lancamento.data']}"
+								filterBy="data">  
+					            	#{lancamento.data}
+					        	</p:column>
+
+							<p:column headerText="#{bundle['lbl.lancamento.valor']}"
+								filterBy="valor">  
+					            	#{lancamento.valor}
+					        	</p:column>
+						</p:dataTable>
+					</ui:remove>
+				</h:panelGrid>
+				<p:pickList id="lancamentos" value="#{faturaController.lancamentos}"
+					var="lancamento"
+					itemLabel="#{lancamento.nome} - #{lancamento.data} - #{lancamento.valor}"
+					itemValue="#{lancamento}">
+					<f:converter converterId="lancamentoConverter" />
+					<p:ajax event="transfer" listener="#{faturaController.onTransfer}"
+						update="cadastroForm:growlGeral cadastroForm:valorFatura" />
+				</p:pickList>
+
+				<h:panelGrid columns="2">
+					<p:outputLabel value="#{bundle['lbl.lancamento.observacao']}: "
+						for="obsLancamento" styleClass="label_obr" />
+					<p:inputTextarea id="obsLancamento" rows="5" cols="30"
+						counter="counter" value="#{faturaController.entity.obs}"
+						maxlength="200" counterTemplate="{0} caracteres restantes."
+						autoResize="false" />
+
+					<h:outputText id="nada" />
+					<h:outputText id="counter" />
+				</h:panelGrid>
+
+				<br />
+				<br />
+
+				<h:panelGrid styleClass="layoutCadMorador" columns="2">
+					<p:commandButton value="#{bundle['btn.gravar']}" id="btnGravar"
+						action="#{faturaController.gravarFaturaReceber}" ajax="false"
+						update=":cadastroForm"
+						rendered="#{faturaController.entity.id == null || faturaController.entity.id == 0}"
+						onclick="pageLoading.show();" oncomplete="pageLoading.hide();" />
+
+					<p:commandButton value="#{bundle['btn.alterar']}"
+						action="#{faturaController.alterar}" ajax="false"
+						update=":cadastroForm"
+						rendered="#{faturaController.entity.id > 0}"
+						onclick="pageLoading.show();" oncomplete="pageLoading.hide();" />
+
+					<p:commandButton value="#{bundle['btn.limpar']}"
+						action="#{faturaController.limparObjetoFatura}" ajax="false"
+						process="@this" onclick="pageLoading.show();"
+						update=":cadastroForm" oncomplete="pageLoading.hide();" />
+				</h:panelGrid>
+			</h:panelGroup>
+		</h:form>
+
+		<script>
+			jQuery(document).ready(function() {
+				aplicaMascaraMonetaria("#valorFatura");
+			});
+		</script>
+
+	</ui:define>
+</ui:composition>

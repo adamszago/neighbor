@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings version="2.0"
+	xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_1_0.xsd">
+
+	<named-query name="PessoaFisica.buscarResponsaveisFinanceiros">
+		<query>
+			<![CDATA[
+				SELECT DISTINCT morador 
+				FROM Morador morador 
+				INNER JOIN morador.unidadeHabitacional relacionamento 
+				INNER JOIN relacionamento.unidadeHabitacional unidade 
+				INNER JOIN unidade.condominio condominio 
+				WHERE relacionamento.responsavelFinanceiro = true 
+				AND morador.ativo = true 
+				AND (:idCondominio IS NULL OR condominio.idPessoa = :idCondominio)
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="PessoaFisica.buscarPessoasLancamentosAtivos">
+		<query>
+			<![CDATA[
+				SELECT DISTINCT pessoa 
+				FROM PessoaFisica pessoa 
+				JOIN pessoa.lancamentos lancamentos 
+				WHERE SIZE(lancamentos) > 0 
+				AND lancamentos.fatura IS NULL
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="PessoaFisica.buscarPessoasFaturaAberto">
+		<query>
+			<![CDATA[
+				SELECT DISTINCT pessoa 
+				FROM Fatura fatura 
+				INNER JOIN fatura.lancamentos lancamentos 
+				INNER JOIN lancamentos.pessoa pessoa 
+				INNER JOIN fatura.condominio condominio 
+				WHERE fatura.dataPagamento IS NULL 
+				AND (idCondominio IS NULL OR condominio.idPessoa = :idCondominio)
+			]]>
+		</query>
+	</named-query>
+
+</entity-mappings>

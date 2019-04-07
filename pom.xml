@@ -1,0 +1,577 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>br.com.lphantus.neighbor</groupId>
+	<artifactId>neighbor-all</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<name>neighbor-all</name>
+
+	<modules>
+		<module>neighbor-util</module>
+		<module>neighbor-pojo</module>
+		<module>neighbor-repository</module>
+		<module>neighbor-service</module>
+		<module>neighbor-web</module>
+		<module>neighbor-ear</module>
+	</modules>
+
+	<properties>
+		<!-- BUILD -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>${project.build.sourceEncoding}</project.reporting.outputEncoding>
+		<java-version>1.7</java-version>
+
+		<!-- LOG -->
+		<org.slf4j-version>1.7.5</org.slf4j-version>
+		<ch.qos.logback-version>1.0.13</ch.qos.logback-version>
+
+		<!-- Persistencia -->
+		<hibernate.jpa.persistence.version>1.0.1.Final</hibernate.jpa.persistence.version>
+		<org.hibernate.version>4.2.16.Final</org.hibernate.version>
+
+		<!-- View -->
+		<org.apache.geronimo.specs.version>1.0</org.apache.geronimo.specs.version>
+		<javax.servlet.servlet-api.version>3.0.1</javax.servlet.servlet-api.version>
+		<javax.el.el-api.version>2.2</javax.el.el-api.version>
+		<com.sun.faces.jsf.version>2.2.10</com.sun.faces.jsf.version>
+		<com.sun.facelets.version>1.1.14</com.sun.facelets.version>
+		<org.primefaces.version>4.0</org.primefaces.version>
+		<org.primefaces.themes.version>1.0.10</org.primefaces.themes.version>
+
+		<!-- Spring -->
+		<org.springframework-bom.version>4.0.8.RELEASE</org.springframework-bom.version>
+		<org.springframework.data.version>1.4.1.RELEASE</org.springframework.data.version>
+		<!-- <org.aspectj-version>1.7.4</org.aspectj-version> -->
+		<org.springframework.batch.version>3.0.2.RELEASE</org.springframework.batch.version>
+		<org.springframework.webflow.spring-faces.version>2.4.0.RELEASE</org.springframework.webflow.spring-faces.version>
+		<spring.security.version>3.2.5.RELEASE</spring.security.version>
+
+		<!-- Util -->
+		<javax.validation.version>1.0.0.GA</javax.validation.version>
+		<com.google.guava.version>14.0.1</com.google.guava.version>
+		<commons-net.version>3.3</commons-net.version>
+		<!-- Desabilitado cache -->
+		<!-- <net.sf.ehcache.version>2.9.0</net.sf.ehcache.version> -->
+		<org.jrimum.jrimum-bopepo.version>0.2.3-SNAPSHOT</org.jrimum.jrimum-bopepo.version>
+		<org.apache.commons.commons-email.version>1.1</org.apache.commons.commons-email.version>
+		<org.bluestemsoftware.open.maven.plugin.ftp-plugin.version>1.0.0.1</org.bluestemsoftware.open.maven.plugin.ftp-plugin.version>
+		<commons-fileupload.version>1.2.1</commons-fileupload.version>
+		<commons-io.version>2.0.1</commons-io.version>
+		<com.healthmarketscience.jackcess.version>2.0.7</com.healthmarketscience.jackcess.version>
+
+		<!-- Test -->
+		<junit.version>4.11</junit.version>
+		<org.mockito.version>1.9.5</org.mockito.version>
+		<org.assertj.version>1.5.0</org.assertj.version>
+		<org.hamcrest.version>1.3</org.hamcrest.version>
+		<org.hamcrest.library.version>1.3</org.hamcrest.library.version>
+
+	</properties>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>2.3.2</version>
+					<configuration>
+						<source>${java-version}</source>
+						<target>${java-version}</target>
+						<fork>true</fork>
+						<meminitial>512m</meminitial>
+						<maxmem>1536m</maxmem>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>2.5</version>
+					<configuration>
+						<encoding>${project.build.sourceEncoding}</encoding>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-site-plugin</artifactId>
+					<configuration>
+						<reportPlugins>
+							<plugin>
+								<groupId>org.codehaus.mojo</groupId>
+								<artifactId>findbugs-maven-plugin</artifactId>
+							</plugin>
+						</reportPlugins>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+
+		<filters>
+			<filter>../profiles/${env}.properties</filter>
+		</filters>
+	</build>
+
+	<dependencyManagement>
+		<dependencies>
+
+			<!-- dependencias -->
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>neighbor-web</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>neighbor-admin-web</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<!-- Spring -->
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-framework-bom</artifactId>
+				<version>${org.springframework-bom.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+			<!-- JSF -->
+			<dependency>
+				<groupId>com.sun.faces</groupId>
+				<artifactId>jsf-api</artifactId>
+				<version>${com.sun.faces.jsf.version}</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>com.sun.faces</groupId>
+				<artifactId>jsf-impl</artifactId>
+				<version>${com.sun.faces.jsf.version}</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>servlet-api</artifactId>
+				<version>${javax.servlet.servlet-api.version}</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>javax.el</groupId>
+				<artifactId>el-api</artifactId>
+				<version>${javax.el.el-api.version}</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>com.sun.facelets</groupId>
+				<artifactId>jsf-facelets</artifactId>
+				<version>${com.sun.facelets.version}</version>
+				<scope>provided</scope>
+			</dependency>
+
+			<!-- Primefaces -->
+			<dependency>
+				<groupId>org.primefaces</groupId>
+				<artifactId>primefaces</artifactId>
+				<version>${org.primefaces.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.primefaces.themes</groupId>
+				<artifactId>all-themes</artifactId>
+				<version>${org.primefaces.themes.version}</version>
+			</dependency>
+
+			<!-- Servlet -->
+			<dependency>
+				<groupId>org.apache.geronimo.specs</groupId>
+				<artifactId>geronimo-servlet_3.0_spec</artifactId>
+				<version>${org.apache.geronimo.specs.version}</version>
+				<scope>provided</scope>
+			</dependency>
+
+			<!-- Persistence -->
+			<dependency>
+				<groupId>org.hibernate.javax.persistence</groupId>
+				<artifactId>hibernate-jpa-2.0-api</artifactId>
+				<version>${hibernate.jpa.persistence.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-entitymanager</artifactId>
+				<version>${org.hibernate.version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>cglib</groupId>
+						<artifactId>cglib</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>dom4j</groupId>
+						<artifactId>dom4j</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>antlr</groupId>
+						<artifactId>antlr</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+
+			<!-- Spring Data -->
+			<dependency>
+				<groupId>org.springframework.data</groupId>
+				<artifactId>spring-data-jpa</artifactId>
+				<version>${org.springframework.data.version}</version>
+			</dependency>
+
+			<!-- Spring Batch -->
+			<dependency>
+				<groupId>org.springframework.batch</groupId>
+				<artifactId>spring-batch-core</artifactId>
+				<version>${org.springframework.batch.version}</version>
+			</dependency>
+
+			<!-- Spring Security -->
+			<dependency>
+				<groupId>org.springframework.security</groupId>
+				<artifactId>spring-security-config</artifactId>
+				<version>${spring.security.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.security</groupId>
+				<artifactId>spring-security-core</artifactId>
+				<version>${spring.security.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.security</groupId>
+				<artifactId>spring-security-crypto</artifactId>
+				<version>${spring.security.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.security</groupId>
+				<artifactId>spring-security-taglibs</artifactId>
+				<version>${spring.security.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.security</groupId>
+				<artifactId>spring-security-web</artifactId>
+				<version>${spring.security.version}</version>
+			</dependency>
+
+			<!-- Spring WebFlow -->
+			<dependency>
+				<groupId>org.springframework.webflow</groupId>
+				<artifactId>spring-faces</artifactId>
+				<version>${org.springframework.webflow.spring-faces.version}</version>
+			</dependency>
+
+			<!-- EhCache -->
+			<!-- Desabilitado Cache -->
+			<!-- <dependency> -->
+			<!-- <groupId>net.sf.ehcache</groupId> -->
+			<!-- <artifactId>ehcache</artifactId> -->
+			<!-- <version>${net.sf.ehcache.version}</version> -->
+			<!-- </dependency> -->
+
+			<!-- Bopepo -->
+			<dependency>
+				<groupId>org.jrimum</groupId>
+				<artifactId>jrimum-bopepo</artifactId>
+				<version>${org.jrimum.jrimum-bopepo.version}</version>
+			</dependency>
+
+			<!-- E-mail -->
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-email</artifactId>
+				<version>${org.apache.commons.commons-email.version}</version>
+			</dependency>
+
+			<!-- FTP -->
+			<dependency>
+				<groupId>org.bluestemsoftware.open.maven.plugin</groupId>
+				<artifactId>ftp-plugin</artifactId>
+				<version>${org.bluestemsoftware.open.maven.plugin.ftp-plugin.version}</version>
+			</dependency>
+
+			<!-- Jackcess -->
+			<dependency>
+				<groupId>com.healthmarketscience.jackcess</groupId>
+				<artifactId>jackcess</artifactId>
+				<version>${com.healthmarketscience.jackcess.version}</version>
+			</dependency>
+
+			<!-- File Upload -->
+			<dependency>
+				<groupId>commons-io</groupId>
+				<artifactId>commons-io</artifactId>
+				<version>${commons-io.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-fileupload</groupId>
+				<artifactId>commons-fileupload</artifactId>
+				<version>${commons-fileupload.version}</version>
+			</dependency>
+
+			<!-- javax.validation (JSR-303) -->
+			<dependency>
+				<groupId>javax.validation</groupId>
+				<artifactId>validation-api</artifactId>
+				<version>${javax.validation.version}</version>
+			</dependency>
+
+			<!-- AspectJ -->
+			<!-- <dependency> -->
+			<!-- <groupId>org.aspectj</groupId> -->
+			<!-- <artifactId>aspectjrt</artifactId> -->
+			<!-- <version>${org.aspectj-version}</version> -->
+			<!-- </dependency> -->
+
+			<!-- Logging -->
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>${org.slf4j-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>jcl-over-slf4j</artifactId>
+				<version>${org.slf4j-version}</version>
+				<scope>runtime</scope>
+			</dependency>
+			<dependency>
+				<groupId>ch.qos.logback</groupId>
+				<artifactId>logback-classic</artifactId>
+				<version>${ch.qos.logback-version}</version>
+			</dependency>
+
+			<!-- DOM4J -->
+			<dependency>
+				<groupId>dom4j</groupId>
+				<artifactId>dom4j</artifactId>
+				<version>1.6.1</version>
+			 	<scope>provided</scope>
+			</dependency>
+
+			<!-- Utilities -->
+			<dependency>
+				<groupId>com.google.guava</groupId>
+				<artifactId>guava</artifactId>
+				<version>${com.google.guava.version}</version>
+			</dependency>
+
+			<!-- FTP -->
+			<dependency>
+				<groupId>commons-net</groupId>
+				<artifactId>commons-net</artifactId>
+				<version>${commons-net.version}</version>
+			</dependency>
+
+			<!-- Test -->
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>${junit.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.mockito</groupId>
+				<artifactId>mockito-core</artifactId>
+				<version>${org.mockito.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.assertj</groupId>
+				<artifactId>assertj-core</artifactId>
+				<version>${org.assertj.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.hamcrest</groupId>
+				<artifactId>hamcrest-core</artifactId>
+				<version>${org.hamcrest.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.hamcrest</groupId>
+				<artifactId>hamcrest-library</artifactId>
+				<version>${org.hamcrest.library.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.objenesis</groupId>
+				<artifactId>objenesis</artifactId>
+				<version>${org.objenesis.version}</version>
+				<scope>test</scope>
+			</dependency>
+
+		</dependencies>
+	</dependencyManagement>
+
+	<dependencies>
+
+		<!-- Componentes Spring -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+		</dependency>
+
+		<!-- Security -->
+		<!-- <dependency> <groupId>org.springframework.security</groupId> <artifactId>spring-security-config</artifactId> 
+			</dependency> <dependency> <groupId>org.springframework.security</groupId> 
+			<artifactId>spring-security-web</artifactId> </dependency> <dependency> <groupId>org.springframework.security</groupId> 
+			<artifactId>spring-security-taglibs</artifactId> </dependency> -->
+
+		<!-- Persistence -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-tx</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-orm</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-orm</artifactId>
+		</dependency>
+
+		<!-- Test -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+	</dependencies>
+
+	<developers>
+		<developer>
+			<name>Adams Zago</name>
+			<email>adams.zago@lphantus.com.br</email>
+		</developer>
+		<developer>
+			<name>Elias Policena</name>
+			<email>elias.policena@lphantus.com.br</email>
+		</developer>
+		<developer>
+			<name>Fabiano Fernandes</name>
+			<email>fabiano.fernandes@lphantus.com.br</email>
+		</developer>
+	</developers>
+
+	<profiles>
+		<profile>
+			<id>env-prod</id>
+			<properties>
+				<env>env-prod</env>
+				<maven.test.skip>true</maven.test.skip>
+			</properties>
+		</profile>
+		<profile>
+			<id>env-dev</id>
+			<properties>
+				<env>env-dev</env>
+				<maven.test.skip>true</maven.test.skip>
+			</properties>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
+		<profile>
+			<id>env-dev-windows</id>
+			<properties>
+				<env>env-dev-windows</env>
+				<maven.test.skip>true</maven.test.skip>
+			</properties>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
+	</profiles>
+
+	<!-- Repositórios -->
+	<repositories>
+		<repository>
+			<id>jrimum.org</id>
+			<url>http://jrimum.org/maven/content/groups/public/</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>prime-repo</id>
+			<name>PrimeFaces Maven Repository</name>
+			<url>http://repository.primefaces.org</url>
+			<layout>default</layout>
+		</repository>
+		<repository>
+			<id>snapshots</id>
+			<name>Nexus Managed Snapshot Repository</name>
+			<url>http://neighbor00.cloudapp.net:8082/nexus/content/repositories/snapshots</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>releases</id>
+			<name>Nexus Managed Snapshot Repository</name>
+			<url>http://neighbor00.cloudapp.net:8082/nexus/content/repositories/releases</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+
+	<distributionManagement>
+		<repository>
+			<id>releases</id>
+			<url>http://neighbor00.cloudapp.net:8082/nexus/content/repositories/releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>snapshots</id>
+			<url>http://neighbor00.cloudapp.net:8082/nexus/content/repositories/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>nexus.snapshots</id>
+			<url>http://neighbor00.cloudapp.net:8082/nexus/content/repositories/snapshots/</url>
+		</pluginRepository>
+		<pluginRepository>
+			<id>nexus.releases</id>
+			<url>http://neighbor00.cloudapp.net:8082/nexus/content/repositories/releases/</url>
+		</pluginRepository>
+	</pluginRepositories>
+
+	<scm>
+		<connection>scm:svn://lphantus.com.br/lphantus/neighbor/1.5</connection>
+		<developerConnection>scm:svn://lphantus.com.br/lphantus/neighbor/1.5</developerConnection>
+	</scm>
+</project>

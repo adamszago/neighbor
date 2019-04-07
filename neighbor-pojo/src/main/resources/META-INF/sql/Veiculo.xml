@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings version="2.0"
+	xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_1_0.xsd">
+
+	<named-query name="Veiculo.listarVeiculosMorador">
+		<query>
+			<![CDATA[
+				SELECT veiculo 
+				FROM Veiculo veiculo
+				INNER JOIN veiculo.proprietario proprietario
+				WHERE proprietario.idPessoa = :idPessoa
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Veiculo.buscarPorCondominio">
+		<query>
+			<![CDATA[
+				SELECT veiculo 
+				FROM Veiculo veiculo 
+				INNER JOIN veiculo.proprietario morador 
+				INNER JOIN morador.unidadeHabitacional relacionamento 
+				INNER JOIN relacionamento.unidadeHabitacional unidadeHabitacional 
+				INNER JOIN unidadeHabitacional.condominio condominio 
+				WHERE (:idCondominio IS NULL OR condominio.idPessoa = :idCondominio)
+			]]>
+		</query>
+	</named-query>
+
+</entity-mappings>

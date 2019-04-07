@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+	<ui:define name="content">
+		<h:form id="cadastroReservaForm">
+			<h3>#{bundle['tit.registro.reserva']}</h3>
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+
+			<p:dialog header="#{bundle['tit.confirmacao']}" modal="true"
+				visible="true" closable="false" widgetVar="confirmarData"
+				rendered="#{reservaController.solicitarConfirmacao}">
+				<div style="margin-bottom: 10px;">
+					#{bundle['msg.reser.conf.pt1']}
+					#{reservaController.reserva.itemReserva.nome} <br />
+					#{bundle['msg.reser.conf.pt2']}
+					<h:outputText value="#{reservaController.reserva.dataReserva}">
+						<f:convertDateTime locale="pt" pattern="dd/MM/yyyy" />
+					</h:outputText>
+					#{bundle['msg.reser.conf.pt3']}<br /> <strong>#{bundle['msg.ask.nova.data']}</strong>
+				</div>
+				<p:commandButton value="#bundle['btn.sim']}"
+					action="#{reservaController.confirmadoFalse}"
+					onclick="confirmarData.hide();" />
+				<p:commandButton value="#{bundle['btn.nao']}"
+					action="#{reservaController.confirmadoTrue}"
+					update=":cadastroReservaForm" onclick="confirmarData.hide();"
+					style="margin-left: 10px;" />
+
+			</p:dialog>
+
+			<h:inputHidden id="idReserva" value="#{reservaController.reserva.id}" />
+			<h:panelGrid columns="2"
+				rendered="#{not usuarioController.userLogadoMorador}"
+				id="moradorReservaContainer">
+				<h:outputLabel value="#{bundle['lbl.proprietario']}: "
+					for="nMoradorReserva" />
+				<h:panelGrid columns="4" id="nMoradorReserva">
+					<h:outputText value="#{bundle['lbl.casa']}"></h:outputText>
+					<p:inputText value="#{reservaController.casa}" size="4"
+						maxlength="4" onblur="if(this.value=='')this.value='0'"
+						onfocus="if(this.value=='0')this.value=''" />
+					<p:commandLink action="#{reservaController.buscarMorador}"
+						ajax="true" process="nMoradorReserva"
+						update=":cadastroReservaForm:moradorReservaContainer">
+						<p:graphicImage url="../../resources/images/lupa.png" width="24px"
+							height="24px" style="border:none;"></p:graphicImage>
+					</p:commandLink>
+					<p:inputText
+						value="#{reservaController.reserva.morador.pessoa.nome}" size="50"
+						maxlength="50" readonly="true" />
+				</h:panelGrid>
+			</h:panelGrid>
+			<h:panelGrid columns="7">
+				<h:outputLabel value="#{bundle['lbl.data.reserva']}: "
+					for="dataReserva" />
+				<p:calendar id="dataReserva" required="true"
+					requiredMessage="#{bundle['msg.sel.data.reserva']}"
+					value="#{reservaController.reserva.dataReserva}" navigator="true"
+					mindate="#{reservaController.dataInicial}" maxdate="1/1/2030"
+					locale="pt" pattern="dd/MM/yyyy" />
+
+				<h:outputLabel value="#{bundle['lbl.itens.reserva']}" />
+				<p:selectOneMenu id="itensReserva" styleClass="selectItemReserva"
+					value="reservaController.itemReservaSelecionado" required="true"
+					requiredMessage="#{bundle['msg.sel.item.reserva']}"
+					valueChangeListener="#{reservaController.valueChangeListener}">
+					<f:selectItem itemLabel=":: Selecione ::" />
+					<f:selectItems value="#{reservaController.listaSelectItem}" />
+				</p:selectOneMenu>
+				<style>
+					.selectItemReserva {
+						width: 159px !important;
+					}
+					
+					.selectItemReserva label {
+						float: none !important
+					}
+				</style>
+
+				<h:outputLabel value="#{bundle['lbl.pago']}: " for="pago"
+					rendered="#{usuarioController.userLogadoMorador}" />
+				<h:selectBooleanCheckbox id="pago"
+					rendered="#{usuarioController.userLogadoMorador}"
+					value="#{reservaController.reserva.pago}" />
+			</h:panelGrid>
+			<h:panelGrid columns="2">
+				<p:commandButton value="#{bundle['btn.registrar']}"
+					action="#{reservaController.confirmarReserva}" ajax="true"
+					process="cadastroReservaForm"
+					update=":cadastroReservaForm :listaReservaForm"
+					rendered="#{reservaController.reserva.id == null || reservaController.reserva.id == 0}" />
+
+				<p:commandButton value="#{bundle['btn.alterar']}"
+					action="#{reservaController.alterarReserva}" ajax="true"
+					process="cadastroReservaForm"
+					update=":cadastroReservaForm :listaReservaForm"
+					rendered="#{reservaController.reserva.id > 0 }" />
+
+				<p:commandButton value="#{bundle['btn.limpar']}"
+					action="#{reservaController.limparFormulario}" ajax="true"
+					process="@this" update=":cadastroReservaForm" />
+			</h:panelGrid>
+		</h:form>
+		<br />
+		<ui:insert name="listaDeReservas">
+			<ui:include src="../../templates/reservas.xhtml" />
+		</ui:insert>
+		<h:panelGroup rendered="#{usuarioController.sistemaIsDemo}">
+			<script type="text/javascript">
+				disponivelNosPlanos(0, 1, 1, 1);
+			</script>
+		</h:panelGroup>
+
+	</ui:define>
+</ui:composition>

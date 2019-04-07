@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+	<ui:define name="content">
+		<h:form id="paginaMoradorForm" styleClass="innerContentFix">
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+
+			<p:dataTable id="veiculos" var="veiculo"
+				value="#{moradorPageController.veiculos}" rowKey="#{veiculo.id}"
+				paginator="true" rows="10"
+				selection="#{moradorPageController.veiculo}" selectionMode="single"
+				emptyMessage="#{bundle['msg.sem.veiculos.cadastrados']}">
+				<f:facet name="header">
+					<h:outputText value="#{bundle['tit.veiculos.cadastrados']}" />
+				</f:facet>
+				<p:column sortBy="placa" filterBy="placa">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.placa']}" />
+					</f:facet>
+					<h:outputText value="#{veiculo.placa}" />
+				</p:column>
+				<p:column sortBy="modelo" filterBy="modelo">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.modelo']}" />
+					</f:facet>
+					<h:outputText value="#{veiculo.modelo}" />
+				</p:column>
+				<p:column sortBy="cor" filterBy="cor">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.cor']}" />
+					</f:facet>
+					<h:outputText value="#{veiculo.cor}" />
+				</p:column>
+				<p:column sortBy="marca.marca"
+					filterBy="marca.marca">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.marca']}" />
+					</f:facet>
+					<h:outputText value="#{veiculo.marca.marca}" />
+				</p:column>
+			</p:dataTable>
+		</h:form>
+		<h:panelGroup rendered="#{usuarioController.sistemaIsDemo}">
+			<script type="text/javascript">
+				disponivelNosPlanos(0, 1, 1, 1);
+			</script>
+		</h:panelGroup>
+	</ui:define>
+</ui:composition>

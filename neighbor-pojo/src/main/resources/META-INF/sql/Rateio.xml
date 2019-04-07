@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings version="2.0"
+	xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_1_0.xsd">
+
+	<named-query name="Rateio.buscarPorMovimentacao">
+		<query>
+			<![CDATA[
+				SELECT rateio 
+				FROM Rateio rateio 
+				INNER JOIN rateio.movimentacao movimentacao 
+				INNER JOIN rateio.centroCusto centroCusto 
+				INNER JOIN rateio.condominio condominio 
+				where (:idMovimentacao IS NULL OR :idMovimentacao = movimentacao.id)
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Rateio.buscarPorMesAtual">
+		<query>
+			<![CDATA[
+				SELECT DISTINCT movimentacao FROM 
+				Movimentacao movimentacao 
+				INNER JOIN movimentacao.carteira carteira 
+				INNER JOIN carteira.condominio condominio 
+				LEFT JOIN movimentacao.rateios rateios 
+				LEFT JOIN rateios.centroCusto centroCusto 
+				WHERE (:idCondominio IS NULL OR condominio.idPessoa = :idCondominio) 
+				AND ( 
+				 	(:dataInicio IS NULL OR :dataFim IS NULL) 
+				 	OR 
+				 	(movimentacao.dataMovimentacao BETWEEN :dataInicio AND :dataFim) 
+				)
+			]]>
+		</query>
+	</named-query>
+
+</entity-mappings>

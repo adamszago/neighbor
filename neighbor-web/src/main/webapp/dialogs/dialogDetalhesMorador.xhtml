@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+<body>
+	<ui:composition>
+		<p:dialog
+			header="Detalhes do morador - #{moradorController.morador.pessoa.nome}"
+			widgetVar="dlgDetalhesMorador" resizable="false" width="800"
+			height="400" modal="true">
+			<h:form id="formDetalhesMorador">
+				<style>
+					.layoutDetalhesMorador {
+						margin-bottom: 10px;
+					}
+					
+					.layoutDetalhesMorador li {
+						color: #222222 !important;
+						line-height: 23.5px;
+					}
+				</style>
+				<h:panelGrid style="margin-bottom:10px">
+					<p:tabView effect="slide" effectDuration="fast"
+						styleClass="layoutDetalhesMorador">
+						<p:tab title="#{bundle['tit.agregados']}">
+							<p:dataList id="lAgregadosMorador" var="agr"
+								value="#{moradorController.morador.agregados}"
+								emptyMessage="#{bundle['msg.sem.agreg.cadastrados']}">
+								<p:outputPanel
+									rendered="#{moradorController.morador.agregados != null}">
+									<h:outputText value="#{agr.agregado.pessoa.nome}" />
+									<strong><h:outputText value=" - #{agr.parentesco}" /></strong>
+								</p:outputPanel>
+							</p:dataList>
+						</p:tab>
+						<p:tab title="#{bundle['tit.telefones']}">
+							<p:dataList id="lTelefonesMorador" var="tlf"
+								value="#{moradorController.morador.telefones}"
+								emptyMessage="#{bundle['msg.sem.telefones.cad']}">
+								<p:outputPanel
+									rendered="#{moradorController.morador.telefones != null}">
+									<h:outputText value="#{tlf.numero}" />
+									<strong><h:outputText value=" - #{tlf.tipoTelefone}" /></strong>
+								</p:outputPanel>
+							</p:dataList>
+						</p:tab>
+						<p:tab title="#{bundle['tit.animais.estimacao']}">
+							<p:dataList id="lAnimaisMorador" var="anm"
+								value="#{moradorController.morador.animaisEstimacao}"
+								emptyMessage="#{bundle['msg.sem.animais.cadastrados']}">
+								<p:outputPanel
+									rendered="#{moradorController.morador.animaisEstimacao != null}">
+									<h:outputText value="#{anm.tipoAnimal.tipoAnimal}" />
+									<strong><h:outputText
+											value=" - #{bundle['tit.nome']}: " /></strong>
+									<h:outputText value="#{anm.nome}" />
+									<strong><h:outputText
+											value=" - #{bundle['tit.raca']}: " /></strong>
+									<h:outputText value="#{anm.raca}" />
+									<strong><h:outputText
+											value=" - #{bundle['tit.porte']}: " /></strong>
+									<h:outputText value="#{anm.porte}" />
+								</p:outputPanel>
+							</p:dataList>
+						</p:tab>
+						<p:tab title="#{bundle['tit.veiculos']}">
+							<p:dataList id="lVeiculosMorador" var="veic"
+								value="#{moradorController.morador.veiculos}"
+								emptyMessage="#{bundle['msg.sem.veiculos.cadastrados']}">
+								<p:outputPanel
+									rendered="#{moradorController.morador.veiculos != null}">
+									<strong><h:outputText
+											value="#{veic.marca.marca} - #{veic.modelo}" /></strong>
+									<strong><h:outputText value=" - Cor: " /></strong>
+									<h:outputText value="#{veic.cor}" />
+									<strong><h:outputText
+											value=" - #{bundle['tit.placa']}: " /></strong>
+									<h:outputText value="#{veic.placa}" />
+								</p:outputPanel>
+							</p:dataList>
+						</p:tab>
+						<p:tab title="#{bundle['tit.ocorrencias']}">
+							<p:dataList id="lOcorrenciasMorador" var="oco"
+								value="#{moradorController.ocorrenciasMorador}"
+								emptyMessage="#{bundle['msg.sem.ocorrencias.cad']}">
+								<p:outputPanel
+									rendered="#{moradorController.ocorrenciasMorador != null}">
+									<h:outputText value="Dia " />
+									<h:outputText value="#{oco.dataOcorrencia}">
+										<f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="GMT-3" />
+									</h:outputText>
+									<h:outputText value=" - Registro " />
+									<h:outputText value="#{oco.dataRegistroOcorrencia}">
+										<f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="GMT-3" />
+									</h:outputText>
+									<strong><h:outputText
+											rendered="#{oco.gerouNotificacao}"
+											value=" - Gerou notificacao" /> <h:outputText
+											rendered="#{not oco.gerouNotificacao}"
+											value=" - Nao gerou notificacao" /></strong>
+									<strong><h:outputText rendered="#{oco.gerouMulta}"
+											value=" - Gerou multa" /> <h:outputText
+											rendered="#{not oco.gerouMulta}" value=" - Nao gerou multa" /></strong>
+									<h:outputText value=" - #{bundle['tit.gravidade']}: " />
+									<strong><h:outputText value="#{oco.gravidade}" /></strong>
+								</p:outputPanel>
+							</p:dataList>
+						</p:tab>
+					</p:tabView>
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+	</ui:composition>
+</body>
+</html>

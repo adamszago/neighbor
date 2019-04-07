@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+	<ui:define name="content">
+		<h:form id="paginaMoradorForm" styleClass="innerContentFix">
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+			<p:tabView id="tabVisitasMorador" effect="slide"
+				effectDuration="fast">
+				<p:tab title="#{bundle['tit.visitas.confirmadas']}">
+					<p:dataTable id="listaVisitasMorador" var="visita"
+						value="#{moradorPageController.visitas}" paginator="true" rows="5"
+						emptyMessage="#{bundle['msg.sem.visitas.morador']}">
+						<f:facet name="header">
+							<h:outputText value="#{bundle['tit.visitas.cadastradas']}" />
+						</f:facet>
+						<p:column filterBy="visitante.pessoa.nome"
+							sortBy="visitante.pessoa.nome">
+							<f:facet name="header">
+								<h:outputText value="#{bundle['tit.nome']}" />
+							</f:facet>
+							<h:outputText value="#{visita.visitante.pessoa.nome}" />
+						</p:column>
+						<p:column filterBy="inicioVisita"
+							sortBy="inicioVisita">
+							<f:facet name="header">
+								<h:outputText value="#{bundle['tit.data.visita']}" />
+							</f:facet>
+							<h:outputText value="#{visita.inicioVisita}">
+								<f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="GMT-3" />
+							</h:outputText>
+						</p:column>
+						<p:column exportable="false">
+							<p:commandLink action="#{moradorPageController.agendarVisita}"
+								id="agendarVisita" oncomplete="dlgAgendarVisita.show()"
+								ajax="true" update=":paginaMoradorForm :formAgendarVisita">
+								<p:graphicImage url="../../resources/images/icons/ico_agenda.png"
+									width="24" height="24" />
+								<p:tooltip for="agendarVisita"
+									value="Agendar visita para este visitante" />
+								<f:setPropertyActionListener
+									target="#{moradorPageController.visitanteAgendado}"
+									value="#{visita.visitante}" />
+							</p:commandLink>
+						</p:column>
+					</p:dataTable>
+				</p:tab>
+				<p:tab title="#{bundle['tit.visitas.agendadas']}">
+					<p:dataTable id="listaVisitasAgendadasMorador" var="visita"
+						value="#{moradorPageController.visitasAgendadas}" paginator="true"
+						rows="5" emptyMessage="Sem visitas agendadas para este morador">
+						<f:facet name="header">
+							<h:outputText value="#{bundle['tit.visitas.agendadas.cad']}" />
+						</f:facet>
+						<p:column filterBy="visitante.pessoa.nome"
+							sortBy="visitante.pessoa.nome" exportable="TRUE">
+							<f:facet name="header">
+								<h:outputText value="#{bundle['tit.nome']}" />
+							</f:facet>
+							<h:outputText value="#{visita.visitante.pessoa.nome}" />
+						</p:column>
+						<p:column filterBy="inicioAgendamentoVisita"
+							sortBy="inicioAgendamentoVisita" exportable="true">
+							<f:facet name="header">
+								<h:outputText value="#{bundle['tit.data.inicio']}" />
+							</f:facet>
+							<h:outputText value="#{visita.inicioAgendamentoVisita}">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</h:outputText>
+						</p:column>
+						<p:column filterBy="fimAgendamentoVisita"
+							sortBy="fimAgendamentoVisita" exportable="true">
+							<f:facet name="header">
+								<h:outputText value="#{bundle['tit.data.fim']}" />
+							</f:facet>
+							<h:outputText value="#{visita.fimAgendamentoVisita}">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</h:outputText>
+						</p:column>
+						
+						<!-- BOTAO REMOVER VISITA AGENDADA -->
+						<p:column style="width:16px"
+							rendered="#{sec:areAnyGranted('ROLE_PAGINA_MORADOR')}" exportable="false">
+							<p:commandLink onclick="dlgRemover.show();" update=":paginaMoradorForm">
+								<p:graphicImage
+									id="imgStatus" value="../../resources/images/ativo_true.png"
+									width="24px" height="24px">
+									<p:tooltip for="imgStatus" hideEffect="fade" showEffect="fade" value="#{'Remover Visita'}" />
+								</p:graphicImage>
+								<f:setPropertyActionListener
+									target="#{moradorPageController.visitaAgendada}"
+									value="#{visita}" />
+							</p:commandLink>
+						</p:column>
+						
+					</p:dataTable>
+				</p:tab>
+			</p:tabView>
+			<p:commandLink value="#{bundle['btn.agendar.visita']}"
+				action="#{moradorPageController.agendarVisita}"
+				id="agendarVisitaNova" oncomplete="dlgAgendarVisita.show()"
+				update=":paginaMoradorForm :formAgendarVisita" ajax="true" />
+		</h:form>
+		
+		<p:confirmDialog header="#{bundle['tit.remover']}" severity="alert"
+			widgetVar="dlgRemover" modal="true" closable="false">
+			<f:facet name="message">
+				Deseja <strong>remover</strong> esta visita agendada ?<br />
+			</f:facet>
+
+			<h:form>
+				<p:commandButton id="confirm" value="#{bundle['btn.sim']}"
+					update=":paginaMoradorForm" oncomplete="dlgRemover.hide()"
+					action="#{moradorPageController.removerVisita}" />
+				<p:commandButton id="decline" value="#{bundle['btn.nao']}"
+					oncomplete="dlgRemover.hide()" update=":paginaMoradorForm:growlGeral" 
+					action="return true;" />
+			</h:form>
+		</p:confirmDialog>
+		
+		<h:panelGroup rendered="#{usuarioController.sistemaIsDemo}">
+			<script type="text/javascript">
+				disponivelNosPlanos(1, 1, 1, 1);
+			</script>
+		</h:panelGroup>
+		<ui:insert>
+			<ui:include src="../../dialogs/dialogAgendarVisita.xhtml" />
+		</ui:insert>
+	</ui:define>
+</ui:composition>

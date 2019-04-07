@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+	<ui:define name="content">
+		<h3>
+			<h:outputLabel value="#{bundle['tit.msg.sindico.do']}" />
+		</h3>
+		<h:form id="mensagemDoSindicoF" prependId="false">
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+			<h:inputHidden id="idMensagem"
+				value="#{mensagemController.mensagem.id}" />
+
+
+			<div>
+				<h:outputLabel value="#{bundle['tit.todos.moradores']}: "
+					for="todos" />
+				<p:selectBooleanCheckbox id="todos"
+					value="#{mensagemController.todos}">
+					<p:ajax event="change" update="pnlDestinatarios" />
+				</p:selectBooleanCheckbox>
+			</div>
+			<br />
+			<br />
+
+			<h:panelGroup id="pnlDestinatarios">
+				<h:outputLabel value="#{bundle['lbl.sindico.msg.todos']}"
+					rendered="#{!mensagemController.todos}" />
+				<h:panelGrid columns="3">
+					<h:outputLabel for="destinatarios" id="lblCasas" value="Casas:"
+						rendered="#{!mensagemController.todos}" />
+					<p:inputText value="#{mensagemController.destinatarios}" size="50"
+						id="destinatarios" rendered="#{!mensagemController.todos}" />
+					<p:commandLink actionListener="#{mensagemController.consultar}"
+						update="listaDestinatarios" process="@parent"
+						rendered="#{!mensagemController.todos}">
+						<p:graphicImage url="../../resources/images/lupa.png" />
+					</p:commandLink>
+
+				</h:panelGrid>
+
+				<p:dataTable value="#{mensagemController.moradoresDestino}"
+					var="morador" paginator="true" rowKey="#{morador.pessoa.idPessoa}"
+					rendered="#{!mensagemController.todos}" rows="20"
+					selection="#{mensagemController.moradoresSelecionados}"
+					id="listaDestinatarios" styleClass="innerContentFix">
+					<p:column selectionMode="multiple" style="width:18px" />
+					<p:column sortBy="pessoa.nome"
+						filterBy="pessoa.nome">
+						<f:facet name="header">
+							<h:outputLabel value="#{bundle['tit.nome']}" />
+						</f:facet>
+						<h:outputText value="#{morador.pessoa.nome}" />
+					</p:column>
+					<p:column
+						sortBy="#{morador.unidadeHabitacional[0].unidadeHabitacional.identificacao}"
+						sortFunction="#{mensagemController.ordenacaoNumerica}"
+						filterBy="#{morador.unidadeHabitacional[0].unidadeHabitacional.identificacao}">
+						<f:facet name="header">
+							<h:outputLabel value="#{bundle['tit.casa']}" />
+						</f:facet>
+						<h:outputText
+							value="#{morador.unidadeHabitacional[0].unidadeHabitacional.identificacao}" />
+					</p:column>
+				</p:dataTable>
+			</h:panelGroup>
+
+			<br />
+
+			<h:panelGrid columns="2" id="grdAssunto">
+				<h:outputLabel value="#{bundle['tit.assunto']}: " for="assunto" />
+				<p:inputText id="assunto"
+					value="#{mensagemController.mensagem.assunto}" size="60"
+					maxlength="80" required="true" styleClass="campo-onload"
+					requiredMessage="#{bundle['msg.informe.assunto']}" />
+
+				<h:outputLabel value="#{bundle['tit.mensagem']}: " for="mensagem" />
+				<h:panelGrid id="mensagem">
+					<iframe src="#{request.contextPath}/pages/comunicacao/mensagem.jsf"
+						width="100%" height="200px" id="iframe1" marginheight="0"
+						frameborder="0" onLoad="autoResize('iframe1');"></iframe>
+				</h:panelGrid>
+			</h:panelGrid>
+
+			<h:panelGrid columns="2" id="grdAcoes">
+				<p:commandButton value="#{bundle['btn.enviar']}"
+					actionListener="#{mensagemController.gravar}" ajax="true"
+					update=":mensagemDoSindicoF"
+					disabled="#{!mensagemController.mensagem.remetente.sindico}" />
+
+				<p:commandButton value="#{bundle['btn.cancelar']}"
+					action="#{mensagemController.novo}" ajax="true" process="@this"
+					update=":mensagemDoSindicoF" />
+			</h:panelGrid>
+		</h:form>
+		<h:panelGroup rendered="#{usuarioController.sistemaIsDemo}">
+			<script type="text/javascript">
+				disponivelNosPlanos(0, 1, 1, 1);
+			</script>
+		</h:panelGroup>
+	</ui:define>
+</ui:composition>

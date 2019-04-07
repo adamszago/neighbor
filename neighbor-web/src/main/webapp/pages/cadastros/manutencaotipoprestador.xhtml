@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+	<ui:define name="content">
+
+		<h:form id="formTipoPrestador">
+			<h3>
+				<h:outputText value="#{bundle['tit.manut.tipo.prestador']}" />
+			</h3>
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+
+			<h:inputHidden id="idMntTipoPrestador"
+				value="#{prestadorServicoController.tipoPrestador.id}" />
+
+			<h:panelGrid columns="2" style="margin-bottom:10px">
+				<h:outputLabel value="#{bundle['lbl.tipo.prestador']}: " for="tipo" />
+				<p:inputText id="tipo"
+					value="#{prestadorServicoController.tipoPrestador.tipoPrestador}"
+					required="true" size="30" maxlength="30"
+					requiredMessage="#{bundle['msg.informe.tipo.prestador']}" />
+				<p:commandButton value="#{bundle['btn.adicionar']}"
+					actionListener="#{prestadorServicoController.alterarTipo}"
+					ajax="true" update=":formTipoPrestador :listaMntTipoPrestador"
+					oncomplete="dlgTipoPrestador.hide()" process="formTipoPrestador" />
+			</h:panelGrid>
+		</h:form>
+
+		<br />
+		<h:form id="listaMntTipoPrestador">
+			<p:dataTable value="#{prestadorServicoController.tiposPrestadores}"
+				var="tp"
+				rendered="#{!empty prestadorServicoController.tiposPrestadores}"
+				paginator="true" rows="10"
+				selection="#{prestadorServicoController.tipoPrestador}"
+				styleClass="innerContentFix"
+				emptyMessage="#{bundle['msg.sem.tipo.prestador']}">
+
+				<f:facet name="header">
+					<h:outputText value="#{bundle['tit.tipo.prestador.cad']}" />
+				</f:facet>
+
+				<p:column sortBy="tipoPrestador"
+					filterBy="tipoPrestador">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.tipo.prestador']}" />
+					</f:facet>
+					<h:outputText value="#{tp.tipoPrestador}" />
+				</p:column>
+				<p:column style="width:16px"
+					rendered="#{sec:areAnyGranted('ROLE_EXCLUIR_TIPO_PRESTADOR, ROLE_ROOT')}">
+					<p:commandLink
+						onclick="mostrarDlgInativarTipoPrestador(#{tp.ativo})"
+						update=":formTipoPrestador :listaMntTipoPrestador">
+						<p:graphicImage id="imgStatus"
+							value="../../resources/images/ativo_#{tp.ativo}.png" width="24px"
+							height="24px">
+							<p:tooltip for="imgStatus" hideEffect="fade" showEffect="fade"
+								value="#{tp.ativo ? 'Tipo Prestador Ativo' : 'Tipo Prestador Inativo'}"></p:tooltip>
+						</p:graphicImage>
+						<f:setPropertyActionListener
+							target="#{prestadorServicoController.tiposPrestadores}"
+							value="#{tp}" />
+					</p:commandLink>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+
+		<p:confirmDialog message="#{bundle['msg.conf.ativacao']}"
+			header="Inativar" severity="alert"
+			widgetVar="dlgInativarTipoPrestador" modal="true" closable="false">
+			<h:form>
+				<p:commandButton id="confirm" value="#{bundle['tit.sim']}"
+					update=":formTipoPrestador :listaMntTipoPrestador"
+					oncomplete="dlgInativarTipoPrestador.hide()"
+					action="#{prestadorServicoController.alterarTipo}" />
+				<p:commandButton id="decline" value="#{bundle['tit.nao']}"
+					onclick="dlgInativarTipoPrestador.hide()" />
+			</h:form>
+		</p:confirmDialog>
+		<script>
+		function mostrarDlgInativarTipoPrestador(tipoEnable){
+			var men = '';
+			if(tipoEnable == true){
+				men = 'Desativar';
+			}else {
+				men = 'Ativar';
+			}
+			jQuery('#dlgInativarTipoPrestador p').html('Deseja <strong>'+men+'</strong> este tipo de Prestador de Serviços?');
+			
+			jQuery('#ui-dialog-title-dlgInativarTipoPrestador').html(men);
+			
+			dlgInativarTipoPrestador.show();	
+		}
+		
+	</script>
+		<h:panelGroup rendered="#{usuarioController.sistemaIsDemo}">
+			<script type="text/javascript">disponivelNosPlanos(1,1,1,1);</script>
+		</h:panelGroup>
+	</ui:define>
+</ui:composition>

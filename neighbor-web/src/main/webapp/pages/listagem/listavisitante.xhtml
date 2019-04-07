@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+	<ui:define name="content">
+		<h:form id="listagemForm" styleClass="innerContentFix">
+			<p:ajaxStatus onprestart="pageLoading.show()"
+				oncomplete="pageLoading.hide()" onerror="pageLoading.hide()" />
+			<div class="innerContentFix">
+				<p:growl id="growlListaVisitante" showDetail="true" sticky="true" />
+			</div>
+			<p:tabView id="tabVisitas" effect="slide" effectDuration="fast">
+			
+				<p:ajax event="tabChange" listener="#{visitanteController.onTabChange}" update=":listagemForm:tabVisitas" />
+			
+				<p:tab id="tbVisitasConfirmadas" title="#{bundle['tit.visitas.confirmadas']}">
+					<p:dataTable id="visitantes" var="visitante"
+						value="#{visitanteController.visitantes}"
+						rowKey="#{visitante.pessoa.idPessoa}" paginator="true" rows="10"
+						selection="#{visitanteController.visitante}"
+						selectionMode="single" emptyMessage="Sem Visitantes Cadastrados">
+						<f:facet name="header">
+							<h:outputText value="#{bundle['tit.visitantes.cadastrados']}" />
+						</f:facet>
+						<p:column style="width:16px" exportable="false">
+							<p:rowToggler />
+						</p:column>
+						<p:column filterBy="pessoa.cpf" exportable="true">
+							<f:facet name="header">
+								<h:outputText value="#{bundle['tit.cpf']}" />
+							</f:facet>
+							<h:outputText value="#{visitante.pessoa.cpf}" />
+						</p:column>
+						<p:column sortBy="pessoa.nome"
+							filterBy="pessoa.nome" exportable="true">
+							<f:facet name="header">
+								<h:outputText value="#{bundle['tit.nome']}" />
+							</f:facet>
+							<h:outputText value="#{visitante.pessoa.nome}" />
+						</p:column>
+
+						<!-- BOTAO VER VISITAS DO VISITANTE -->
+						<p:column exportable="false">
+							<p:commandLink oncomplete="centerAndShowDialog('dlgVerVisitas')" id="verVisitas"
+								update=":formVisitas" ajax="true">
+								<p:graphicImage value="../../resources/images/ico_visits.png"
+									style="text-align:center;" />
+								<f:setPropertyActionListener
+									target="#{visitanteController.visitante}" value="#{visitante}" />
+							</p:commandLink>
+							<p:tooltip for="verVisitas" value="Ver visitas"
+								showEffect="slide" hideEffect="slide" />
+						</p:column>
+
+						<!-- BOTAO REGISTRAR OCORRENCIA -->
+						<p:column
+							rendered="#{sec:areAnyGranted('ROLE_CADASTRO_OCORRENCIA, ROLE_ROOT')}"
+							exportable="false">
+							<p:commandLink onclick="dlgOcorrencia.show()"
+								id="registrarOcorrencia">
+								<p:graphicImage value="../../resources/images/ico_apito.png"
+									style="text-align:center;" />
+								<f:setPropertyActionListener
+									target="#{ocorrenciaController.ocorrencia.visitantePenalizado}"
+									value="#{visitante}" />
+							</p:commandLink>
+							<p:tooltip for="registrarOcorrencia" value="Registrar Ocorrência"
+								showEffect="slide" hideEffect="slide" />
+						</p:column>
+
+						<!-- BOTAO EDITAR VISITANTE -->
+						<p:column
+							rendered="#{sec:areAnyGranted('ROLE_EDITAR_VISITANTE, ROLE_ROOT')}"
+							exportable="false">
+							<f:facet name="header">
+							</f:facet>
+							<h:commandLink action="#{visitanteController.editarVisitante}"
+								id="btnEditarVisitante">
+								<p:graphicImage value="../../resources/images/edit.png" width="20px"
+									height="20px" style="text-align:center;" />
+								<f:setPropertyActionListener
+									target="#{visitanteController.visitante}" value="#{visitante}" />
+							</h:commandLink>
+							<p:tooltip for="btnEditarVisitante" value="Editar Visitante"
+								showEffect="slide" hideEffect="slide" />
+						</p:column>
+
+						<!-- BOTAO REGISTRAR VISITA -->
+						<p:column
+							rendered="#{sec:areAnyGranted('ROLE_REGISTRAR_VISITA, ROLE_ROOT')}"
+							exportable="false">
+							<f:facet name="header">
+							</f:facet>
+							<p:commandLink onclick="dlgVisita.show()" ajax="true"
+								id="btnRegistrarVisita">
+								<p:graphicImage value="../../resources/images/btns/add.png" width="20px"
+									height="20px" style="text-align:center;" />
+								<f:setPropertyActionListener
+									target="#{visitanteController.visitante}" value="#{visitante}" />
+							</p:commandLink>
+							<p:tooltip for="btnRegistrarVisita" value="Registrar Visita"
+								showEffect="slide" hideEffect="slide" />
+						</p:column>
+						<p:rowExpansion>
+							<table style="border: hidden;">
+								<tr>
+									<td><p:graphicImage
+											style="cursor: pointer; border:none; margin: 8px;"
+											url="/mediaservlet?idVisitante=#{visitante.pessoa.idPessoa}"
+											width="150" height="100" />
+									</td>
+									<!-- BOTAO ADICIONAR ENTRADA LIVRE --> 
+									<td>
+										<p:commandLink
+											onclick="dlgEntradaLivre.show()" ajax="true"
+											id="btnAdicionarEntradaLivre"
+											rendered="#{sec:areAnyGranted('ROLE_ADICIONAR_ENTRADA_LIVRE_VISITANTE, ROLE_ROOT')}">
+											<h:outputText value="Adicionar Entrada Livre+"
+												style="color: black;" />
+											<f:setPropertyActionListener
+												target="#{visitanteController.visitante}"
+												value="#{visitante}" />
+										</p:commandLink> <p:tooltip for="btnAdicionarEntradaLivre"
+											value="Adicionar Entrada Livre" showEffect="slide"
+											hideEffect="slide" /> <br /> <p:dataTable
+											id="listaEntradaslivres"
+											value="#{visitante.entradasLivresList}" var="mo"
+											emptyMessage="#{bundle['msg.sem.entradas.livres']}"
+											styleClass="datatableHeaderPadrao2">
+											<f:facet name="header">
+												<h:outputText value="#{bundle['tit.entradas.livres']}" />
+											</f:facet>
+											<p:column style="width: 67px;" exportable="true">
+												<f:facet name="header">
+													<h:outputText value="#{bundle['tit.casa']}" />
+												</f:facet>
+												<h:outputText style="text-align: center" 
+													value="#{mo.unidadeHabitacional[0].unidadeHabitacional.identificacao}" />
+											</p:column>
+											<p:column exportable="true">
+												<f:facet name="header">
+													<h:outputText value="#{bundle['tit.nome']}" />
+												</f:facet>
+												<h:outputText value="#{mo.pessoa.nome}" />
+											</p:column>
+											<!-- BOTAO REMOVER ENTRADA LIVRE -->
+											<p:column
+												rendered="#{sec:areAnyGranted('ROLE_REMOVER_ENTRADA_LIVRE_VISITANTE, ROLE_ROOT')}"
+												exportable="false">
+												<f:facet name="header"></f:facet>
+												<h:commandLink
+													action="#{visitanteController.removerEntradaLivre}"
+													update=":listagemForm" id="btnRemoverEntradaLivre">
+													<p:graphicImage value="../../resources/images/delete.png"
+														width="10px" height="10px" style="text-align:center;" />
+													<f:setPropertyActionListener
+														target="#{visitanteController.morador}" value="#{mo}" />
+													<f:setPropertyActionListener
+														target="#{visitanteController.visitante}"
+														value="#{visitante}" />
+												</h:commandLink>
+												<p:tooltip for="btnRemoverEntradaLivre"
+													value="Remover Entrada Livre" showEffect="slide"
+													hideEffect="slide" />
+											</p:column>
+										</p:dataTable>
+									</td>
+								</tr>
+							</table>
+						</p:rowExpansion>
+					</p:dataTable>
+				</p:tab>
+				<p:tab id="tbVisitasAgendadas" title="Visitas Agendadas">
+					<p:dataTable id="listaVisitasAgendadas" var="visita"
+						value="#{visitanteController.visitasAgendadas}" paginator="true"
+						rows="5" emptyMessage="#{bundle['msg.sem.visitas.agend']}">
+						<f:facet name="header">
+							<h:outputText value="#{bundle['tit.visitas.agendadas.cad']}" />
+						</f:facet>
+						<p:column filterBy="visitante.pessoa.nome"
+							sortBy="visitante.pessoa.nome" exportable="true">
+							<f:facet name="header">
+								<h:outputText value="#{bundle['tit.nome']}" />
+							</f:facet>
+							<h:outputText value="#{visita.visitante.pessoa.nome}" />
+						</p:column>
+						<p:column filterBy="inicioAgendamentoVisita"
+							sortBy="inicioAgendamentoVisita" exportable="true">
+							<f:facet name="header">
+								<h:outputText value="#{bundle['tit.data.inicio']}" />
+							</f:facet>
+							<h:outputText value="#{visita.inicioAgendamentoVisita}">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</h:outputText>
+						</p:column>
+						<p:column filterBy="fimAgendamentoVisita"
+							sortBy="fimAgendamentoVisita" exportable="true">
+							<f:facet name="header">
+								<h:outputText value="#{bundle['tit.data.fim']}" />
+							</f:facet>
+							<h:outputText value="#{visita.fimAgendamentoVisita}">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</h:outputText>
+						</p:column>
+						<p:column filterBy="morador.pessoa.nome"
+							sortBy="morador.pessoa.nome" exportable="true">
+							<f:facet name="header">
+								<h:outputText value="#{bundle['tit.morador.visitado']}" />
+							</f:facet>
+							<h:outputText value="#{visita.morador.pessoa.nome}" />
+						</p:column>
+						<p:column
+							filterBy="morador.unidadeHabitacional[0].unidadeHabitacional.identificacao"
+							sortBy="morador.unidadeHabitacional[0].unidadeHabitacional.identificacao"
+							sortFunction="#{visitanteController.ordenacaoNumerica}"
+							exportable="true">
+							<f:facet name="header">
+								<h:outputText value="#{bundle['tit.residencia.visitada']}" />
+							</f:facet>
+							<h:outputText
+								value="#{visita.morador.unidadeHabitacional[0].unidadeHabitacional.identificacao}" />
+						</p:column>
+						<p:column exportable="false">
+							<p:commandLink
+								action="#{visitanteController.validarVisitaAgendada}"
+								id="confirmVisita" ajax="false" update=":listagemForm"
+								onclick="pageLoading.show();" oncomplete="pageLoading.hide();">
+								<p:graphicImage value="../../resources/images/check.png" width="20px"
+									height="20px" style="text-align:center;" />
+								<f:setPropertyActionListener
+									target="#{visitanteController.visitaAgendada}"
+									value="#{visita}" />
+							</p:commandLink>
+							<p:tooltip for="confirmVisita" value="Confirmar visita agendada"
+								showEffect="slide" hideEffect="slide" />
+						</p:column>
+					</p:dataTable>
+				</p:tab>
+			</p:tabView>
+
+			<ui:remove>
+				<p:commandButton style="float: left; margin-top: 10px;" ajax="false"
+					value="Cadastrar Visitante"
+					action="#{visitanteController.novoVisitante}"
+					onclick="pageLoading.show();" oncomplete="pageLoading.hide();" />
+			</ui:remove>
+
+		</h:form>
+
+		<ui:insert name="dialogOcorrencia">
+			<ui:include src="../../dialogs/dialogOcorrencia.xhtml" />
+			<ui:include src="../../dialogs/dialogVisita.xhtml" />
+			<ui:include src="../../dialogs/dialogEntradaLivre.xhtml" />
+			<ui:include src="../../dialogs/dialogVisitasVisitante.xhtml" />
+		</ui:insert>
+		
+		<h:panelGroup rendered="#{usuarioController.sistemaIsDemo}">
+			<script type="text/javascript">
+				disponivelNosPlanos(1, 1, 1, 1);
+			</script>
+		</h:panelGroup>
+	</ui:define>
+</ui:composition>

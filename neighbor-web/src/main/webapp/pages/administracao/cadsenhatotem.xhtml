@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<ui:define name="content">
+		<h3>
+			<h:outputText value="#{bundle['tit.cadastro.senha.totem']}" />
+		</h3>
+		<h:form id="cadastroSenhaTotemForm">
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+
+			<h:panelGrid columns="3">
+				<h:outputLabel value="#{bundle['lbl.casa']}" for="casa" />
+				<p:inputText id="casa" value="#{totemController.casa}"
+					styleClass="toCapitalize" required="true" size="10" maxlength="10"
+					requiredMessage="#{bundle['msg.informe.casa']}"
+					readonly="#{totemController.userLogado.morador != null}" />
+
+				<p:commandLink id="buscaProprietario"
+					rendered="#{totemController.userLogado.morador == null}"
+					action="#{totemController.buscarProprietario}" ajax="true"
+					update="nomeMorador agregadosDataTable growlGeral">
+					<p:graphicImage url="../../resources/images/lupa.png" width="24px"
+						height="24px" style="border:none;" />
+					<p:tooltip for="buscaProprietario" value="Buscar proprietário!" />
+				</p:commandLink>
+			</h:panelGrid>
+
+			<h:panelGrid columns="3">
+				<h:outputLabel value="#{bundle['lbl.nome.morador']}" />
+
+				<p:inputText id="nomeMorador"
+					value="#{totemController.morador.pessoa.nome}"
+					styleClass="toCapitalize" size="50" readonly="true" />
+
+				<p:commandLink action="#{totemController.buscarMoradorTotem}"
+					onclick="dlgMoradorTotem.show();"
+					update=":formMoradorTotem:panelGridMoradorTotem" ajax="true">
+					<p:graphicImage
+						value="../../resources/images/edit#{!totemController.morador.possuiSenhaTotem ? '2' : ''}.png"
+						width="20px" height="20px" style="text-align:center;" />
+				</p:commandLink>
+			</h:panelGrid>
+
+			<p:dataTable id="agregadosDataTable" var="agregado"
+				value="#{totemController.morador.agregados}" paginator="true"
+				rows="10" emptyMessage="#{bundle['msg.sem.usuarios.associados']}">
+				<f:facet name="header">
+					<h:outputText value="#{bundle['tit.agregados.associados']}" />
+				</f:facet>
+				<p:column sortBy="#{agregado.nome}">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['lbl.nome']}" />
+					</f:facet>
+					<h:outputText value="#{agregado.nome}" />
+				</p:column>
+				<p:column width="25"
+					rendered="#{sec:areAnyGranted('ROLE_PAGINA_MORADOR, ROLE_ROOT')}">
+					<p:commandLink action="#{totemController.buscarAgregadoTotem}"
+						onclick="dlgAgregadoTotem.show();"
+						update=":formAgregadoTotem:panelGridAgregadoTotem" ajax="true">
+						<p:graphicImage
+							value="../../resources/images/edit#{!agregado.possuiSenhaTotem ? '2' : ''}.png"
+							width="20px" height="20px" style="text-align:center;" />
+						<f:setPropertyActionListener target="#{totemController.agregado}"
+							value="#{agregado}" />
+					</p:commandLink>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+
+		<ui:insert>
+			<ui:include src="../../dialogs/dialogMoradorTotem.xhtml" />
+			<ui:include src="../../dialogs/dialogAgregadoTotem.xhtml" />
+		</ui:insert>
+	</ui:define>
+</ui:composition>

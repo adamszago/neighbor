@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:sec="http://www.springframework.org/security/tags" >
+	<ui:define name="content">
+	<h:form id="mntMarcaVeiculo">
+		<h3><h:outputText value="#{bundle['tit.manut.marca']}"/></h3>
+		<ui:insert   >
+			<ui:include src="../../templates/growlGeral.xhtml" />
+		</ui:insert>
+		<h:inputHidden id="idMntMarcaVeiculo" value="#{veiculoController.marcaVeiculo.id}" />
+		<h:panelGrid columns="2" style="margin-bottom:10px">
+			<h:outputLabel value="#{bundle['tit.marca']}: " for="marca" />
+			<p:inputText id="marca"
+				value="#{veiculoController.marcaVeiculo.marca}" required="true"
+				label="marca" size="20" maxlength="20"
+				requiredMessage="#{bundle['msg.informe.marca']}" styleClass="toUppercase" />
+			<p:commandButton value="#{bundle['btn.gravar']}"
+				actionListener="#{veiculoController.gravarMarca}" ajax="true"
+				update=":mntMarcaVeiculo :listaMntMarcaVeiculo"
+				process="mntMarcaVeiculo"/>
+		</h:panelGrid>
+	</h:form>
+	<br/>
+	<h:form id="listaMntMarcaVeiculo">
+		<p:dataTable value="#{veiculoController.marcas}" var="mrc" rendered="#{!empty veiculoController.marcas}" 
+					paginator="true" rows="10" selection="#{veiculoController.marcaVeiculo}" styleClass="innerContentFix" emptyMessage="#{bundle['msg.sem.marcas.cadastradas']}">
+		
+			<f:facet name="header">  
+				<h:outputLabel value="#{bundle['tit.marca.cadastrada']}"/>
+			</f:facet>  
+			<!-- <p:column sortBy="#{mrc.id}" filterBy="#{mrc.id}" >  
+         		<f:facet name="header">  
+                	ID  
+         		</f:facet>
+         		<h:outputText value="#{mrc.id}"  />
+     		</p:column> -->
+     		<p:column sortBy="marca" filterBy="marca" >  
+         		<f:facet name="header">  
+                	<h:outputLabel value="#{bundle['tit.marca']}"/>
+         		</f:facet>
+         		<h:outputText value="#{mrc.marca}"  />
+     		</p:column>
+     		<p:column>  
+				<p:commandLink onclick="mostrarDglInativarMarca(#{mrc.ativo})"  update=":mntMarcaVeiculo :listaMntMarcaVeiculo">
+  					<p:graphicImage id="imgStatus" value="../../resources/images/ativo_#{mrc.ativo}.png" width="24px" height="24px" >
+  						<p:tooltip for="imgStatus" hideEffect="fade" showEffect="fade" 
+  							value="#{mrc.ativo ? 'Marca Ativa' : 'Marca Inativa'}"></p:tooltip>
+  					</p:graphicImage>
+  					<f:setPropertyActionListener target="#{veiculoController.marcaVeiculo}" value="#{mrc}" />
+ 					</p:commandLink>
+			</p:column>
+		</p:dataTable>
+	</h:form>
+	<p:confirmDialog message="#{bundle['msg.conf.ativacao']}"
+		header="Inativar" severity="alert" widgetVar="dglInativarMarcaVeiculo"
+		modal="true" closable="false">
+		<h:form>
+			<p:commandButton id="confirm" value="#{bundle['tit.sim']}"
+				update=":mntMarcaVeiculo :listaMntMarcaVeiculo"
+				oncomplete="dglInativarMarcaVeiculo.hide()"
+				action="#{veiculoController.alterarMarca}" />
+			<p:commandButton id="decline" value="#{bundle['tit.nao']}"
+				onclick="dglInativarMarcaVeiculo.hide()" />
+		</h:form>
+	</p:confirmDialog>
+	<script>
+		function mostrarDglInativarMarca(marcaEnable){
+			var men = '';
+			if(marcaEnable == true){
+				men = 'Desativar';
+			}else {
+				men = 'Ativar';
+			}
+			jQuery('#dglInativarMarcaVeiculo p').html('Deseja <strong>'+men+'</strong> esta marca ?');
+			
+			jQuery('#ui-dialog-title-dglInativarMarcaVeiculo').html(men);
+			
+			dglInativarMarcaVeiculo.show();	
+		}
+		
+	</script>
+	<h:panelGroup rendered="#{usuarioController.sistemaIsDemo}"> <script type="text/javascript">disponivelNosPlanos(1,1,1,1);</script></h:panelGroup>
+</ui:define>
+</ui:composition>

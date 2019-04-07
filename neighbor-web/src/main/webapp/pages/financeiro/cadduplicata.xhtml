@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+	<ui:define name="content">
+		<h3>
+			<h:outputText value="#{bundle['tit.duplicatas.cadastro']}" />
+		</h3>
+
+		<h:form id="cadastroForm" prependId="false">
+
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+
+			<h:panelGroup>
+				<div style="width: 600px">
+					<p:dataTable id="pessoas" var="pessoa"
+						value="#{duplicataController.pessoas}" rowKey="#{pessoa.idPessoa}"
+						paginator="true" rows="5"
+						disabled="#{duplicataController.entity.id > 0}"
+						selection="#{duplicataController.pessoaSelecionada}"
+						selectionMode="single">
+
+						<p:ajax event="rowSelect"
+							listener="#{duplicataController.onRowSelect}"
+							update=":cadastroForm:growlGeral :cadastroForm:faturas" />
+						<p:ajax event="rowUnselect"
+							listener="#{duplicataController.onRowUnselect}"
+							update=":cadastroForm:growlGeral :cadastroForm:faturas" />
+
+						<p:column headerText="#{bundle['lbl.cpf']}"
+							filterBy="cpf">  
+			            #{pessoa.cpf}
+			        </p:column>
+
+						<p:column headerText="#{bundle['lbl.nome']}"
+							filterBy="nome">  
+			            #{pessoa.nome}
+			        </p:column>
+					</p:dataTable>
+				</div>
+
+				<div style="width: 600px">
+					<p:dataTable id="faturas" var="fatura"
+						value="#{duplicataController.faturas}"
+						disabled="#{duplicataController.entity.id > 0}" paginator="true"
+						rows="5" selection="#{duplicataController.entity.fatura}"
+						selectionMode="single">
+
+						<p:ajax event="rowSelect"
+							listener="#{duplicataController.onRowSelectFatura}"
+							update=":cadastroForm:growlGeral" />
+						<p:ajax event="rowUnselect"
+							listener="#{duplicataController.onRowUnselectFatura}"
+							update=":cadastroForm:growlGeral" />
+
+						<p:column headerText="#{bundle['lbl.fatura.nome']}"
+							filterBy="nome">  
+			            #{fatura.nome}
+			        </p:column>
+
+						<p:column headerText="#{bundle['lbl.fatura.valor']}"
+							filterBy="valor">
+							<h:outputText value="#{fatura.valor}">
+								<f:convertNumber pattern="R$ #,##0.00" />
+							</h:outputText>
+						</p:column>
+
+						<p:column headerText="#{bundle['lbl.fatura.data']}"
+							filterBy="data">
+							<h:outputText value="#{fatura.data}">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</h:outputText>
+						</p:column>
+					</p:dataTable>
+				</div>
+
+				<h:panelGrid columns="2">
+					<p:outputLabel value="#{bundle['lbl.duplicata.parcelamento']}: "
+						for="cmbTipoParcelamento" styleClass="label_obr" />
+					<p:selectOneMenu value="#{duplicataController.tipoParcelamento}"
+						id="cmbTipoParcelamento" required="true"
+						requiredMessage="#{bundle['msg.sel.tipo.parcelamento']}"
+						style="width: 166px;">
+						<f:selectItem itemLabel="#{bundle['select.selecione']}"
+							itemValue="" />
+						<f:selectItem
+							itemLabel="#{bundle['select.tipo.parc.dupl.avista']}"
+							itemValue="AVISTA" />
+						<f:selectItem itemLabel="#{bundle['select.tipo.parc.dupl.parc']}"
+							itemValue="PARCELADO" />
+						<p:ajax event="change"
+							listener="#{duplicataController.onChangeTipoParcelamento}"
+							update=":cadastroForm:numParcelas" />
+					</p:selectOneMenu>
+
+					<p:outputLabel value="#{bundle['lbl.duplicata.qtd.parcelas']}: "
+						for="numParcelas" styleClass="label_obr" />
+					<p:inputText id="numParcelas"
+						disabled="#{duplicataController.tipoParcelamento == 'AVISTA'}"
+						value="#{duplicataController.numeroParcelas}" />
+
+					<p:outputLabel value="#{bundle['lbl.duplicata.dataprimeira']}: "
+						for="dataPrimeiraParcela" styleClass="label_obr" />
+					<p:calendar id="dataPrimeiraParcela"
+						value="#{duplicataController.dataPrimeiraParcela}"
+						navigator="true" mindate="1/1/1930" maxdate="1/1/2030" locale="pt"
+						pattern="dd/MM/yyyy" readonlyInput="true" />
+
+					<p:outputLabel value="#{bundle['lbl.duplicata.dias.vencimento']}: "
+						for="diasVencto" styleClass="label_obr" />
+					<p:inputText id="diasVencto"
+						value="#{duplicataController.limiteDias}" />
+
+					<p:outputLabel value="#{bundle['lbl.duplicata.mora.recbtos']}: "
+						for="moraRecbtos" styleClass="label_obr" />
+					<p:inputText id="moraRecbtos" converter="moneyConverter"
+						value="#{duplicataController.moraOutrosRecebimentos}" />
+
+					<p:outputLabel value="#{bundle['lbl.duplicata.multa.vencto']}: "
+						for="multaVencto" styleClass="label_obr" />
+					<p:inputText id="multaVencto" converter="moneyConverter"
+						value="#{duplicataController.multaVencimento}" />
+
+					<p:outputLabel value="#{bundle['lbl.duplicata.taxa.dia']}: "
+						for="taxaDia" styleClass="label_obr" />
+					<p:inputText id="taxaDia" converter="moneyConverter"
+						value="#{duplicataController.taxaDia}" />
+
+					<p:outputLabel value="#{bundle['lbl.duplicata.desc']}: "
+						for="desconto" styleClass="label_obr" />
+					<p:inputText id="desconto" converter="moneyConverter"
+						value="#{duplicataController.desconto}" />
+
+					<p:outputLabel value="#{bundle['lbl.duplicata.abat']}: "
+						for="abatimento" styleClass="label_obr" />
+					<p:inputText id="abatimento" converter="moneyConverter"
+						value="#{duplicataController.abatimento}" />
+
+					<p:commandButton value="#{bundle['btn.gerar']}" id="btnGerar"
+						action="#{duplicataController.gerarParcelas}" ajax="true"
+						update=":cadastroForm"
+						disabled="#{duplicataController.entity.id != null || duplicataController.entity.id > 0}"
+						onclick="pageLoading.show();" oncomplete="pageLoading.hide();" />
+					<p:commandButton value="#{bundle['btn.limpar']}"
+						id="btnLimparParcelas"
+						action="#{duplicataController.limparParcelas}" ajax="true"
+						update=":cadastroForm"
+						disabled="#{duplicataController.entity.id != null || duplicataController.entity.id > 0}"
+						onclick="pageLoading.show();" oncomplete="pageLoading.hide();" />
+				</h:panelGrid>
+
+				<div style="width: 800px">
+					<p:dataTable id="parcelas" var="parcela"
+						value="#{duplicataController.parcelaModelo}" paginator="true"
+						rows="5">
+
+						<p:column headerText="#{bundle['lbl.parcela.numero']}"
+							filterBy="numeroParcela">  
+			            	#{parcela.numeroParcela}
+			        	</p:column>
+
+						<p:column headerText="#{bundle['lbl.data.pagamento']}"
+							filterBy="dataPagamento">
+							<h:outputText value="#{parcela.dataPagamento}">
+								<f:convertDateTime pattern="dd/MM/YYYY" />
+							</h:outputText>
+						</p:column>
+
+						<p:column headerText="#{bundle['lbl.vencto.limite']}"
+							filterBy="dataLimiteVencto">
+							<h:outputText value="#{parcela.dataLimiteVencto}">
+								<f:convertDateTime pattern="dd/MM/YYYY" />
+							</h:outputText>
+						</p:column>
+
+						<p:column headerText="#{bundle['lbl.duplicata.mora.recbtos_']}">
+							<h:outputText value="#{parcela.moraOutrosRecebimentos}">
+								<f:convertNumber pattern="R$ #,##0.00" />
+							</h:outputText>
+						</p:column>
+
+						<p:column headerText="#{bundle['lbl.duplicata.multa.vencto_']}">
+							<h:outputText value="#{parcela.multaVencimento}">
+								<f:convertNumber pattern="R$ #,##0.00" />
+							</h:outputText>
+						</p:column>
+
+						<p:column headerText="#{bundle['lbl.duplicata.taxa.dia_']}">
+							<h:outputText value="#{parcela.taxaDia}">
+								<f:convertNumber pattern="R$ #,##0.00" />
+							</h:outputText>
+						</p:column>
+
+						<p:column headerText="#{bundle['lbl.duplicata.desc_']}">
+							<h:outputText value="#{parcela.desconto}">
+								<f:convertNumber pattern="R$ #,##0.00" />
+							</h:outputText>
+						</p:column>
+
+						<p:column headerText="#{bundle['lbl.duplicata.abat_']}">
+							<h:outputText value="#{parcela.abatimento}">
+								<f:convertNumber pattern="R$ #,##0.00" />
+							</h:outputText>
+						</p:column>
+					</p:dataTable>
+				</div>
+
+				<br />
+				<br />
+
+				<h:panelGrid styleClass="layoutCadMorador" columns="2">
+					<p:commandButton value="#{bundle['btn.gravar']}" id="btnGravar"
+						action="#{duplicataController.gravarDuplicataReceber}"
+						ajax="false" update=":cadastroForm"
+						rendered="#{duplicataController.entity.id == null || duplicataController.entity.id == 0}"
+						onclick="pageLoading.show();" oncomplete="pageLoading.hide();" />
+
+					<p:commandButton value="#{bundle['btn.alterar']}"
+						action="#{duplicataController.alterar}" ajax="false"
+						update=":cadastroForm"
+						rendered="#{duplicataController.entity.id > 0}"
+						onclick="pageLoading.show();" oncomplete="pageLoading.hide();" />
+
+					<p:commandButton value="#{bundle['btn.limpar']}"
+						action="#{duplicataController.limparObjetoDuplicata}" ajax="false"
+						process="@this" onclick="pageLoading.show();"
+						update=":cadastroForm" oncomplete="pageLoading.hide();" />
+				</h:panelGrid>
+			</h:panelGroup>
+
+		</h:form>
+
+		<script>
+			jQuery(document).ready(function() {
+				aplicaMascaraMonetaria("#moraRecbtos");
+				aplicaMascaraMonetaria("#multaVencto");
+				aplicaMascaraMonetaria("#taxaDia");
+				aplicaMascaraMonetaria("#desconto");
+				aplicaMascaraMonetaria("#abatimento");
+			});
+		</script>
+
+	</ui:define>
+</ui:composition>

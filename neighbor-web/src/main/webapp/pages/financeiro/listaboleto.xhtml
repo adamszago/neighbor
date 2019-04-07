@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<ui:define name="content">
+
+		<style>
+.selectStatus {
+	width: 76px;
+	text-align: left;
+}
+
+.columnStatus .ui-sortable-column-icon {
+	vertical-align: top;
+}
+</style>
+
+		<h3>
+			<h:outputText vale="#{bundle['tit.boletos']}" />
+		</h3>
+
+		<h:form id="listagemForm" styleClass="innerContentFix">
+
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+
+			<p:toolbar>
+				<p:toolbarGroup align="left">
+					<p:commandButton type="button" value="Novo" icon="ui-icon-document"
+						action="#{bancoController.pageCadastroBanco}"
+						rendered="#{not usuarioController.userLogadoMorador}" />
+
+				</p:toolbarGroup>
+
+				<p:toolbarGroup align="right">
+					<p:selectOneMenu id="selectStatus"
+						value="#{bancoController.valueSelectStatus}"
+						styleClass="selectStatus" onchange="pageLoading.show();"
+						rendered="#{not usuarioController.userLogadoMorador}">
+						<f:selectItem itemLabel="#{bundle['select.stt.todos']}"
+							itemValue="TODOS" />
+						<f:selectItem itemLabel="#{bundle['select.stt.ativos']}"
+							itemValue="ATIVOS" />
+						<f:selectItem itemLabel="#{bundle['select.stt.inativos']}"
+							itemValue="INATIVOS" />
+						<p:ajax update=":listagemForm"
+							listener="#{bancoController.valueSelectStatus}"
+							oncomplete="pageLoading.hide();" />
+					</p:selectOneMenu>
+				</p:toolbarGroup>
+
+			</p:toolbar>
+
+			<p:dataTable value="#{boletoController.entities}" var="boleto"
+				emptyMessage="Sem registros para exibir" paginator="true" rows="10">
+
+				<p:column headerText="#{bundle['lbl.boleto.data']}"
+					sortBy="dataVencimento" filterBy="dataVencimento">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['lbl.boleto.data']}" />
+					</f:facet>
+					<h:outputText id="dtBoleto" value="#{boleto.dataVencimento}">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</p:column>
+
+				<p:column sortBy="valor" filterBy="valor"
+					headerText="#{bundle['tit.valor']}">
+					<f:facet name="header" style="text-align: center;">
+						<h:outputText value="#{bundle['tit.valor']}" />
+					</f:facet>
+					<h:outputText id="campoValor" value="#{boleto.valor}"
+						style="text-align: right;">
+						<f:converter converterId="moneyConverter" />
+					</h:outputText>
+				</p:column>
+
+				<p:column sortBy="statusBoleto.status"
+					headerText="#{bundle['lbl.boleto.status']}"
+					filterBy="statusBoleto.status" style="text-align: center;">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['lbl.boleto.status']}" />
+					</f:facet>
+					<h:outputText id="campoLancamentoTipoNome"
+						value="#{boleto.statusBoleto.status}" />
+				</p:column>
+
+			</p:dataTable>
+
+		</h:form>
+
+	</ui:define>
+</ui:composition>

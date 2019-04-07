@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+	<ui:define name="content">
+		<h3>
+			<h:outputText value="#{bundle['tit.centro.custo.cadastro']}" />
+		</h3>
+
+		<h:form id="cadastroForm">
+
+			<style>
+				.content form table td label {
+					float: left !important;
+				}
+				
+				.layoutCadMorador td {
+					padding: 7px;
+					border: none;
+				}
+				
+				.layoutCadMorador tr {
+					border: none;
+				}
+			</style>
+
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+			
+			<p:panelGrid styleClass="layoutCadMorador">
+				<p:row>
+					<p:column>
+						<p:outputLabel value="#{bundle['lbl.centro.custo.nome']}: "
+							for="nomeCentro" styleClass="label_obr" />
+					</p:column>
+					<p:column>
+						<p:inputText id="nomeCentro"
+							value="#{centroCustoController.entity.nome}" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel value="#{bundle['lbl.centro.custo.detalhes']}: "
+							for="descCentro" styleClass="label_obr" />
+					</p:column>
+					<p:column>
+						<p:inputTextarea id="descCentro" rows="5" cols="30"
+							counter="counter" value="#{centroCustoController.entity.descricao}"
+							maxlength="200" counterTemplate="{0} caracteres restantes."
+							autoResize="false" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<h:outputText value="#{bundle['lbl.centro.custo.pai']}: "
+							styleClass="label_obr" />
+					</p:column>
+					<p:column>
+						<p:tree id="paiCentro" var="node" 
+				            value="#{centroCustoController.treeRootCentrosCusto}"   
+	                        selectionMode="single"  
+	                        selection="#{centroCustoController.nodeCentroCustoSelecionado}">  
+	                        <p:treeNode>
+	                        	<h:outputText value="#{node}" id="lblNode"/>
+	                        </p:treeNode>
+		                </p:tree>
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+					</p:column>
+					<p:column>
+						<h:outputText id="counter" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel value="#{bundle['lbl.centro.custo.lancavel']}"
+							for="lancavel" styleClass="label_obr" />
+					</p:column>
+					<p:column>
+						<h:selectBooleanCheckbox id="lancavel"
+							value="#{centroCustoController.entity.lancavel}">
+						</h:selectBooleanCheckbox>
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+
+			<p:panelGrid styleClass="layoutCadMorador" columns="2">
+				<p:commandButton value="#{bundle['btn.gravar']}" id="btnGravar"
+					action="#{centroCustoController.gravarCentroCusto}"
+					ajax="false" update=":cadastroForm"
+					rendered="#{centroCustoController.entity.id == null || centroCustoController.entity.id == 0}"
+					onclick="pageLoading.show();" oncomplete="pageLoading.hide();" />
+
+				<p:commandButton value="#{bundle['btn.alterar']}"
+					action="#{centroCustoController.alterar}" ajax="false"
+					rendered="#{centroCustoController.entity.id > 0}"
+					update=":cadastroForm" onclick="pageLoading.show();"
+					oncomplete="pageLoading.hide();" />
+
+				<p:commandButton value="#{bundle['btn.limpar']}"
+					action="#{centroCustoController.limparObjetoCentroCusto}" ajax="false"
+					process="@this" onclick="pageLoading.show();"
+					update=":cadastroForm" oncomplete="pageLoading.hide();" />
+			</p:panelGrid>
+		</h:form>
+
+	</ui:define>
+</ui:composition>

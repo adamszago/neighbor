@@ -1,0 +1,15 @@
+<jboss-deployment-structure>
+	<ear-subdeployments-isolated>false</ear-subdeployments-isolated>
+	<deployment>
+		<dependencies>
+			<module name="javax.faces.api" />
+			<module name="com.sun.jsf-impl" />
+		</dependencies>
+	</deployment>
+	<sub-deployment name="neighbor.war">
+		<dependencies>
+			<!-- <module name="javax.faces.api" />
+			<module name="com.sun.jsf-impl" /> -->
+		</dependencies>
+	</sub-deployment>
+</jboss-deployment-structure>

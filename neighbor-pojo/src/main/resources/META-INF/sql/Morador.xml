@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings version="2.0"
+	xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_1_0.xsd">
+
+	<named-query name="Morador.buscarPrincipal">
+		<query>
+			<![CDATA[
+				SELECT DISTINCT morador 
+				FROM Morador morador 
+				INNER JOIN morador.unidadeHabitacional relacionamento 
+				INNER JOIN relacionamento.unidadeHabitacional unidade 
+				INNER JOIN unidade.condominio condominio 
+				WHERE unidade.identificacao = :identificacao 
+				AND condominio.idPessoa = :idCondominio 
+				AND morador.ativo = true 
+				AND relacionamento.responsavelFinanceiro = true
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Morador.listarMoradores">
+		<query>
+			<![CDATA[
+				SELECT morador 
+				FROM Morador morador 
+				INNER JOIN FETCH morador.veiculos
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Morador.findBuscaPersonalizada">
+		<query>
+			<![CDATA[
+				SELECT morador 
+				FROM Morador morador 
+				INNER JOIN morador.unidadeHabitacional relacionamento 
+				INNER JOIN relacionamento.unidadeHabitacional unidade 
+				WHERE morador.ativo = true
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Morador.findBuscaPersonalizadaSequencia">
+		<query>
+			<![CDATA[
+				SELECT morador 
+				FROM Morador morador 
+				INNER JOIN morador.unidadeHabitacional relacionamento 
+				INNER JOIN relacionamento.unidadeHabitacional unidade 
+				WHERE morador.ativo = true 
+				AND unidade.identificacao IN(:sequencia)
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Morador.existeCpf">
+		<query>
+			<![CDATA[
+				SELECT m 
+				FROM Morador m 
+				INNER JOIN m.unidadeHabitacional relacionamento 
+				INNER JOIN relacionamento.unidadeHabitacional unidade 
+				WHERE m.cpf = :cpf 
+				AND (:condominio IS NULL OR unidade.condominio = :condominio)
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Morador.buscarDetalhesMorador">
+		<query>
+			<![CDATA[
+				SELECT morador 
+				FROM Morador morador 
+				LEFT JOIN morador.telefones telefones 
+				LEFT JOIN morador.agregados relAgregados 
+				LEFT JOIN relAgregados.agregado agregado 
+				LEFT JOIN morador.animaisEstimacao animais 
+				LEFT JOIN morador.veiculos veiculos 
+				INNER JOIN morador.unidadeHabitacional relUnidade 
+				INNER JOIN relUnidade.unidadeHabitacional unidade 
+				INNER JOIN unidade.condominio condominio 
+				WHERE morador.idPessoa = :idPessoa
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Morador.listarMoradoresCondominio">
+		<query>
+			<![CDATA[
+				SELECT DISTINCT morador 
+				FROM Morador morador 
+				INNER JOIN morador.unidadeHabitacional relacionamento 
+				INNER JOIN relacionamento.unidadeHabitacional unidade 
+				INNER JOIN unidade.condominio condominio 
+				WHERE (:idCondominio IS NULL OR condominio.idPessoa = :idCondominio ) 
+				AND ( :status IS NULL OR morador.ativo = :status )
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Morador.buscarMoradorUsuario">
+		<query>
+			<![CDATA[
+				SELECT morador 
+				FROM Morador morador 
+				WHERE morador.idPessoa = :idPessoa
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Morador.buscarPorPessoa">
+		<query>
+			<![CDATA[
+				SELECT morador 
+				FROM Morador morador 
+				WHERE morador.idPessoa = :idPessoa
+			]]>
+		</query>
+	</named-query>
+
+</entity-mappings>

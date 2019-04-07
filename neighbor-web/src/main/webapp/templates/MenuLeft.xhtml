@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:sec="http://www.springframework.org/security/tags">
+
+    <body>
+        <ui:composition>
+            <!-- left menu -->
+            <h:form>
+                <h:panelGroup id="menuLeft">
+                    <div id="s4-leftpanel" class="s4-notdlg">
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td>&nbsp;</td>
+                                    <td>
+                                        <!-- The quick launch bar / left navigation -->
+                                        <div class="ms-quicklaunchouter">
+                                            <div class="ms-quickLaunch">
+                                                <div
+                                                    id="ctl00_PlaceHolderLeftNavBar_ctl00_QuickLaunchNavigationManager"
+                                                    class="ms-quicklaunch-navmgr">
+                                                    <div>
+                                                        <div id="zz2_V4QuickLaunchMenu" class="s4-ql">
+                                                            <div class="menu vertical menu-vertical">
+                                                                <ul class="root static">
+                                                                    <!--########################################## GESTAO DE CONDOMINIO ##########################################-->
+                                                                    <li class="static">
+                                                                        <!--  verifica se tem alguma permissao para o grupo "Gestão de Condôminios" para renderizar o titulo-->
+                                                                        <h:panelGroup
+                                                                            rendered="#{sec:areAnyGranted('ROLE_ROOT, ROLE_CADASTRO_MORADOR, 
+                                                                                        ROLE_CADASTRO_VISITANTE,ROLE_CADASTRO_PRESTADOR, 
+                                                                                        ROLE_CADASTRO_VEICULO, ROLE_CADASTRO_ANIMAL, 
+                                                                                        ROLE_CADASTRO_MARCA_VEICULO, ROLE_CADASTRO_TIPO_ANIMAL')}">
+                                                                            <span class="static menu-head">
+                                                                                <span class="additional-background">
+                                                                                    <span class="menu-item-text">Gestão de Condôminos</span>
+                                                                                </span>
+                                                                            </span>
+                                                                        </h:panelGroup>
+                                                                        <ul class="static">
+                                                                            <h:panelGroup
+                                                                                rendered="#{sec:areAnyGranted('ROLE_LISTA_AGREGADOS, ROLE_ROOT')}">
+                                                                                <li class="static"><h:commandLink
+                                                                                        action="#{agregadoController.listarAgregados}" 
+                                                                                        onclick="pageLoading.show();" 
+                                                                                        value="Agregados"
+                                                                                        class="additional-background menu-item-text" /></li>
+                                                                            </h:panelGroup>
+                                                                            <h:panelGroup
+                                                                                rendered="#{sec:areAnyGranted('ROLE_CADASTRO_MORADOR, ROLE_ROOT')}">
+                                                                                <li class="static"><h:commandLink
+                                                                                        action="#{moradorController.novoMorador}" 
+                                                                                        onclick="pageLoading.show();" 
+                                                                                        value="Novo Morador"
+                                                                                        class="additional-background menu-item-text" /></li>
+                                                                            </h:panelGroup>
+                                                                            <h:panelGroup
+                                                                                rendered="#{sec:areAnyGranted('ROLE_CADASTRO_VEICULO, ROLE_ROOT')}">
+                                                                                <li class="static"><h:commandLink
+                                                                                        action="#{veiculoController.novoVeiculo}" 
+                                                                                        onclick="pageLoading.show();" 
+                                                                                        value="Novo Veículo"
+                                                                                        class="additional-background menu-item-text" /></li>
+                                                                            </h:panelGroup>
+                                                                            <h:panelGroup
+                                                                                rendered="#{sec:areAnyGranted('ROLE_CADASTRO_ANIMAL, ROLE_ROOT')}">
+                                                                                <li class="static"><h:commandLink
+                                                                                        action="#{animalController.novoAnimal}" 
+                                                                                        onclick="pageLoading.show();" 
+                                                                                        value="Novo Animal de Estimação"
+                                                                                        class="additional-background menu-item-text" /></li>
+                                                                            </h:panelGroup>
+                                                                            <h:panelGroup
+                                                                                rendered="#{sec:areAnyGranted('ROLE_CADASTRO_MARCA_VEICULO, ROLE_ROOT')}">
+                                                                                <li class="static"><h:commandLink
+                                                                                        action="#{veiculoController.novaMarcaVeiculo}" 
+                                                                                        onclick="pageLoading.show();" 
+                                                                                        value="Marcas de Veículos"
+                                                                                        class="additional-background menu-item-text" /></li>
+                                                                            </h:panelGroup>
+                                                                            <h:panelGroup
+                                                                                rendered="#{sec:areAnyGranted('ROLE_CADASTRO_TIPO_ANIMAL, ROLE_ROOT')}">
+                                                                                <li class="static"><h:commandLink
+                                                                                        action="#{animalController.novoTipoAnimal}" 
+                                                                                        onclick="pageLoading.show();" 
+                                                                                        value="Tipos de Animais"
+                                                                                        class="additional-background menu-item-text" /></li>
+                                                                            </h:panelGroup>
+                                                                        </ul></li>
+                                                                    <!--############################################## FIM ###############################################-->
+
+                                                                    <!--########################################## COMUNICACAO ##########################################-->
+                                                                    <h:panelGroup
+                                                                        rendered="#{sec:areAnyGranted('ROLE_ROOT, ROLE_MENSAGEM_PARA_SINDICO, 
+                                                                                    ROLE_MENSAGEM_DO_SINDICO')}">
+                                                                        <li class="static">
+                                                                            <span class="static menu-head">
+                                                                                <span class="additional-background">
+                                                                                    <span class="menu-item-text">Comunicação</span>
+                                                                                </span>
+                                                                            </span>
+                                                                            <ul class="static">
+                                                                                <h:panelGroup
+                                                                                    rendered="#{sec:areAnyGranted('ROLE_MENSAGEM_PARA_SINDICO, ROLE_ROOT') and usuarioController.userLogado.isSindico==false }">
+                                                                                    <li class="static"><h:commandLink
+                                                                                            action="#{mensagemController.novaMensagemSindico}" 
+                                                                                            onclick="pageLoading.show();" 
+                                                                                            value="Mensagem para Síndico"
+                                                                                            class="additional-background menu-item-text" /></li>
+                                                                                </h:panelGroup>
+                                                                                <h:panelGroup
+                                                                                    rendered="#{sec:areAnyGranted('ROLE_MENSAGEM_DO_SINDICO, ROLE_ROOT') and usuarioController.userLogado.isSindico }">
+                                                                                    <li class="static"><h:commandLink
+                                                                                            action="#{mensagemController.novaMensagemDoSindico}" 
+                                                                                            onclick="pageLoading.show();" 
+                                                                                            value="Mensagem do Síndico"
+                                                                                            class="additional-background menu-item-text" /></li>
+                                                                                </h:panelGroup>
+                                                                                <h:panelGroup
+                                                                                    rendered="#{sec:areAnyGranted('ROLE_LISTA_MENSAGEM, ROLE_ROOT')}">
+                                                                                    <li class="static"><h:commandLink
+                                                                                            action="#{mensagemController.listaMensagens}" 
+                                                                                            onclick="pageLoading.show();" 
+                                                                                            value="Mensagens"
+                                                                                            class="additional-background menu-item-text" /></li>
+                                                                                </h:panelGroup>
+                                                                            </ul></li>
+                                                                    </h:panelGroup>
+                                                                    <!--############################################## FIM ###############################################-->
+                                                                    <!--########################################## RESERVAS ##########################################-->
+                                                                    <h:panelGroup
+                                                                        rendered="#{sec:areAnyGranted('ROLE_CADASTRO_RESERVA, ROLE_ROOT')}">
+                                                                        <li class="static">
+                                                                            <span class="static menu-head">
+                                                                                <span class="additional-background">
+                                                                                    <span class="menu-item-text">Reservas</span>
+                                                                                </span>
+                                                                            </span>
+                                                                            <ul class="static">
+                                                                                <li class="static">
+                                                                                    <h:commandLink
+                                                                                        action="#{reservaController.novaReserva}" 
+                                                                                        onclick="pageLoading.show();" 
+                                                                                        value="Nova Reserva"
+                                                                                        class="additional-background menu-item-text" />
+                                                                                </li>
+                                                                                <h:panelGroup
+                                                                                    rendered="#{sec:areAnyGranted('ROLE_LISTA_ITEM_RESERVA, ROLE_ROOT')}">
+                                                                                    <li class="static"><h:commandLink
+                                                                                            action="#{itemReservaController.pageListaItemReserva}" 
+                                                                                            onclick="pageLoading.show();" 
+                                                                                            value="Lista Itens Reserva"
+                                                                                            class="additional-background menu-item-text" /></li>
+                                                                                </h:panelGroup>
+                                                                                <h:panelGroup
+                                                                                    rendered="#{sec:areAnyGranted('ROLE_CADASTRO_ITEM_RESERVA, ROLE_ROOT')}">
+                                                                                    <li class="static"><h:commandLink
+                                                                                            action="#{itemReservaController.novoItemReserva}" 
+                                                                                            onclick="pageLoading.show();" 
+                                                                                            value="Novo Item Reserva"
+                                                                                            class="additional-background menu-item-text" /></li>
+                                                                                </h:panelGroup>
+                                                                                <h:panelGroup
+                                                                                    rendered="#{sec:areAnyGranted('ROLE_APROVAR_RESERVA, ROLE_ROOT')}">
+                                                                                    <li class="static"><h:commandLink
+                                                                                            action="#{aprovacaoController.pageListaAprovacao}" 
+                                                                                            onclick="pageLoading.show();" 
+                                                                                            value="Reservas Pendentes"
+                                                                                            class="additional-background menu-item-text" /></li>
+                                                                                </h:panelGroup>
+                                                                            </ul>
+                                                                        </li>
+
+                                                                    </h:panelGroup>
+                                                                    <!--############################################## FIM ###############################################-->																
+
+                                                                    <!--########################################## ADMINISTRACAO ##########################################-->
+                                                                    <li class="static">
+                                                                        <!--  verifica se tem alguma permissao para o grupo "Administração" para renderizar o titulo-->
+                                                                        <h:panelGroup
+                                                                            rendered="#{sec:areAnyGranted('ROLE_ROOT, ROLE_REGISTRO_PAGAMENTO,
+                                                                                        ROLE_LISTA_RESERVA, ROLE_CADASTRO_ITEM_RESERVA, ROLE_LISTA_MORADOR_ADM, 
+                                                                                        ROLE_LISTA_ITEM_RESERVA, ROLE_VER_HISTORICO')}">
+                                                                            <span class="static menu-head">
+                                                                                <span class="additional-background"> 
+                                                                                    <span class="menu-item-text">Administração</span>
+                                                                                </span>
+                                                                            </span>
+                                                                        </h:panelGroup>
+                                                                        <ul class="static">
+                                                                            <h:panelGroup
+                                                                                rendered="#{sec:areAnyGranted('ROLE_REGISTRO_PAGAMENTO, ROLE_ROOT')}">
+                                                                                <li class="static"><h:commandLink
+                                                                                        action="#{contasController.pageRegistroPagamentos}" 
+                                                                                        onclick="pageLoading.show();" 
+                                                                                        value="Inadimplência Manual"
+                                                                                        class="additional-background menu-item-text" /></li>
+                                                                            </h:panelGroup>
+                                                                            <h:panelGroup
+                                                                                rendered="#{sec:areAnyGranted('ROLE_REGISTRO_PAGAMENTO, ROLE_ROOT')}">
+                                                                                <li class="static"><h:commandLink
+                                                                                        action="#{contasController.pageRegistroPagamentosArquivo}" 
+                                                                                        onclick="pageLoading.show();" 
+                                                                                        value="Inadimplência Arquivo"
+                                                                                        class="additional-background menu-item-text" /></li>
+                                                                            </h:panelGroup>
+                                                                            <h:panelGroup
+                                                                                rendered="#{sec:areAnyGranted('ROLE_LISTA_MORADOR_ADM, ROLE_ROOT')}">
+                                                                                <li class="static"><h:commandLink
+                                                                                        action="#{moradorController.pageListaMoradoresAdm}" 
+                                                                                        onclick="pageLoading.show();" 
+                                                                                        value="Lista Todos Moradores"
+                                                                                        class="additional-background menu-item-text" /></li>
+                                                                            </h:panelGroup>
+                                                                            <h:panelGroup
+                                                                                rendered="#{sec:areAnyGranted('ROLE_ROOT')}">
+                                                                                <li class="static"><h:commandLink
+                                                                                        action="#{condominioController.pageNovoCondominio}" 
+                                                                                        onclick="pageLoading.show();" 
+                                                                                        value="Novo Condomínio"
+                                                                                        class="additional-background menu-item-text" /></li>
+                                                                            </h:panelGroup>
+                                                                            <h:panelGroup
+                                                                                rendered="#{sec:areAnyGranted('ROLE_ROOT')}">
+                                                                                <li class="static"><h:commandLink
+                                                                                        action="#{condominioController.pageListaCondominio}" 
+                                                                                        onclick="pageLoading.show();" 
+                                                                                        value="Listagem de Condomínios"
+                                                                                        class="additional-background menu-item-text" /></li>
+                                                                            </h:panelGroup>
+                                                                            <h:panelGroup
+                                                                                rendered="#{sec:areAnyGranted('ROLE_VER_HISTORICO, ROLE_ROOT')}">
+                                                                                <li class="static"><h:commandLink
+                                                                                        action="#{historicoController.pageHistorico}" 
+                                                                                        onclick="pageLoading.show();" 
+                                                                                        value="Histórico"
+                                                                                        class="additional-background menu-item-text" /></li>
+                                                                            </h:panelGroup>
+                                                                        </ul></li>
+                                                                    <!--############################################## FIM ###############################################-->
+
+                                                                    <!--########################################## SEGURANCA ##########################################-->
+                                                                    <li class="static">
+                                                                        <!--  verifica se tem alguma permissao para o grupo "Segurança" para renderizar o titulo-->
+                                                                        <h:panelGroup
+                                                                            rendered="#{sec:areAnyGranted('ROLE_ROOT, ROLE_LISTA_USUARIO,
+                                                                                        ROLE_CADASTRO_USUARIO, ROLE_LISTA_MODULOACESSO, ROLE_CADASTRO_MODULOACESSO')}">
+                                                                            <span class="static menu-head">
+                                                                                <span class="additional-background"> 
+                                                                                    <span class="menu-item-text">Segurança</span>
+                                                                                </span>
+                                                                            </span>
+                                                                        </h:panelGroup>
+                                                                        <ul class="static">
+                                                                            <h:panelGroup
+                                                                                rendered="#{sec:areAnyGranted('ROLE_LISTA_USUARIO, ROLE_ROOT')}">
+                                                                                <li class="static"><h:commandLink
+                                                                                        action="#{usuarioController.pageListaUsuarios}" 
+                                                                                        onclick="pageLoading.show();" 
+                                                                                        value="Usuários"
+                                                                                        class="additional-background menu-item-text" /></li>
+                                                                            </h:panelGroup>
+                                                                            <h:panelGroup
+                                                                                rendered="#{sec:areAnyGranted('ROLE_CADASTRO_USUARIO, ROLE_ROOT')}">
+                                                                                <li class="static"><h:commandLink
+                                                                                        action="#{usuarioController.novoUsuario}" 
+                                                                                        onclick="pageLoading.show();" 
+                                                                                        value="Novo Usuário"
+                                                                                        class="additional-background menu-item-text" /></li>
+                                                                            </h:panelGroup>
+                                                                            <h:panelGroup
+                                                                                rendered="#{sec:areAnyGranted('ROLE_LISTA_MODULOACESSO, ROLE_ROOT')}">
+                                                                                <li class="static"><h:commandLink
+                                                                                        action="#{moduloAcessoController.pageListaModuloAcesso}" 
+                                                                                        onclick="pageLoading.show();" 
+                                                                                        value="Módulos de Acesso"
+                                                                                        class="additional-background menu-item-text" /></li>
+                                                                            </h:panelGroup>
+
+                                                                            
+                                                                            
+                                                                            <h:panelGroup
+                                                                                rendered="#{sec:areAnyGranted('ROLE_CADASTRO_MODULOACESSO, ROLE_ROOT')}">
+                                                                                <li class="static"><h:commandLink
+                                                                                        action="#{moduloAcessoController.novoModuloAcesso}" 
+                                                                                        onclick="pageLoading.show();" 
+                                                                                        value="Novo Módulo de Acesso"
+                                                                                        class="additional-background menu-item-text" /></li>
+                                                                            </h:panelGroup>
+                                                                        </ul></li>
+                                                                    <!--############################################## FIM ###############################################-->
+
+                                                                    <!--########################################## ACESSO ROOT ##########################################-->
+                                                                    <h:panelGroup
+                                                                        rendered="#{sec:areAnyGranted('ROLE_ROOT, ROLE_ROOT')}">
+                                                                        <li class="static"><span class="static menu-head">
+                                                                                <span class="additional-background"> <span
+                                                                                        class="menu-item-text">Área Root</span>
+                                                                                </span>
+                                                                            </span>
+                                                                            <ul class="static">
+
+                                                                                <li class="static"><h:commandLink
+                                                                                        action="#{acessoRootController.pageListarUsuarios}" 
+                                                                                        onclick="pageLoading.show();" 
+                                                                                        value="Usuários"
+                                                                                        class="additional-background menu-item-text" /></li>
+
+                                                                                <li class="static"><h:commandLink
+                                                                                        action="#{acessoRootController.novoUsuario}" 
+                                                                                        onclick="pageLoading.show();" 
+                                                                                        value="Novo Usuário"
+                                                                                        class="additional-background menu-item-text" /></li>
+
+                                                                                <li class="static"><h:commandLink  
+                                                                                        action="#{acessoRootController.pageListarModulosAcesso}" 
+                                                                                        onclick="pageLoading.show();"  
+                                                                                        value="Módulos de Acesso" 
+                                                                                        class="additional-background menu-item-text" /></li>
+
+                                                                                <li class="static"><h:commandLink
+                                                                                        action="#{acessoRootController.novoModuloAcesso}" 
+                                                                                        onclick="pageLoading.show();" 
+                                                                                        value="Novo Módulo de Acesso"
+                                                                                        class="additional-background menu-item-text" /></li>
+
+                                                                                <li class="static"><h:commandLink
+                                                                                        action="#{planoController.pagNovoPlano}" 
+                                                                                        onclick="pageLoading.show();" 
+                                                                                        value="Novo Plano"
+                                                                                        class="additional-background menu-item-text" /></li>
+
+                                                                                <li class="static"><h:commandLink
+                                                                                        action="#{planoController.pageListaPlano}" 
+                                                                                        onclick="pageLoading.show();" 
+                                                                                        value="Planos"
+                                                                                        class="additional-background menu-item-text" /></li>
+
+                                                                            </ul></li>
+                                                                    </h:panelGroup>
+                                                                    <!--############################################## FIM ###############################################-->
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <ul class="s4-specialNavLinkList">
+                                                    <li></li>
+                                                    <li><a
+                                                            id="ctl00_PlaceHolderLeftNavBar_ctl00_PlaceHolderQuickLaunchBottomV4_idNavLinkViewAllV4"
+                                                            accesskey="3" href="#"><span
+                                                                style="height: 16px; width: 16px; position: relative; display: inline-block; overflow: hidden;"
+                                                                class="s4-clust s4-specialNavIcon"><img
+                                                                    src="../../resources/images/fgimg.png"
+                                                                    style="position: absolute; left: 0px ! important; top: 0px ! important; border-width: 0px;" /></span>&nbsp;<span
+                                                                class="ms-splinkbutton-text">Link para última ATA</span></a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <!-- td
+                                            style="background-image: url('../../resources/images/tracejado_cinza_top_v.jpg'); background-repeat: repeat-y;"
+                                            width="1"></td -->
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </h:panelGroup>
+                <!-- end menu -->
+            </h:form>
+        </ui:composition>
+    </body>
+
+</html>

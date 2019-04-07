@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings version="2.0"
+	xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_1_0.xsd">
+
+	<named-query name="MoradorUnidadeHabitacional.listarMoradoresCondominio">
+		<query>
+			<![CDATA[
+				SELECT relacionamento 
+				FROM MoradorUnidadeHabitacional relacionamento 
+				INNER JOIN relacionamento.morador mp 
+				INNER JOIN relacionamento.unidadeHabitacional unidade 
+				INNER JOIN unidade.condominio condominio 
+				WHERE (:parametroAtivo IS NULL OR mp.ativo = :parametroAtivo) 
+				AND (:idCondominio IS NULL OR condominio.idPessoa = :idCondominio) 
+				ORDER BY mp.dataCadastro DESC
+			]]>
+		</query>
+	</named-query>
+
+</entity-mappings>

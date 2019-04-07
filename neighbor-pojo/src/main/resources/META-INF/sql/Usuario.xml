@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings version="2.0"
+	xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_1_0.xsd">
+
+	<named-query name="Usuario.existeUsuario">
+		<query>
+			<![CDATA[
+				SELECT usuario
+				FROM Usuario usuario 
+				WHERE usuario.login = :login
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Usuario.findByLogin">
+		<query>
+			<![CDATA[
+				SELECT usuario
+				FROM Usuario usuario 
+				INNER JOIN usuario.condominio condominio
+				WHERE usuario.login = :login 
+				AND usuario.ativo = true
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Usuario.findTotalUsuariosByCondominio">
+		<query>
+			<![CDATA[
+				SELECT usuario
+				FROM Usuario usuario
+				INNER JOIN usuario.condominio condominio
+				WHERE condominio.idPessoa = :idCondominio
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Usuario.buscarSindico">
+		<query>
+			<![CDATA[
+				SELECT u 
+				FROM Usuario u
+				INNER JOIN u.condominio condominio 
+				WHERE condominio.idPessoa = :idCondominio 
+				AND u.sindico = true
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Usuario.buscaCondominioMorador">
+		<query>
+			<![CDATA[
+				SELECT condominio 
+				FROM Usuario u 
+				INNER JOIN u.condominio condominio 
+				WHERE u.idPessoa = :idPessoa
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Usuario.findAllWithoutRoot">
+		<query>
+			<![CDATA[
+				SELECT usuario 
+				FROM Usuario usuario 
+				WHERE usuario.root = false
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Usuario.findAllByIdCondominioWithoutRoot">
+		<query>
+			<![CDATA[
+				SELECT usuario 
+				FROM Usuario usuario 
+				INNER JOIN usuario.condominio condominio 
+				WHERE (:idCondominio IS NULL OR condominio.idPessoa = :idCondominio) 
+				AND usuario.root = false
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Usuario.buscaUsuarioMorador">
+		<query>
+			<![CDATA[
+				SELECT usuario 
+				FROM Usuario usuario
+				WHERE usuario.idPessoa = :idMorador
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Usuario.buscarPorParametros">
+		<query>
+			<![CDATA[
+				SELECT usuario 
+				FROM Usuario usuario 
+				INNER JOIN usuario.condominio condominio 
+				where (:idCondominio IS NULL OR condominio.idPessoa = :idCondominio)
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Usuario.atualizarUsuarioPessoa">
+		<query>
+			<![CDATA[
+				UPDATE PessoaFisica pf 
+				SET pf.nome = :nome, pf.mail = :mail, pf.cpf = :cpf 
+				WHERE pf.idPessoa = :idPessoa
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Usuario.atualizarUsuario">
+		<query>
+			<![CDATA[
+				UPDATE Usuario u 
+				SET u.sindico = :sindico, u.login = :login, u.senha = :senha, 
+				u.condominio = :condominio, u.plano = :plano, u.moduloAcesso = :moduloAcesso 
+				WHERE u.idPessoa = :idPessoa
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Usuario.findByEmail">
+		<query>
+			<![CDATA[
+				SELECT usuario 
+				FROM Usuario usuario 
+				WHERE usuario.mail = :email
+			]]>
+		</query>
+	</named-query>
+
+</entity-mappings>

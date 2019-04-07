@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+<body>
+	<ui:composition>
+		<p:dialog header="Adicionar Entrada Livre" widgetVar="dlgEntradaLivre"
+			resizable="false" modal="true" width="550">
+			<h:form id="formEntradaLivre">
+				<h:panelGrid columns="5" id="panelEntradaLivre">
+					<h:outputLabel value="Proprietario: " />
+					<h:outputText value="Casa"></h:outputText>
+					<p:inputText value="#{prestadorServicoController.casa}" size="4"
+						maxlength="4" />
+					<p:commandLink
+						action="#{prestadorServicoController.buscarProprietario}"
+						ajax="true" update="nomeMorador" process="panelEntradaLivre">
+						<p:graphicImage url="../../resources/images/lupa.png" width="24px"
+							height="24px" style="border:none;"></p:graphicImage>
+					</p:commandLink>
+					<p:inputText
+						value="#{prestadorServicoController.morador.pessoa.nome}"
+						size="30" maxlength="30" readonly="true" id="nomeMorador" />
+				</h:panelGrid>
+				<p:commandButton value="Gravar"
+					actionListener="#{prestadorServicoController.adicionarEntradaLivre}"
+					ajax="true" update=":listagemForm"
+					onsuccess="dlgEntradaLivre.hide();"
+					onerror="dlgEntradaLivre.hide();" />
+			</h:form>
+		</p:dialog>
+	</ui:composition>
+</body>
+</html>

@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:sec="http://www.springframework.org/security/tags" >
+	<ui:define name="content">
+		<h3><h:outputLabel value="#{bundle['tit.pagina.morador']}"/></h3>
+		<h:form id="paginaMoradorForm" styleClass="innerContentFix">
+			<ui:insert   >
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+			<style>
+				.inner, div.boxintro_fim .inner {
+				    top: 150px !important;
+				}
+			</style>
+			<p:tabView id="tabPaginaMorador">  
+		        <p:tab title="#{bundle['tit.dados.pessoais']}" id="tabDadosPessoais">  
+		        	<!-- ************* ABA MORADOR PRINCIPAL ************* -->
+					<h:inputHidden id="idMorador" value="#{moradorPageController.morador.idMorador}" />
+		        	<h:panelGrid columns="2" cellpadding="5">  
+		    			<h:outputLabel value="#{bundle['lbl.ativo']}: " for="ativo" />
+						<h:outputText id="ativo" value="#{moradorPageController.morador.ativo == true ? 'Sim' : 'Não'}"  />
+			
+						<h:outputLabel value="#{bundle['lbl.casa']}: " for="casa" />
+						<h:outputText id="casa" value="#{moradorPageController.morador.casa}"  />
+				
+						<h:outputLabel value="#{bundle['lbl.tipo.morador']}:" for="cmbTipoMorador" />
+			   			<h:outputText value="#{moradorPageController.morador.tipoMorador}" id="cmbTipoMorador" />  
+				
+						<h:outputLabel value="#{bundle['lbl.nome']}: " for="nome" />				
+						<p:inputText id="nome" value="#{moradorPageController.morador.pessoa.nome}" styleClass="toCapitalize"
+								required="true" label="Nome" size="60" maxlength="80" requiredMessage="O nome é obrigatório"/>
+		
+						<h:outputLabel value="#{bundle['lbl.tem.interfone']}: " for="txtInterfone" id="lblInterfone"/>
+						<h:selectBooleanCheckbox id="txtInterfone" value="#{moradorPageController.morador.interfoneOk}" />
+					
+						<h:outputLabel value="#{bundle['lbl.cnh']}: " for="cnh" />
+						<p:inputText id="cnh" value="#{moradorPageController.morador.cnh}"
+								required="false" label="CNH" size="15" maxlength="15" />
+			
+						<h:outputLabel value="#{bundle['lbl.email']}: " for="mail" />
+						<h:panelGroup>
+							<p:inputText id="mail" value="#{moradorPageController.morador.pessoa.mail}"  styleClass="toLowercase"
+								required="true" label="E-mail" size="60" maxlength="80" 
+								requiredMessage="#{bundle['msg.email.invalido']}">
+								<f:validateRegex pattern="[a-zA-Z0-9\-\_\.]+@[a-zA-Z0-9\-\_\.]+" />
+							</p:inputText>
+							<p:message for="mail" />
+						</h:panelGroup>
+				
+						<h:outputLabel value="#{bundle['lbl.profissao']}: " for="profissao" />
+						<p:inputText id="profissao" styleClass="toCapitalize"
+									value="#{moradorPageController.morador.profissao}" required="false"
+									label="Profissão" size="40" maxlength="40" />
+			
+						<h:outputLabel value="#{bundle['lbl.cpf']}: " for="cpf" />
+						<p:inputMask id="cpf" value="#{moradorPageController.morador.cpf}"
+									required="true" label="CPF" mask="999.999.999-99" requiredMessage="#{bundle['msg.informe.cpf']}">
+							<f:validator validatorId="br.com.lphantus.neighbor.component.validator.ValidatorCPF" />
+						</p:inputMask>
+					
+						<h:outputLabel value="#{bundle['lbl.rg']}: " for="rg" />
+						<p:inputText id="rg" value="#{moradorPageController.morador.rg}"
+								required="false" label="RG" size="15" maxlength="15" styleClass="toUppercase" />
+			        </h:panelGrid>
+			        <h:panelGrid columns="1">
+						<p:commandButton value="#{bundle['btn.alterar']}" actionListener="#{moradorPageController.alterar}" ajax="true" process="tabDadosPessoais" 
+										update=":paginaMoradorForm :tabDadosPessoais :growlGeral" />
+					</h:panelGrid>
+			    </p:tab>
+			     <p:tab title="#{bundle['tit.agregados']}">  
+		            <p:dataTable id="agregadosMorador" var="agregado" value="#{moradorPageController.agregados}" rowKey="#{agregado.id}" paginator="true" rows="5"  
+               					selection="#{moradorPageController.agregado}" selectionMode="single" emptyMessage="Sem Agregados para #{moradorPageController.morador.pessoa.nome}" style="width: 100%">  
+       					<f:facet name="header">  
+					    	<h:outputLabel value="#{bundle['tit.agregados.cadastrados']}"/>
+					    </f:facet> 
+					    <p:column sortBy="pessoa.nome" filterBy="pessoa.nome">  
+           					<f:facet name="header">
+                   				<h:outputLabel value="#{bundle['tit.nome.agregado']}"/>
+           					</f:facet>
+           					<h:outputText value="#{agregado.pessoa.nome}"  />
+       					</p:column>
+       					<p:column sortBy="parentesco" filterBy="parentesco">  
+           					<f:facet name="header">
+           					<h:outputLabel value="#{bundle['tit.parentesco.morador']}"/>
+           					</f:facet>
+           					<h:outputText value="#{agregado.parentesco}"  />
+       					</p:column> 
+					  	<p:column>  
+           					<f:facet name="header">  
+                   				<h:outputLabel value="#{bundle['tit.data.br.nasc']}"/>
+           					</f:facet>
+           					<h:outputText value="#{agregado.dataNascimento}"  >
+           						<f:convertDateTime locale="pt" pattern="dd/MM/yyyy" ></f:convertDateTime>
+           					</h:outputText>
+       					</p:column>
+       				</p:dataTable>  
+		        </p:tab>
+		        <p:tab title="#{bundle['tit.animais']}">  
+		            <p:dataTable id="animais" var="animal" value="#{moradorPageController.animaisEstimacao}" rowKey="#{animal.nome}" paginator="true" rows="5"  
+               					selection="#{moradorPageController.animalEstimacao}" selectionMode="single" rowStyleClass="#{animal.vacinado ? null : 'devedor'}"
+               					emptyMessage="Sem Animais Cadastrados para #{moradorPageController.morador.pessoa.nome}">  
+       					<f:facet name="header">  
+					    	<h:outputLabel value="#{bundle['tit.animais.cadastrados']}"/>
+					    </f:facet>  
+					  	<p:column sortBy="nome" filterBy="nome">  
+           					<f:facet name="header">  
+                   				<h:outputLabel value="#{bundle['tit.nome']}"/>
+           					</f:facet>
+           					<h:outputText value="#{animal.nome}"  />
+       					</p:column> 
+       					<p:column sortBy="raca" filterBy="raca">  
+           					<f:facet name="header">  
+                   				<h:outputLabel value="#{bundle['tit.raca']}"/>
+           					</f:facet>
+           					<h:outputText value="#{animal.raca}"  />
+       					</p:column>
+       					<p:column sortBy="porte" filterBy="porte">  
+           					<f:facet name="header">  
+                   				<h:outputLabel value="#{bundle['tit.porte']}"/>
+           					</f:facet>
+           					<h:outputText value="#{animal.porte}"  />
+       					</p:column>
+       					<p:column sortBy="tipoAnimal" filterBy="tipoAnimal">  
+           					<f:facet name="header">  
+                   				<h:outputLabel value="#{bundle['tit.tipo.animal']}"/>
+           					</f:facet>
+           					<h:outputText value="#{animal.tipoAnimal}"  />
+       					</p:column>
+       					<p:column sortBy="dataVistoriaCartao" filterBy="dataVistoriaCartao">  
+           					<f:facet name="header">  
+                   				<h:outputLabel value="#{bundle['tit.data.vacina']}"/>
+           					</f:facet>
+           					<h:outputText value="#{animal.dataVistoriaCartao}" >
+				            	<f:convertDateTime locale="pt" pattern="dd/MM/yyyy" />
+				            </h:outputText>
+       					</p:column>
+       				</p:dataTable>
+		        </p:tab> 
+		        <p:tab title="#{bundle['tit.visitantes']}">  
+		             <p:dataTable id="listaVisitasMorador" scrollable="true" height="330"  
+				           	var="visita" emptyMessage="#{bundle['msg.sem.visitas.morador']}"
+				           	value="#{moradorPageController.visitas}" 
+				           	effectSpeed="fast" >
+		       		
+			       		<p:column filterBy="visitante.pessoa.nome" sortBy="visitante.pessoa.nome" style="width: 281px" >  
+	      					<f:facet name="header">  
+	              				<h:outputLabel value="#{bundle['tit.nome']}"/>
+	      					</f:facet>
+	      					<h:outputText value="#{visita.visitante.pessoa.nome}"  />
+	  					</p:column>
+	  					<p:column filterBy="inicioVisita" sortBy="inicioVisita" style="width: 125px">  
+	      					<f:facet name="header">  
+	              				<h:outputLabel value="#{bundle['tit.data.visita']}"/>
+	      					</f:facet>
+	   						<h:outputText value="#{visita.inicioVisita}">
+				          		<f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="GMT-3"/>
+				          	</h:outputText>
+	  					</p:column>
+	  					
+			       	</p:dataTable>  
+		        </p:tab>  
+		        <p:tab title="#{bundle['tit.prestadores]'}">  
+		            <p:dataTable id="listaPrestacaoServicosMorador" scrollable="true" height="330"  
+				           	var="servicoPrestado" emptyMessage="#{bundle['msg.sem.servicos.prestados']}"
+				           	value="#{moradorPageController.servicosPrestados}" 
+				           	effectSpeed="fast" >  
+		           		<p:column sortBy="prestadorServico.pessoa.nome" filterBy="prestadorServico.pessoa.nome" style="width: 281px">  
+	      					<f:facet name="header">  
+	              				<h:outputLabel value="#{bundle['tit.nome']}"/>
+	      					</f:facet>
+	      					<h:outputText value="#{servicoPrestado.prestadorServico.pessoa.nome}"  />
+	  					</p:column>
+	  					<p:column sortBy="dataServico" filterBy="dataServico" style="width: 125px; text-align: center" >  
+	      					<f:facet name="header">  
+	              				<h:outputLabel value="#{bundle['tit.data.inicio']}"/>
+	      					</f:facet>
+	   						<h:outputText value="#{servicoPrestado.dataServico}">
+				          		<f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="GMT-3"/>
+				          	</h:outputText>
+	  					</p:column>
+	  					
+	  					<p:column sortBy="dataFimServico" filterBy="dataFimServico" style="width: 125px; text-align: center" >  
+	      					<f:facet name="header">  
+	              				<h:outputLabel value="#{bundle['tit.data.fim']}"/>
+	      					</f:facet>
+	   						<h:outputText value="#{servicoPrestado.dataFimServico}" >
+				          		<f:convertDateTime pattern="dd/MM/yyyy" timeZone="GMT-3"/>
+				          	</h:outputText>
+	  					</p:column>
+			       	</p:dataTable>  
+		        </p:tab>
+		        <p:tab title="#{bundle['tit.mensagens']}">  
+		            <p:dataTable id="mensagensRecebidas" var="msg" value="#{moradorPageController.mensagensRecebidas}" rowKey="#{msg.id}" paginator="true" rows="5"  
+                					selection="#{moradorPageController.mensagem}" selectionMode="single" emptyMessage="#{bundle['msg.sem.mensagens']}" 
+                					rowStyleClass="#{!msg.lido ? null : 'lida'}" >  
+       					<f:facet name="header">  
+					    	<h:outputLabel value="#{bundle['tit.msg.recebida.vc']}"/>
+					    </f:facet>  
+					    <p:column sortBy="dataEnvio" filterBy="dataEnvio">  
+           					<f:facet name="header">  
+                   				<h:outputLabel value="#{bundle['tit.data']}"/>
+           					</f:facet>
+           					<h:outputText value="#{msg.dataEnvio}"  />
+       					</p:column>
+       					<p:column sortBy="remetente.nome" filterBy="remetente.nome">  
+           					<f:facet name="header">  
+                   				<h:outputLabel value="#{bundle['tit.remetente']}"/>
+           					</f:facet>
+           					<h:outputText value="#{msg.remetente.nome}"  />
+       					</p:column> 
+       					<p:column sortBy="destinatario.nome" filterBy="destinatario.nome">  
+           					<f:facet name="header">  
+                   				<h:outputLabel value="#{bundle['tit.destinatario']}"/>
+           					</f:facet>
+           					<h:outputText value="#{msg.destinatario.nome}"  />
+       					</p:column>  
+       					<p:column sortBy="assunto" filterBy="assunto">  
+           					<f:facet name="header">  
+                   				<h:outputLabel value="#{bundle['tit.assunto']}"/>
+           					</f:facet>
+           					<h:outputText value="#{msg.assunto}"  />
+       					</p:column> 
+					  	
+       					<p:column rendered="#{sec:areAnyGranted('ROLE_LISTA_MENSAGEM, ROLE_ROOT')}" id="leituraMensagem">
+       						<p:commandLink action="#{moradorPageController.lerMensagem}" id="lerMensagem" oncomplete="dlgLerMensagem.show()" 
+											  ajax="true" update=":paginaMoradorForm :formLerMensagem">
+								<p:graphicImage  url="../../resources/images/icons/ico_mail_#{msg.lido}.png" width="24" height="24" />
+								<f:setPropertyActionListener 
+									target="#{moradorPageController.mensagem}" value="#{msg}" />
+							</p:commandLink>
+       					</p:column>
+						
+					</p:dataTable>
+					<br/>
+					<p:dataTable id="mensagensEnviadas" var="msg" value="#{moradorPageController.mensagensEnviadas}" rowKey="#{msg.id}" paginator="true" rows="5"  
+                					selection="#{moradorPageController.mensagem}" selectionMode="single" emptyMessage="#{bundle['msg.sem.mensagens']}" 
+                					rowStyleClass="#{!msg.lido ? null : 'lida'}" >  
+       					<f:facet name="header">  
+					    	<h:outputLabel value="#{bundle['tit.msg.enviada.vc']}"/>
+					    </f:facet>  
+					    <p:column sortBy="dataEnvio" filterBy="dataEnvio">  
+           					<f:facet name="header">  
+                   				<h:outputLabel value="#{bundle['tit.data']}"/>
+           					</f:facet>
+           					<h:outputText value="#{msg.dataEnvio}"  />
+       					</p:column>
+       					<p:column sortBy="remetente.nome" filterBy="remetente.nome">  
+           					<f:facet name="header">  
+                   				<h:outputLabel value="#{bundle['tit.remetente']}"/>
+           					</f:facet>
+           					<h:outputText value="#{msg.remetente.nome}"  />
+       					</p:column> 
+       					<p:column sortBy="destinatario.nome" filterBy="destinatario.nome">  
+           					<f:facet name="header">  
+                   				<h:outputLabel value="#{bundle['tit.destinatario']}"/>
+           					</f:facet>
+           					<h:outputText value="#{msg.destinatario.nome}"  />
+       					</p:column>  
+       					<p:column sortBy="assunto" filterBy="assunto">  
+           					<f:facet name="header">  
+                   				<h:outputLabel value="#{bundle['tit.assunto']}"/>
+           					</f:facet>
+           					<h:outputText value="#{msg.assunto}"  />
+       					</p:column> 
+					  	
+       					<p:column rendered="#{sec:areAnyGranted('ROLE_LISTA_MENSAGEM, ROLE_ROOT')}" id="leituraMensagem">
+       						<p:commandLink action="#{moradorPageController.lerMensagem}" id="lerMensagem" oncomplete="dlgLerMensagem.show()" 
+											  ajax="true" update=":paginaMoradorForm :formLerMensagem">
+								<p:graphicImage  url="../../resources/images/icons/ico_mail_#{msg.lido}.png" width="24" height="24" />
+								<f:setPropertyActionListener 
+									target="#{moradorPageController.mensagem}" value="#{msg}" />
+							</p:commandLink>
+       					</p:column>
+						
+					</p:dataTable>  
+		        </p:tab>  
+		        <p:tab title="#{bundle['tit.ocorrencias']}">  
+		            <p:dataTable id="ocorrencias" value="#{moradorPageController.ocorrencias}" var="ocorrencia" width="100%" 
+							emptyMessage="#{bundle['msg.sem.ocorrencias.para']} #{moradorPageController.morador.pessoa.nome}">
+						<f:facet name="header">  
+					    	<h:outputLabel value="#{bundle['tit.ocorrencias']}"/>
+					    </f:facet>  
+						<p:column style="width: 178px;">
+				        	<f:facet name="header"><h:outputLabel value="#{bundle['tit.penalizado']}"/></f:facet>
+				        		<h:panelGroup rendered="#{not empty ocorrencia.visitantePenalizado.idVisitante}">
+				        			<span style="font-weight: bold;"><h:outputLabel value="#{bundle['tit.visitante']}:"/></span><br/>
+				        			<h:outputLabel value="#{ocorrencia.visitantePenalizado.nome}"/>
+				        		</h:panelGroup>
+				        		<h:panelGroup rendered="#{not empty ocorrencia.moradorPenalizado.idMorador}">
+				        			<span style="font-weight: bold;"><h:outputLabel value="#{bundle['tit.morador']}:"/></span><br/>
+				        			<h:outputLabel value="#{ocorrencia.moradorPenalizado.nome}"/>
+				        		</h:panelGroup>
+				        		<h:panelGroup rendered="#{not empty ocorrencia.prestadorPenalizado.idPrestadorServico}">
+				        			<span style="font-weight: bold;"><h:outputLabel value="#{bundle['tit.prestador']}:"/></span><br/>
+				        			<h:outputLabel value="#{ocorrencia.prestadorPenalizado.nome}"/>
+				        		</h:panelGroup>
+				        		<h:panelGroup rendered="#{not empty ocorrencia.agregadoPenalizado.id}">
+				        			<span style="font-weight: bold;"><h:outputLabel value="#{bundle['tit.agregado']}:"/></span><br/>
+				        			<h:outputLabel value="#{ocorrencia.agregadoPenalizado.nome}"/>
+				        		</h:panelGroup>
+				        </p:column> 
+						 <p:column sortBy="#{ocorrencia.dataOcorrencia}">  
+				          	<f:facet name="header"><h:outputLabel value="#{bundle['tit.data.br.ocorrencia']}"/></f:facet>
+				          	<h:outputText value="#{ocorrencia.dataOcorrencia}">
+				          		<f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="GMT-3"/>
+				          	</h:outputText>
+				      	</p:column>
+						<p:column sortBy="#{ocorrencia.dataRegistroOcorrencia}">  
+				          	<f:facet name="header"><h:outputLabel value="#{bundle['tit.data.br.registro']}"/></f:facet>
+				          	<h:outputText value="#{ocorrencia.dataRegistroOcorrencia}">
+				          		<f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="GMT-3" />
+				          	</h:outputText>
+				      	</p:column>
+				      	 <p:column sortBy="#{ocorrencia.gravidade}">  
+				          	<f:facet name="header"><h:outputLabel value="#{bundle['tit.gravidade']}"/></f:facet>
+				          	<h:outputText value="#{ocorrencia.gravidade}"  />
+				      	</p:column>
+				      	
+				      	<p:column>
+				            <f:facet name="header"></f:facet>
+				            <p:rowToggler />
+				        </p:column>
+				        <p:rowExpansion>
+							<table style="border: hidden;" >
+								<tr>
+									<td>
+										<span style="font-weight: bold;"><h:outputLabel value="#{bundle['msg.gerou.notificacao']}"/></span><br/>
+										<h:outputText value="#{ocorrencia.gerouNotificacao == true ? 'Sim' : 'Não'}"  />		
+									</td>
+									<td>
+										<span style="font-weight: bold;"><h:outputLabel value="#{bundle['msg.gerou.multa']}"/></span><br/>
+										<h:outputText value="#{ocorrencia.gerouMulta == true ? 'Sim' : 'Não'}"  />	
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2">
+										<span style="font-weight: bold;"><h:outputLabel value="#{bundle['lbl.descricao']}:"/></span><br/>
+										<h:outputLabel value="#{ocorrencia.descricao}"/>
+									</td>
+								</tr>
+							</table>
+							
+				      	</p:rowExpansion>  
+					</p:dataTable>  
+		        </p:tab>
+		        <p:tab title="#{bundle['tit.veiculos']}">  
+		            <p:dataTable id="veiculos" var="veiculo" value="#{moradorPageController.veiculos}" rowKey="#{veiculo.id}" paginator="true" rows="10"  
+               					selection="#{moradorPageController.veiculo}" selectionMode="single" emptyMessage="#{bundle['msg.sem.veiculos.cadastrados']}">  
+       					<f:facet name="header">  
+					    	<h:outputLabel value="#{bundle['tit.veiculos.cadastrados']}"/>
+					    </f:facet>  
+					    <p:column sortBy="placa" filterBy="placa">  
+           					<f:facet name="header">  
+                   				<h:outputLabel value="#{bundle['tit.placa']}"/>
+           					</f:facet>
+           					<h:outputText value="#{veiculo.placa}"  />
+       					</p:column>  
+       					<p:column sortBy="modelo" filterBy="modelo">  
+           					<f:facet name="header">  
+                   				<h:outputLabel value="#{bundle['tit.modelo']}"/>
+           					</f:facet>
+           					<h:outputText value="#{veiculo.modelo}"  />
+       					</p:column> 
+					  	<p:column sortBy="cor" filterBy="cor">  
+           					<f:facet name="header">  
+                   				<h:outputLabel value="#{bundle['tit.cor']}"/>
+           					</f:facet>
+           					<h:outputText value="#{veiculo.cor}"  />
+       					</p:column>
+       					<p:column sortBy="marca" filterBy="marca">  
+           					<f:facet name="header">  
+                   				<h:outputLabel value="#{bundle['tit.marca']}"/>
+           					</f:facet>
+           					<h:outputText value="#{veiculo.marca}"  />
+       					</p:column>  
+       				</p:dataTable>  
+		        </p:tab>
+		        <p:tab title="#{bundle['tit.reservas']}">  
+		            <p:dataTable value="#{moradorPageController.reservas}" var="rsv" paginator="true" rows="10" selection="#{moradorPageController.reserva}"
+								emptyMessage="#{bundle['msg.sem.reservas']}">
+						<f:facet name="header">  
+							<h:outputLabel value="#{bundle['tit.reservas.efetuadas']}"/>
+						</f:facet>
+						<p:column sortBy="#{rsv.dataSolicitacao}">
+							<f:facet name="header">  
+                				<h:outputLabel value="#{bundle['tit.data.solicitacao']}"/>
+         					</f:facet>
+							<h:outputText value="#{rsv.dataSolicitacao}">
+								<f:convertDateTime locale="pt" pattern="dd/MM/yyyy" />
+							</h:outputText>
+						</p:column>
+						<p:column sortBy="morador.unidadeHabitacional[0].unidadeHabitacional.identificacao"
+							filterBy="morador.unidadeHabitacional[0].unidadeHabitacional.identificacao">
+							<f:facet name="header">  
+		                	<h:outputLabel value="#{bundle['lbl.casa']}"/>
+		         		</f:facet>
+							<h:outputText value="#{rsv.morador.unidadeHabitacional[0].unidadeHabitacional.identificacao}" />
+						</p:column>
+						<p:column sortBy="morador.pessoa.nome"
+							filterBy="morador.pessoa.nome">
+							<f:facet name="header">  
+		                	<h:outputLabel value="#{bundle['tit.morador']}"/>
+		         		</f:facet>
+							<h:outputText value="#{rsv.morador.pessoa.nome}" />
+						</p:column>
+						<p:column sortBy="itemReserva.nome"
+							filterBy="itemReserva.nome">
+							<f:facet name="header">  
+		                	<h:outputLabel value="#{bundle['tit.item.reserva']}"/>
+		         		</f:facet>
+							<h:outputText value="#{rsv.itemReserva.nome}" />
+						</p:column>
+					</p:dataTable>
+		        </p:tab>
+	    	</p:tabView>
+		</h:form> 
+		<ui:insert name="dialogsExtras" >
+			<ui:include src="../../dialogs/dialogLerMensagem.xhtml" />
+		</ui:insert> 
+		<h:panelGroup rendered="#{usuarioController.sistemaIsDemo}"> <script type="text/javascript">disponivelNosPlanos(0,1,1,1);</script></h:panelGroup>
+	</ui:define>
+</ui:composition>

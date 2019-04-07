@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+	<ui:define name="content">
+		<h:form id="paginaMoradorForm" styleClass="innerContentFix">
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+			<p:tabView id="tabServicosMorador" effect="slide"
+				effectDuration="fast">
+				<p:tab title="Serviços Confirmados">
+					<p:dataTable id="listaPrestacaoServicosMorador" paginator="true"
+						rows="5" var="servicoPrestado"
+						emptyMessage="#{bundle['msg.sem.servicos.prestados']}"
+						value="#{moradorPageController.servicosPrestados}">
+						<p:column sortBy="prestadorServico.pessoa.nome"
+							filterBy="prestadorServico.pessoa.nome"
+							style="width: 281px">
+							<f:facet name="header">
+								<h:outputText value="#{bundle['tit.nome']}" />
+							</f:facet>
+							<h:outputText
+								value="#{servicoPrestado.prestadorServico.pessoa.nome}" />
+						</p:column>
+						<p:column sortBy="inicioAgendamentoServico"
+							filterBy="inicioAgendamentoServico"
+							style="width: 125px; text-align: center">
+							<f:facet name="header">
+								<h:outputText value="#{bundle['tit.data.inicio']}" />
+							</f:facet>
+							<h:outputText value="#{servicoPrestado.dataServico}">
+								<f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="GMT-3" />
+							</h:outputText>
+						</p:column>
+
+						<p:column sortBy="fimAgendamentoServico"
+							filterBy="fimAgendamentoServico"
+							style="width: 125px; text-align: center">
+							<f:facet name="header">
+								<h:outputText value="#{bundle['tit.data.fim']}" />
+							</f:facet>
+							<h:outputText value="#{servicoPrestado.fimAgendamentoServico}">
+								<f:convertDateTime pattern="dd/MM/yyyy" timeZone="GMT-3" />
+							</h:outputText>
+						</p:column>
+						<p:column exportable="false">
+							<p:commandLink action="#{moradorPageController.agendarServico}"
+								id="agendarServico" oncomplete="dlgAgendarServico.show()"
+								ajax="true" update=":paginaMoradorForm :formAgendarServico">
+								<p:graphicImage url="../../resources/images/icons/ico_agenda.png"
+									width="24" height="24" />
+								<p:tooltip for="agendarServico"
+									value="Agendar serviço para este visitante" />
+								<f:setPropertyActionListener
+									target="#{moradorPageController.servicoAgendado}"
+									value="#{servicoPrestado.prestadorServico}" />
+							</p:commandLink>
+						</p:column>
+					</p:dataTable>
+				</p:tab>
+				<p:tab title="#{bundle['tit.serv.agend']}">
+					<p:dataTable id="listaServicosAgendadosMorador"
+						var="servicoAgendado"
+						value="#{moradorPageController.servicosAgendados}"
+						paginator="true" rows="5"
+						emptyMessage="Sem serviços agendados para este morador">
+						<ui:remove>
+							<f:facet name="header">
+								<h:outputText value="#{bundle['tit.serv.agend.cad']}" />
+							</f:facet>
+						</ui:remove>
+						<p:column
+							filterBy="prestadorServico.pessoa.nome"
+							sortBy="prestadorServico.pessoa.nome"
+							exportable="TRUE">
+							<f:facet name="header">
+								<h:outputText value="#{bundle['tit.nome']}" />
+							</f:facet>
+							<h:outputText
+								value="#{servicoAgendado.prestadorServico.pessoa.nome}" />
+						</p:column>
+						<p:column filterBy="inicioAgendamentoServico"
+							sortBy="inicioAgendamentoServico"
+							exportable="true">
+							<f:facet name="header">
+								<h:outputText value="#{bundle['tit.data.inicio']}" />
+							</f:facet>
+							<h:outputText value="#{servicoAgendado.inicioAgendamentoServico}">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</h:outputText>
+						</p:column>
+						<p:column filterBy="fimAgendamentoServico"
+							sortBy="fimAgendamentoServico"
+							exportable="true">
+							<f:facet name="header">
+								<h:outputText value="#{bundle['tit.data.fim']}" />
+							</f:facet>
+							<h:outputText value="#{servicoAgendado.fimAgendamentoServico}">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</h:outputText>
+						</p:column>
+						
+						<!-- BOTAO REMOVER VISITA AGENDADA -->
+						<p:column style="width:16px"
+							rendered="#{sec:areAnyGranted('ROLE_PAGINA_MORADOR')}" exportable="false">
+							<p:commandLink onclick="dlgRemover.show();" update=":paginaMoradorForm">
+								<p:graphicImage
+									id="imgStatus" value="../../resources/images/ativo_true.png"
+									width="24px" height="24px">
+									<p:tooltip for="imgStatus" hideEffect="fade" showEffect="fade" value="#{'Remover Servico'}" />
+								</p:graphicImage>
+								<f:setPropertyActionListener
+									target="#{moradorPageController.servicoAgendado}"
+									value="#{servicoAgendado}" />
+							</p:commandLink>
+						</p:column>
+						
+					</p:dataTable>
+				</p:tab>
+			</p:tabView>
+			<p:commandLink value="#{bundle['tit.agend.serv']}"
+				action="#{moradorPageController.agendarServico}"
+				id="agendarServicoNova" oncomplete="dlgAgendarServico.show()"
+				update=":paginaMoradorForm :formAgendarServico" ajax="true" />
+		</h:form>
+		
+		<p:confirmDialog header="#{bundle['tit.remover']}" severity="alert"
+			widgetVar="dlgRemover" modal="true" closable="false">
+			<f:facet name="message">
+				Deseja <strong>remover</strong> este serviço agendado ?<br />
+			</f:facet>
+
+			<h:form>
+				<p:commandButton id="confirm" value="#{bundle['btn.sim']}"
+					update=":paginaMoradorForm" oncomplete="dlgRemover.hide()"
+					action="#{moradorPageController.removerPrestador}" />
+				<p:commandButton id="decline" value="#{bundle['btn.nao']}"
+					oncomplete="dlgRemover.hide()" update=":paginaMoradorForm:growlGeral" 
+					action="return true;" />
+			</h:form>
+		</p:confirmDialog>
+		
+		<h:panelGroup rendered="#{usuarioController.sistemaIsDemo}">
+			<script type="text/javascript">
+				disponivelNosPlanos(1, 1, 1, 1);
+			</script>
+		</h:panelGroup>
+		<ui:insert>
+			<ui:include src="../../dialogs/dialogAgendarServico.xhtml" />
+		</ui:insert>
+	</ui:define>
+</ui:composition>

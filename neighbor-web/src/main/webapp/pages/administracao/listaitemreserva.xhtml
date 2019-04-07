@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+	<ui:define name="content">
+		<h:form id="listagemItemReservaForm" styleClass="innerContentFix">
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+			<p:dataTable id="itensReserva" var="itemReserva"
+				value="#{itemReservaController.itensReserva}"
+				rowKey="#{itemReserva.id}" paginator="true" rows="10"
+				selection="#{itemReservaController.itemReserva}"
+				selectionMode="single" emptyMessage="Itens Cadastrados para Reserva"
+				rowStyleClass="#{itemReserva.ativo ? null : 'inativo'}">
+				<f:facet name="header">
+					<h:outputText value="#{bundle['tit.item.reserva.cadastrado']}" />
+				</f:facet>
+				<!-- <p:column sortBy="#{itemReserva.id}" filterBy="#{itemReserva.id}">  
+            					<f:facet name="header">  
+                    				Id 
+            					</f:facet>
+            					<h:outputText value="#{itemReserva.id}"  />
+        					</p:column> -->
+				<p:column sortBy="nome"
+					filterBy="nome" exportable="true">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['lbl.nome']}" />
+					</f:facet>
+					<h:outputText value="#{itemReserva.nome}" />
+				</p:column>
+				<p:column sortBy="#{itemReserva.preco}" exportable="true">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['lbl.preco']}" />
+					</f:facet>
+					<h:outputText value="#{itemReserva.preco}" />
+				</p:column>
+				<p:column sortBy="#{itemReserva.carenciaDiasReserva}"
+					exportable="true">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['lbl.carencia']}" />
+					</f:facet>
+					<h:outputText value="#{itemReserva.carenciaDiasReserva}" />
+				</p:column>
+				<!-- BOTAO EDITAR ITEM RESERVA -->
+				<p:column
+					rendered="#{sec:areAnyGranted('ROLE_EDITAR_ITEM_RESERVA, ROLE_ROOT')}"
+					exportable="false">
+					<h:commandLink action="#{itemReservaController.editarItemReserva}"
+						id="editItemReserva" onclick="pageLoading.show();"
+						oncomplete="pageLoading.hide();">
+						<p:graphicImage value="../../resources/images/edit.png" width="20px"
+							height="20px" style="text-align:center;" />
+						<f:setPropertyActionListener
+							target="#{itemReservaController.itemReserva}"
+							value="#{itemReserva}" />
+					</h:commandLink>
+					<p:tooltip for="editItemReserva" value="Editar Registro"
+						showEffect="slide" hideEffect="slide" />
+				</p:column>
+				<p:column style="width:16px"
+					rendered="#{sec:areAnyGranted('ROLE_ALTERAR_STATUS_ITEM_RESERVA, ROLE_ROOT')}"
+					exportable="false">
+					<!-- BOTAO ALTERAR STATUS ITEM RESERVA -->
+					<h:commandLink action="#{itemReservaController.ativacao}"
+						update=":listagemItemReservaForm">
+						<p:graphicImage id="itemAtivo"
+							value="../../resources/images/ativo_#{itemReserva.ativo}.png" width="24px"
+							height="24px" style="border:none;">
+							<p:tooltip for="itemAtivo" hideEffect="fade" showEffect="fade"
+								value="#{itemReserva.ativo ? 'Item Ativo' : 'Item Inativo'}" />
+						</p:graphicImage>
+						<f:setPropertyActionListener
+							target="#{itemReservaController.itemReserva}"
+							value="#{itemReserva}" />
+					</h:commandLink>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+		<h:panelGroup rendered="#{usuarioController.sistemaIsDemo}">
+			<script type="text/javascript">
+				disponivelNosPlanos(0, 1, 1, 1);
+			</script>
+		</h:panelGroup>
+	</ui:define>
+</ui:composition>

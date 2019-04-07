@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+	<ui:define name="content">
+		<h3>
+			<h:outputText value="#{bundle['tit.cadastro.veiculo']}" />
+		</h3>
+		<h:form id="formCadastroVeiculo" class="innerContentFix">
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+			<h:inputHidden id="idVeiculo" value="#{veiculoController.veiculo.id}" />
+
+			<h:panelGrid columns="2">
+				<h:outputLabel value="#{bundle['lbl.proprietario']}: "
+					for="nproprietario" />
+				<h:panelGrid columns="4" id="nproprietario">
+					<h:outputText value="#{bundle['lbl.casa']}" styleClass="label_obr"></h:outputText>
+					<p:inputText value="#{veiculoController.casa}" size="4"
+						maxlength="4" onblur="if(this.value=='')this.value='0'"
+						onfocus="if(this.value=='0')this.value=''"
+						styleClass="campo-onload" />
+					<p:commandLink id="buscaProprietario"
+						action="#{veiculoController.buscarProprietario}" ajax="true"
+						process="nproprietario" update="txtNomeProprietario growlGeral">
+						<p:graphicImage url="../../resources/images/lupa.png" width="24px"
+							height="24px" style="border:none;"></p:graphicImage>
+						<p:tooltip for="buscaProprietario" value="Buscar proprietário!" />
+					</p:commandLink>
+					<p:inputText
+						value="#{veiculoController.veiculo.proprietario.pessoa.nome}"
+						size="30" maxlength="30" readonly="true" id="txtNomeProprietario"
+						required="true"
+						requiredMessage="#{bundle['msg.informe.proprietario']}"
+						styleClass="inputNomeDono" />
+				</h:panelGrid>
+			</h:panelGrid>
+
+			<h:panelGrid columns="2">
+				<h:outputLabel value="#{bundle['lbl.placa']}: " for="placa"
+					styleClass="label_obr" />
+				<p:inputMask id="placa" value="#{veiculoController.veiculo.placa}"
+					styleClass="toUppercase" required="true" label="placa" size="8"
+					maxlength="8" requiredMessage="#{bundle['msg.informe.placa']}"
+					mask="aaa-9999" />
+			</h:panelGrid>
+			<h:panelGrid columns="3" id="comboMarcas">
+				<h:outputLabel value="#{bundle['lbl.marca']}: " for="marca"
+					styleClass="label_obr" />
+				<h:selectOneMenu id="marca"
+					value="#{veiculoController.marcaSelecionada}"
+					valueChangeListener="#{veiculoController.valueChangeListener}"
+					required="true" requiredMessage="#{bundle['msg.informe.marca']}">
+					<f:selectItem itemLabel="#{bundle['select.selecione']}"
+						itemValue="-1" />
+					<f:selectItems value="#{veiculoController.listaSelectItem}" />
+				</h:selectOneMenu>
+				<p:commandLink onclick="dlgMarca.show()" ajax="true"
+					process="comboMarcas" id="addMarcaCarro">
+					<p:graphicImage url="../../resources/images/btns/add.png" width="24px"
+						height="24px" style="border:none;"></p:graphicImage>
+					<p:tooltip for="addMarcaCarro" value="Adicionar marca de carro!" />
+				</p:commandLink>
+			</h:panelGrid>
+
+			<h:panelGrid columns="2">
+				<h:outputLabel value="#{bundle['lbl.modelo']}: " for="modelo"
+					styleClass="label_obr" />
+				<p:inputText id="modelo" value="#{veiculoController.veiculo.modelo}"
+					styleClass="toCapitalize" required="true" label="marca" size="30"
+					maxlength="30" requiredMessage="#{bundle['msg.informe.modelo']}" />
+
+				<h:outputLabel value="#{bundle['lbl.cor']}: " for="cor"
+					styleClass="label_obr" />
+				<p:inputText id="cor" value="#{veiculoController.veiculo.cor}"
+					styleClass="toCapitalize" required="true" label="marca" size="30"
+					maxlength="30" requiredMessage="#{bundle['msg.informe.cor']}" />
+			</h:panelGrid>
+
+			<p:commandButton value="#{bundle['btn.gravar']}"
+				actionListener="#{veiculoController.gravarVeiculo}" ajax="true"
+				update=":formCadastroVeiculo"
+				rendered="#{veiculoController.veiculo.id == null || veiculoController.veiculo.id == 0}"
+				onclick="pageLoading.show();" oncomplete="pageLoading.hide();" />
+			<p:commandButton value="#{bundle['btn.alterar']}"
+				actionListener="#{veiculoController.alterarVeiculo}" ajax="true"
+				update=":formCadastroVeiculo"
+				rendered="#{veiculoController.veiculo.id > 0}"
+				onclick="pageLoading.show();" oncomplete="pageLoading.hide();" />
+
+			<p:commandButton value="#{bundle['btn.limpar']}"
+				action="#{veiculoController.novoVeiculo}" ajax="true"
+				process="@this" update=":formCadastroVeiculo"
+				onclick="pageLoading.show();" oncomplete="pageLoading.hide();" />
+		</h:form>
+
+		<ui:insert name="dialogOcorrencia">
+			<ui:include src="../../dialogs/dialogMarca.xhtml" />
+		</ui:insert>
+		<h:panelGroup rendered="#{usuarioController.sistemaIsDemo}">
+			<script type="text/javascript">
+				disponivelNosPlanos(1, 1, 1, 1);
+			</script>
+		</h:panelGroup>
+	</ui:define>
+</ui:composition>

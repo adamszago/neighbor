@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+	<ui:define name="content">
+		<h:form id="listagemForm" styleClass="innerContentFix">
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+			<p:dataTable id="animais" var="animal"
+				value="#{animalController.animais}" rowKey="#{animal.nome}"
+				paginator="true" rows="10"
+				selection="#{animalController.animalEstimacao}"
+				selectionMode="single"
+				rowStyleClass="#{animal.vacinado ? null : 'devedor'}"
+				emptyMessage="#{bundle['msg.sem.animais.cadastrados']}">
+				<f:facet name="header">
+					<h:outputText value="#{bundle['tit.animais.cadastrados']}" />
+				</f:facet>
+				<p:column style="width:16px" exportable="false">
+					<p:rowToggler />
+				</p:column>
+				<p:column
+					sortBy="dono.unidadeHabitacional[0].unidadeHabitacional.identificacao"
+					filterBy="dono.unidadeHabitacional[0].unidadeHabitacional.identificacao"
+					sortFunction="#{animalController.ordenacaoNumerica}"
+					exportable="true" styleClass="centeredColumn">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.casa']}" />
+					</f:facet>
+					<h:outputText
+						value="#{animal.dono.unidadeHabitacional[0].unidadeHabitacional.identificacao}" />
+				</p:column>
+				<p:column sortBy="nome" filterBy="nome"
+					exportable="true">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.nome']}" />
+					</f:facet>
+					<h:outputText value="#{animal.nome}" />
+				</p:column>
+				<p:column sortBy="raca" filterBy="raca"
+					exportable="true">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.raca']}" escape="false" />
+					</f:facet>
+					<h:outputText value="#{animal.raca}" />
+				</p:column>
+				<!-- BOTAO EDITAR ANIMAL -->
+				<p:column
+					rendered="#{sec:areAnyGranted('ROLE_EDITAR_ANIMAL, ROLE_ROOT')}"
+					exportable="false">
+					<h:commandLink action="#{animalController.editarAnimal}"
+						id="editAnimal" onclick="pageLoading.show();"
+						oncomplete="pageLoading.hide();">
+						<p:graphicImage value="../../resources/images/edit.png" width="20px"
+							height="20px" style="text-align:center;" />
+						<f:setPropertyActionListener
+							target="#{animalController.animalEstimacao}" value="#{animal}" />
+					</h:commandLink>
+					<p:tooltip for="editAnimal" value="Editar Registro"
+						showEffect="slide" hideEffect="slide" />
+				</p:column>
+				<!-- BOTAO EXCLUIR ANIMAL -->
+				<p:column
+					rendered="#{sec:areAnyGranted('ROLE_EXCLUIR_ANIMAL, ROLE_ROOT')}"
+					exportable="false">
+					<h:commandLink action="#{animalController.excluir}"
+						update=":listagemForm :growlListaAnimal"
+						onclick="return confirm('Confirma Exclusão do Registro?')"
+						ajax="true" id="delAnimal">
+						<p:graphicImage value="../../resources/images/delete.png" width="20px"
+							height="20px" style="text-align:center;" />
+						<f:setPropertyActionListener
+							target="#{animalController.animalEstimacao}" value="#{animal}" />
+					</h:commandLink>
+					<p:tooltip for="delAnimal" value="Excluir Registro"
+						showEffect="slide" hideEffect="slide" />
+				</p:column>
+				<p:rowExpansion>
+					<h:panelGrid id="detalheAnimal" columns="2" cellpadding="4"
+						style="width:300px;" styleClass="ui-widget-content"
+						columnClasses="label, value">
+
+						<h:outputText value="#{bundle['lbl.dono']}:" />
+						<h:outputText value="#{animal.dono.pessoa.nome}" />
+
+						<h:outputText value="#{bundle['lbl.porte']}:" />
+						<h:outputText value="#{animal.porte}" />
+
+						<h:outputText value="#{bundle['lbl.tipo.animal']}:" />
+						<h:outputText value="#{animal.tipoAnimal.tipoAnimal}" />
+
+						<h:outputText value="#{bundle['lbl.data.ultima.vist.vacina']}:" />
+						<h:outputText value="#{animal.dataVistoriaCartao}">
+							<f:convertDateTime locale="pt" pattern="dd/MM/yyyy" />
+						</h:outputText>
+
+					</h:panelGrid>
+				</p:rowExpansion>
+			</p:dataTable>
+		</h:form>
+		<h:panelGroup rendered="#{usuarioController.sistemaIsDemo}">
+			<script type="text/javascript">
+				disponivelNosPlanos(1, 1, 1, 1);
+			</script>
+		</h:panelGroup>
+	</ui:define>
+</ui:composition>

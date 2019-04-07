@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<ui:define name="content">
+		<style>
+			.selectStatus {
+				width: 76px;
+				text-align: left;
+			}
+			
+			.columnStatus .ui-sortable-column-icon {
+				vertical-align: top;
+			}
+		</style>
+
+		<h3>
+			<h:outputText value="#{bundle['tit.movimentacao.lista']}" />
+		</h3>
+
+		<h:form id="listagemForm" styleClass="innerContentFix">
+
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+
+
+			<p:dataTable id="lista" var="movimento"
+				value="#{movimentacaoController.entities}" paginator="true"
+				rows="10" emptyMessage="#{bundle['msg.sem.registros.cadastrados']}">
+
+				<p:column sortBy="dataMovimentacao"
+					filterBy="dataMovimentacao"
+					style="text-align: center;">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.data']}" />
+					</f:facet>
+					<h:outputText id="campoData" value="#{movimento.dataMovimentacao}">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</p:column>
+
+				<p:column sortBy="valor" filterBy="valor"
+					style="text-align: center;">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.valor']}" />
+					</f:facet>
+					<h:outputText id="campoValor" value="#{movimento.valor}">
+						<f:converter converterId="moneyConverter" />
+					</h:outputText>
+				</p:column>
+
+				<p:column sortBy="carteira.nome"
+					filterBy="carteira.nome" style="text-align: center;">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.carteira']}" />
+					</f:facet>
+					<h:outputText id="campoCarteira" value="#{movimento.carteira.nome}" />
+				</p:column>
+
+				<!-- BOTAO EDITAR -->
+				<p:column style="width:50px;">
+					<h:commandLink id="btnEditar" immediate="true"
+						onclick="pageLoading.show();" oncomplete="pageLoading.hide();"
+						action="#{movimentacaoController.editarMovimentacao}">
+						<p:graphicImage value="../../resources/images/edit1.png"
+							style="text-align:center;" />
+						<f:setPropertyActionListener
+							target="#{movimentacaoController.entity}" value="#{movimento}" />
+					</h:commandLink>
+					<p:tooltip for="btnEditar" value="Editar Movimentacao" />
+				</p:column>
+
+			</p:dataTable>
+
+		</h:form>
+
+	</ui:define>
+</ui:composition>

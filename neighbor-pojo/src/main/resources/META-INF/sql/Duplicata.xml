@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings version="2.0"
+	xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_1_0.xsd">
+
+	<named-query name="Duplicata.buscarPorParametros">
+		<query>
+			<![CDATA[
+				SELECT DISTINCT duplicata 
+				FROM Duplicata duplicata 
+				INNER JOIN duplicata.fatura fatura 
+				INNER JOIN fatura.lancamentos lancamentos 
+				INNER JOIN lancamentos.pessoa pessoa 
+				INNER JOIN fatura.condominio condominioFatura 
+				INNER JOIN duplicata.condominio condominio 
+				LEFT JOIN duplicata.parcelas parcelas 
+				WHERE (:idCondominio IS NULL OR condominio.idPessoa = :idCondominio) 
+				AND (:idFatura IS NULL OR fatura.id = :idFatura)
+			]]>
+		</query>
+	</named-query>
+
+</entity-mappings>

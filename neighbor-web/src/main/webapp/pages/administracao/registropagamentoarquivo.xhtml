@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+	<ui:define name="content">
+		<h3>
+			<h:outputText value="#{bundle['tit.manut.adimplencia']}" />
+		</h3>
+
+		<h:form enctype="multipart/form-data">
+
+			<div class="innerContentFix">
+				<p:fileUpload
+					fileUploadListener="#{contasController.handleFileUpload}"
+					mode="advanced" update="messages" auto="true"
+					sizeLimit="1000000000" allowTypes="/(\.|\/)(xls)$/"
+					label="Selecione o arquivo de inadimplentes" />
+
+				<p:growl id="messages" showDetail="false" />
+			</div>
+		</h:form>
+		<h:form>
+			<p:dataTable emptyMessage="Sem débitos registrados!" var="debt"
+				value="#{contasController.pagamentos}" id="dbtsDia"
+				rowKey="#{debt.mesReferencia}" paginator="true" rows="20"
+				rowStyleClass="#{debt.statusPagamento ? 'devedor': null}">
+				<f:facet name="header">
+					<h:outputText value="#{bundle['tit.debitos.registrados']}" />
+				</f:facet>
+				<p:column sortBy="#{debt.morador.casa}"
+					filterBy="#{debt.morador.casa}">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['lbl.casa']}" />
+					</f:facet>
+					<h:outputText
+						value="#{debt.statusPagamento ? debt.morador.casa : debt.descricaoLancamento}" />
+				</p:column>
+				<p:column sortBy="#{debt.morador.pessoa.nome}"
+					filterBy="#{debt.morador.pessoa.nome}">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.morador']}" />
+					</f:facet>
+					<h:outputText
+						value="#{debt.statusPagamento ? debt.morador.pessoa.nome : debt.descricaoLancamento}" />
+				</p:column>
+				<p:column sortBy="#{debt.mesReferencia}"
+					filterBy="#{debt.mesReferencia}">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.mes.referencia']}" />
+					</f:facet>
+					<h:outputText value="#{debt.mesReferencia}" />
+				</p:column>
+				<p:column sortBy="#{debt.valorDevido}"
+					filterBy="#{debt.valorDevido}">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.valor.devido']}" />
+					</f:facet>
+					<h:outputText value="#{debt.valorDevido}" />
+				</p:column>
+			</p:dataTable>
+		</h:form>
+	</ui:define>
+</ui:composition>

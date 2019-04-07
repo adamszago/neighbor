@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<ui:define name="content" style="border:1px solid green">
+
+		<h:form id="listagemForm" styleClass="innerContentFix">
+
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+
+			<p:dataTable var="fatura" value="#{faturaController.entities}"
+				paginator="true" rows="10" emptyMessage="#{bundle['msg.sem.registros.cadastrados']}">
+				
+				<f:facet name="header">
+					<h:outputText value="#{bundle['tit.faturas']}" />
+				</f:facet>
+
+				<p:column sortBy="#{fatura.data}" filterBy="data"
+					 style="text-align: center;">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.data']}" />
+					</f:facet>
+					<h:outputText id="campoData" value="#{fatura.data}">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.morador']}" />
+					</f:facet>
+					<h:outputText value="#{fatura.lancamentos[0].pessoa.nome}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.nome']}" />
+					</f:facet>
+					<h:outputText value="#{fatura.nome}" />
+				</p:column>
+				<p:column style="text-align: right;">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.valor']}" />
+					</f:facet>
+					<h:outputText id="campoValor" value="#{fatura.valor}">
+						<f:converter converterId="moneyConverter" />
+					</h:outputText>
+				</p:column>
+				<p:column style="text-align: right;">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.valor.pago']}" />
+					</f:facet>
+					<h:outputText id="campoValorPago" value="#{fatura.valorPago}">
+						<f:converter converterId="moneyConverter" />
+					</h:outputText>
+				</p:column>
+				<p:column style="text-align: right;">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.valor.pagar']}" />
+					</f:facet>
+					<h:outputText id="campoValoraPagar" value="#{fatura.valoraPagar}">
+						<f:converter converterId="moneyConverter" />
+					</h:outputText>
+				</p:column>
+
+				<p:column style="width:50px;">
+					<h:commandLink id="editarFatura" immediate="true"
+						action="#{faturaController.editarFatura}"
+						onclick="pageLoading.show();" oncomplete="pageLoading.hide();">
+						<p:graphicImage value="../../resources/images/edit1.png"
+							style="text-align:center;" />
+						<f:setPropertyActionListener target="#{faturaController.entity}"
+							value="#{fatura}" />
+					</h:commandLink>
+					<p:tooltip for="editarFatura" value="Editar Fatura" />
+				</p:column>
+
+				<!-- BOTAO ALTERAR STATUS -->
+				<p:column styleClass="gridTdIco">
+					<f:facet name="header">
+					</f:facet>
+					<p:commandLink onclick="pageLoading.show();"
+						oncomplete="pageLoading.hide(); dglAtivarDesativar.show();"
+						update=":dialogAtivarDesativar">
+						<p:graphicImage id="ativarDesativar"
+							value="../../resources/images/ativo_#{fatura.ativo == true ? 'false' : 'true'}.png"
+							width="20px" height="20px" style="text-align:center;" />
+						<f:setPropertyActionListener target="#{faturaController.entity}"
+							value="#{fatura}" />
+					</p:commandLink>
+					<p:tooltip for="ativarDesativar" hideEffect="fade"
+						showEffect="fade"
+						value="#{fatura.ativo == true ? 'Desativar Fatura' : 'Ativar Fatura'}" />
+				</p:column>
+			</p:dataTable>
+
+			<p:toolbar>
+				<p:toolbarGroup align="left">
+					<p:commandButton value="#{bundle['btn.novo']}"
+						icon="ui-icon-document"
+						action="#{faturaController.pageCadastroFatura}" ajax="false"
+						immediate="true">
+					</p:commandButton>
+				</p:toolbarGroup>
+				<p:toolbarGroup align="left">
+					<p:commandButton value="#{bundle['tit.faturas.gerar']}"
+						id="btnGerarFatura" update=":listagemForm"
+						onclick="pageLoading.show();dlgGerar.show();"
+						oncomplete="pageLoading.hide();"
+						rendered="#{faturaController.existemNaoAssociados}" />
+				</p:toolbarGroup>
+				<p:toolbarGroup align="right">
+					<p:selectOneMenu id="selectStatus"
+						value="#{faturaController.valueSelectStatus}"
+						styleClass="selectStatus" onchange="pageLoading.show();"
+						style="min-width:100px">
+						<f:selectItem itemLabel="#{bundle['select.stt.todos']}"
+							itemValue="TODOS" />
+						<f:selectItem itemLabel="#{bundle['select.stt.ativos']}"
+							itemValue="ATIVOS" />
+						<f:selectItem itemLabel="#{bundle['select.stt.inativos']}"
+							itemValue="INATIVOS" />
+						<p:ajax update=":listagemForm"
+							listener="#{faturaController.gerarLista}"
+							oncomplete="pageLoading.hide();" />
+					</p:selectOneMenu>
+				</p:toolbarGroup>
+			</p:toolbar>
+
+		</h:form>
+
+		<p:dialog id="dialogAtivarDesativar"
+			header="#{faturaController.entity.ativo ? 'Desativar' : 'Ativar'}"
+			widgetVar="dglAtivarDesativar" modal="true" closable="false">
+			<h:form id="formAtivarDesativar">
+
+				<div>Confirma #{faturaController.entity.ativo ? 'desativação'
+					: 'ativação'} da fatura?</div>
+				<br />
+				<strong>#{faturaController.entity.data},
+					#{lancamentoController.entity.valor}</strong>
+
+				<div class="botoesDialog" style="width: 114px;">
+					<p:commandButton id="confirm" value="#{bundle['btn.sim']}"
+						update=":listagemForm" onclick="pageLoading.show();" ajax="false"
+						oncomplete="dglAtivarDesativar.hide();pageLoading.hide();"
+						action="#{faturaController.ativarDesativar}" global="false" />
+					<p:commandButton id="decline" value="#{bundle['btn.nao']}"
+						onclick="dglAtivarDesativar.hide();" immediate="true"
+						global="false" action="#{faturaController.limparObjetoFatura}" />
+				</div>
+			</h:form>
+		</p:dialog>
+
+		<p:confirmDialog header="#{bundle['tit.faturas.gerar']}"
+			severity="alert" widgetVar="dlgGerar" modal="true" closable="false"
+			message="#{bundle['msg.fatura.gerar.aberto']}">
+			<h:form>
+				<p:commandButton id="confirm" value="#{bundle['btn.sim']}"
+					update=":listagemForm :listagemForm:growlGeral"
+					oncomplete="dlgGerar.hide()" ajax="false"
+					action="#{faturaController.gerarFaturasAberto}" />
+				<p:commandButton id="decline" value="#{bundle['btn.nao']}"
+					oncomplete="dlgGerar.hide()" update=":listagemForm:growlGeral" />
+			</h:form>
+		</p:confirmDialog>
+
+		<h:panelGroup rendered="#{usuarioController.sistemaIsDemo}">
+			<script type="text/javascript">
+				disponivelNosPlanos(0, 0, 0, 1);
+			</script>
+		</h:panelGroup>
+	</ui:define>
+</ui:composition>

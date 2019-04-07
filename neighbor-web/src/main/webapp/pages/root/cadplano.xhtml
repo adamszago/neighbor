@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:sec="http://www.springframework.org/security/tags" >
+	<ui:define name="content">
+	
+	 <script type="text/javascript" >
+		function handleDrop(event, ui) {
+			ui.draggable.fadeOut('fast');
+		}
+	</script> 
+		 
+	<style type="text/css">
+		.onDropClass tr,
+		
+		
+		.onDropClass {
+			border: 1px solid #666666 !important;
+			color: #FFFFFF !important;
+		}
+		
+		.onDropClass2 {
+			border: 1px solid #666666 !important;
+			color: #FFFFFF !important;
+		}
+		
+		.onDropClass td
+		 {
+			color: #FFFFFF;
+			font-weight: bold;
+		}
+		
+		.iconDrag {
+			background-image: url("../../resources/images/drag_arrow.png");
+			display: block;
+			height: 16px;
+    		width: 16px;	
+    		cursor: move;
+		}
+		
+	</style>
+	
+	<h3>Cadastro de Planos</h3>
+	<h:form id="cadastroPlanoForm" >
+		<ui:insert   >
+			<ui:include src="../../templates/growlGeral.xhtml" />
+		</ui:insert>
+		
+		<h:panelGrid columns="2">
+			<h:outputLabel value="Nome: " for="nome" />
+			<p:inputText id="nome" value="#{planoController.plano.nome}" styleClass="toCapitalize"
+				required="true" label="Nome" size="60" maxlength="80" minLength="4" requiredMessage="O Nome é obrigatório"/>
+
+			<h:outputLabel value="Descrição: " for="descricao" />
+			<p:inputTextarea id="descricao" value="#{planoController.plano.descricao}" 
+				required="true" requiredMessage="Descrição é obrigatório" autoResize="true"/>
+			
+		</h:panelGrid>
+		 	
+		<h:panelGrid columns="2" id="selecionarPermissoes">
+			
+			<p:fieldset id="dropAreaPermissoesSelecionadas" legend="Permissões Selecionadas" style="margin: 10px; " >
+				<h:panelGroup  id="dropArea" >
+					<p:dataTable 
+						id="permissoesSelecionadas" 
+						var="per" 
+						styleClass="permissoesSelecionadas" 
+						emptyMessage="Sem permissões selecionadas" 
+						value="#{planoController.permissoesSelecionadas}" 
+						style="height: 292px; overflow: scroll; overflow-x: hidden;">
+				    	
+            			<h:outputText value="!!!Solte Aqui!!!"  
+                    		rendered="#{empty planoController.permissoesSelecionadas}"  
+                    		style="font-size:24px;" />
+                    
+						<p:column >  
+							<f:facet name="header">  
+			       				Nome  
+							</f:facet>
+			  					<h:outputText value="#{per.label}"  />
+						</p:column>
+						
+						<p:column>
+							<h:outputText id="dragIcon" styleClass="iconDrag" />
+							<p:draggable for="dragIcon" revert="true" />
+						</p:column>
+						
+					</p:dataTable>
+				</h:panelGroup>
+			</p:fieldset>
+			
+			<p:fieldset id="dropAreaPermissoesDisponiveis" legend="Permissões Disponíveis" style="margin: 10px; " >
+				<h:panelGroup id="containerListaPermissao" >
+					<p:dataTable id="permissoesDisponiveis" var="per" value="#{planoController.permissoesDisponiveis}" 
+						width="100%" emptyMessage="Sem Permissões Cadastradas" 
+						style="height: 292px; overflow: scroll; overflow-x: hidden; " >
+				    	
+						<p:column>
+							<h:outputText id="dragIcon" styleClass="iconDrag" />
+							<p:draggable for="dragIcon" revert="true" />
+						</p:column>
+						
+						<p:column sortBy="label" filterBy="label">  
+							<f:facet name="header">  
+			       				Nome  
+							</f:facet>
+			  					<h:outputText value="#{per.label}"  />
+						</p:column>
+						
+					</p:dataTable>
+				</h:panelGroup>
+			</p:fieldset>
+			
+			
+			<p:droppable 
+				for="dropAreaPermissoesSelecionadas" 
+				tolerance="touch"	
+				activeStyleClass="onDropClass" 
+				datasource="permissoesDisponiveis"
+				onDrop="handleDrop" >
+				  <p:ajax listener="#{planoController.onPermissaoDrop}" update=":cadastroPlanoForm:selecionarPermissoes" />
+		    </p:droppable>
+		      
+		  	<p:droppable 
+				for="dropAreaPermissoesDisponiveis" 
+				tolerance="touch"	
+				activeStyleClass="onDropClass2" 
+				datasource="permissoesSelecionadas" 
+				onDrop="handleDrop" >
+				  <p:ajax listener="#{planoController.onRemoverPermissaoDrop}" update=":cadastroPlanoForm:selecionarPermissoes" />
+		    </p:droppable>
+		     
+			
+		</h:panelGrid>
+		
+		<br/>
+		
+		
+		
+		<h:panelGrid columns="2">
+			<p:commandButton value="Gravar"	 actionListener="#{planoController.gravarPlano}" ajax="true" 
+							update=":cadastroPlanoForm" 
+							rendered="#{planoController.plano.idPlano == null || planoController.plano.idPlano == 0}"  
+							onclick="pageLoading.show();" oncomplete="pageLoading.hide();" />
+							
+			<p:commandButton value="Alterar" actionListener="#{planoController.alterarPlano}" ajax="true" 
+							update=":cadastroPlanoForm" rendered="#{planoController.plano.idPlano > 0 }" 
+							onclick="pageLoading.show();" oncomplete="pageLoading.hide();" />
+			
+			<p:commandButton value="Limpar" action="#{planoController.atualizarTela}" ajax="true" process="@this"
+								update=":cadastroPlanoForm" 
+								onclick="pageLoading.show();" oncomplete="pageLoading.hide();" />	
+		</h:panelGrid>
+	
+	</h:form>
+	</ui:define>
+</ui:composition>

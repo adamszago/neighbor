@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<body>
+	<ui:composition>
+		<h:form>
+			<!-- header -->
+			<div class="s4-notdlg">
+				<table border="0" cellpadding="0" cellspacing="0" width="100%">
+					<tbody>
+						<tr>
+							<td rowspan="3" width="5">&nbsp;</td>
+							<td rowspan="3" align="right" valign="middle"><a
+								href="../acesso/home.jsf" target="_self"> <!-- <img
+										src="../../resources/images/logo.gif"
+										alt="Lphantus Neighbor" border="0" width="190" height="49" />  -->
+
+									<p:graphicImage url="#{usuarioController.urlImagem}"
+										alt="Lphantus Neighbor" />
+
+							</a></td>
+							<td rowspan="3"><img src="../../resources/images/spacer.gif"
+								width="10" height="70" /></td>
+							<td align="left" valign="top">
+								<div style="padding-top: 18px;">
+									<table class="menuInv topMenu" border="0" cellpadding="0"
+										cellspacing="0" width="630">
+										<tbody>
+											<tr>
+												<td><h:commandLink
+														action="#{moradorPageController.pagMoradorPrincipal}"
+														onclick="pageLoading.show();">
+														<p:graphicImage url="../../resources/images/icons/home.png" alt=""
+															styleClass="ico_top1"></p:graphicImage>
+													</h:commandLink></td>
+												<td><h:commandLink
+														action="#{moradorPageController.pagMoradorAgregados}"
+														onclick="pageLoading.show();">
+														<p:graphicImage url="../../resources/images/icons/agregados.png"
+															alt="" styleClass="ico_top2"></p:graphicImage>
+													</h:commandLink></td>
+												<td><h:commandLink
+														action="#{moradorPageController.pagMoradorVisitantes}"
+														onclick="pageLoading.show();">
+														<p:graphicImage url="../../resources/images/icons/visitantes.png"
+															alt="" styleClass="ico_top3"></p:graphicImage>
+													</h:commandLink></td>
+												<td><h:commandLink
+														action="#{moradorPageController.pagMoradorPrestadores}"
+														onclick="pageLoading.show();">
+														<p:graphicImage url="../../resources/images/icons/prestadores.png"
+															alt="" styleClass="ico_top4"></p:graphicImage>
+													</h:commandLink></td>
+												<td><h:commandLink
+														action="#{moradorPageController.pagMoradorAnimais}"
+														onclick="pageLoading.show();">
+														<p:graphicImage url="../../resources/images/icons/animais.png"
+															alt="" styleClass="ico_top5"></p:graphicImage>
+													</h:commandLink></td>
+												<td><h:commandLink
+														action="#{moradorPageController.pagMoradorVeiculos}"
+														onclick="pageLoading.show();">
+														<p:graphicImage url="../../resources/images/icons/veiculos.png"
+															alt="" styleClass="ico_top5"></p:graphicImage>
+													</h:commandLink></td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="3">
+								<div id="zz1_TopNavigationMenuV4" class="s4-tn">
+									<div class="menu horizontal menu-horizontal">
+										<ul class="root static">
+
+											<li class="static dynamic-children"><h:commandLink
+													id="lnkIconReservas"
+													action="#{reservaController.novaReserva}"
+													rendered="#{moradorPageController.contemReservas}"
+													onclick="pageLoading.show();">
+													<p:graphicImage url="../../resources/images/icons/ico_agenda.png"
+														alt="" styleClass="ico_top6"></p:graphicImage>
+												</h:commandLink> &nbsp; <p:tooltip for="lnkIconReservas"
+													value="Ver Reservas" showEffect="slide" hideEffect="slide" />
+											</li>
+
+											<li class="static dynamic-children"><h:commandLink
+													id="lnkIconOcorrencias"
+													action="#{moradorPageController.pagMoradorOcorrencias}"
+													rendered="#{moradorPageController.contemOcorrencias}"
+													onclick="pageLoading.show();">
+													<p:graphicImage url="../../resources/images/icons/ico_apito.png"
+														alt="" styleClass="ico_top7"></p:graphicImage>
+												</h:commandLink> &nbsp; <p:tooltip for="lnkIconOcorrencias"
+													value="Ver Ocorrências" showEffect="slide"
+													hideEffect="slide" /></li>
+
+											<li class="static dynamic-children"><h:commandLink
+													id="lnkIconMensagensRecebidas"
+													action="#{moradorPageController.pagMoradorMensagens}"
+													rendered="#{moradorPageController.contemMensagemParaSindico}"
+													onclick="pageLoading.show();">
+													<p:graphicImage url="../../resources/images/icons/ico_mensagem.png"
+														alt="" styleClass="ico_top8"></p:graphicImage>
+												</h:commandLink> &nbsp; <p:tooltip for="lnkIconMensagensRecebidas"
+													value="Ver Mensagens Recebidas" showEffect="slide"
+													hideEffect="slide" /></li>
+
+											<li class="static dynamic-children"><h:commandLink
+													id="lnkIconEscreverMensagens"
+													action="#{mensagemController.novaMensagemSindico}"
+													rendered="#{moradorPageController.contemMensagemDoSindico}"
+													onclick="pageLoading.show();">
+													<p:graphicImage
+														url="../../resources/images/icons/ico_escrevermensagem.png" alt=""
+														styleClass="ico_top9"></p:graphicImage>
+												</h:commandLink> &nbsp; <p:tooltip for="lnkIconEscreverMensagens"
+													value="Escrever Mensagens" showEffect="slide"
+													hideEffect="slide" /></li>
+
+											<li class="static dynamic-children"><h:commandLink
+													id="lnkIconSenhaTotem"
+													action="#{totemController.pageTotem}"
+													rendered="#{moradorPageController.contemTotem}"
+													onclick="pageLoading.show();">
+													<p:graphicImage url="../../resources/images/icons/ico_totem.png"
+														alt="" styleClass="ico_top9"></p:graphicImage>
+												</h:commandLink> &nbsp; <p:tooltip for="lnkIconSenhaTotem"
+													value="Senhas Totem" showEffect="slide" hideEffect="slide" />
+											</li>
+											
+											<li class="static dynamic-children"><h:commandLink
+													id="lnkIconBoletos"
+													action="#{boletoController.paginaListar}"
+													rendered="#{moradorPageController.contemBoletos}"
+													onclick="pageLoading.show();">
+													<p:graphicImage url="../../resources/images/icons/ico_barcode.png"
+														alt="Boletos" styleClass="ico_top9"></p:graphicImage>
+												</h:commandLink> &nbsp; <p:tooltip for="lnkIconBoletos"
+													value="Boletos" showEffect="slide" hideEffect="slide" />
+											</li>
+											
+											<li class="static dynamic-children"><h:commandLink
+													id="lnkIconDocumentos"
+													action="#{documentoController.pageDocumento}"
+													rendered="#{moradorPageController.contemArquivos}"
+													onclick="pageLoading.show();">
+													<p:graphicImage url="../../resources/images/icons/ico_download.png"
+														alt="Documentos" styleClass="ico_top9"></p:graphicImage>
+												</h:commandLink> &nbsp; <p:tooltip for="lnkIconDocumentos"
+													value="Documentos" showEffect="slide" hideEffect="slide" />
+											</li>
+
+											<!--#### USUARIO LOGADO ###-->
+											<li class="static dynamic-children">
+												<div align="right" style="width: 510px;" class="userLogado">
+													<span id="nomeCondominio">#{usuarioController.userLogado.condominio.pessoa.nome}</span>
+													<br /> <span id="nomeuserLogado"><strong>#{usuarioController.userLogado.pessoa.nome}</strong></span>
+													<span id="loginuserLogado">(#{usuarioController.userLogado.login})</span>
+													<span id="logout"> <!--  h:form --> <h:commandLink
+															id="logout" action="#{usuarioController.logout}"
+															onclick="pageLoading.show();" update=":menuLeft">
+															<img class="imgLogout" src="../../resources/images/log_out-16.png"
+																border="0" />
+														</h:commandLink>
+													</span>
+												</div>
+											</li>
+
+										</ul>
+									</div>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</h:form>
+		<!-- end header -->
+	</ui:composition>
+</body>
+
+</html>

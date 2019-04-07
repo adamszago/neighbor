@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<body>
+	<ui:composition>
+		<p:dialog header="#{bundle['tit.morador']}"
+			widgetVar="dlgMoradorTotem" modal="true" resizable="false"
+			width="500" onHide="pageLoading.hide();">
+			<h:form id="formMoradorTotem">
+				<h:panelGrid id="panelGridMoradorTotem" columns="2">
+					<h:panelGroup>
+						<h:inputHidden value="#{totemController.morador.pessoa.idPessoa}" />
+						<h:outputLabel value="#{bundle['lbl.nome']}: " />
+					</h:panelGroup>
+					<p:inputText value="#{totemController.morador.pessoa.nome}"
+						size="45" maxlength="50" styleClass="toCapitalize" readonly="true" />
+					<h:outputLabel value="#{bundle['lbl.senha']}: " />
+					<p:password value="#{totemController.senha}" size="10"
+						maxlength="4" styleClass="toCapitalize" feedback="true"
+						requiredMessage="#{bundle['msg.informe.senha']}"
+						goodLabel="#{bundle['lbl.medio']}" label="#{bundle['lbl.senha']}"
+						strongLabel="#{bundle['lbl.forte']}"
+						weakLabel="#{bundle['lbl.fraco']}" promptLabel="Digite uma senha">
+						<f:convertNumber integerOnly="true" minIntegerDigits="4"
+							maxIntegerDigits="4" />
+					</p:password>
+					<h:outputLabel value="#{bundle['lbl.conf.senha']}: " />
+					<p:password value="#{totemController.confirmarSenha}" size="10"
+						maxlength="4" styleClass="toCapitalize"
+						requiredMessage="#{bundle['msg.informe.senha']}"
+						goodLabel="#{bundle['lbl.medio']}"
+						label="#{bundle['lbl.senha.conf']}"
+						strongLabel="#{bundle['lbl.forte']}"
+						weakLabel="#{bundle['lbl.fraco']}" promptLabel="Digite uma senha">
+						<f:convertNumber integerOnly="true" minIntegerDigits="4"
+							maxIntegerDigits="4" />
+					</p:password>
+				</h:panelGrid>
+				<p:commandButton value="#{bundle['btn.confirmar']}"
+					actionListener="#{totemController.gravarMorador}" ajax="true"
+					onclick="pageLoading.show();"
+					oncomplete="handleIncludeMoradorTotemRequest(args);"
+					update=":listagemForm:growlGeral :listagemForm" />
+			</h:form>
+			<script type="text/javascript">
+				function handleIncludeMoradorTotemRequest(args) {
+					if (args.resultOk) {
+						dlgMoradorTotem.hide();
+					} else {
+					}
+				}
+			</script>
+		</p:dialog>
+	</ui:composition>
+</body>
+</html>

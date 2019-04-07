@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<body>
+	<ui:composition>
+		<p:ajaxStatus onerror="ajaxLoading.hide();"
+			onstart="ajaxLoading.hide();" oncomplete="ajaxLoading.hide();" />
+
+		<p:dialog header="Adicionar Telefone" widgetVar="dlgAdicionarFone"
+			modal="true" resizable="false" width="283">
+			<h:form id="formAdicionarFone">
+				<p:growl id="growlAdicionarTelefone" showSummary="true" />
+				<h:panelGrid columns="1">
+					<h:outputLabel value="Número: " for="fone" style="float: left;" />
+					<p:inputText mask="(99)9999-9999" id="fone"
+						value="#{moradorPageController.telefone.numero}" size="16"
+						maxlength="15" onkeyup="this.value=maskTel(this.value)">
+						<f:validator
+							validatorId="br.com.lphantus.neighbor.component.validator.ValidatorTelefone" />
+					</p:inputText>
+
+					<h:outputLabel value="Tipo Telefone" for="tipoTelefone"
+						style="float: left;" />
+					<h:selectOneMenu
+						value="#{moradorPageController.telefone.tipoTelefone}"
+						id="tipoTelefone">
+						<f:selectItem itemLabel=":: Selecione ::" itemValue="" />
+						<f:selectItem itemLabel="Fixo" itemValue="FIXO" />
+						<f:selectItem itemLabel="Celular" itemValue="CELULAR" />
+						<f:selectItem itemLabel="Comercial" itemValue="COMERCIAL" />
+						<f:selectItem itemLabel="Recado" itemValue="RECADO" />
+						<f:selectItem itemLabel="Outro" itemValue="OUTRO" />
+					</h:selectOneMenu>
+				</h:panelGrid>
+
+				<br />
+				<br />
+
+				<p:commandButton value="Gravar"
+					actionListener="#{moradorPageController.adicionarTelefone}"
+					ajax="true" update=":formAdicionarFone :paginaMoradorForm"
+					process=":formAdicionarFone"
+					oncomplete="handleIncludeTelefoneRequest(args);">
+
+				</p:commandButton>
+
+			</h:form>
+			<script type="text/javascript">
+				function handleIncludeTelefoneRequest(args) {
+					if (args) {
+					} else {
+					}
+				}
+			</script>
+		</p:dialog>
+	</ui:composition>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<title>Lphantus Neighbor</title>
+	<!-- favicon -->
+	<link rel="shortcut icon" href="../../resources/images/favicon.ico" type="image/vnd.microsoft.icon"/>
+	<meta http-equiv="refresh" content="1440" />
+	<meta http-equiv="X-UA-Compatible" content="IE=9" />
+
+	<!-- all OOTB css -->
+	<link rel="stylesheet" type="text/css" href="../../resources/css/forms-min.css"/>
+	<link rel="stylesheet" type="text/css" href="../../resources/css/Menu-min.css"/>
+	<link rel="stylesheet" type="text/css" href="../../resources/css/search-min.css"/>
+	<link rel="stylesheet" type="text/css" href="../../resources/css/corev4-min.css"/>
+	<link rel="stylesheet" type="text/css" href="../../resources/css/disponivel-nos-planos-min.css"/>
+	<!-- <link rel="stylesheet" type="text/css" href="../../resources/css/estilos_002.css" /> -->
+
+	<link rel="stylesheet" type="text/css" href="../../resources/css/usuario-min.css" />
+	<link rel="stylesheet" type="text/css" href="../../resources/css/primefaces-bootstrap/theme-nobg-min.css" />
+</h:head>
+<h:body>
+
+	<div id="conteudo">
+		<h:form id="listagemForm" prependId="false">
+
+			<style>
+				.content form table td label {
+					float: left !important;
+				}
+				
+				.layoutCadMorador td {
+					padding: 7px;
+					border: none;
+				}
+				
+				.layoutCadMorador tr {
+					border: none;
+				}
+			</style>
+
+			<p:growl id="growlGeral" showDetail="false" sticky="false"
+				errorIcon="../../resources/images/info_red.png" life="5000" />
+
+			<!-- <p:panelGrid styleClass="layoutCadMorador"> -->
+			<p:schedule id="schedule"
+				value="#{agendaSindicoController.eventModel}" locale="pt"
+				widgetVar="myschedule" >
+				<p:ajax event="dateSelect"
+					listener="#{agendaSindicoController.onDateSelect}"
+					update="eventDetails" oncomplete="eventDialog.show();" />
+				<p:ajax event="eventSelect"
+					listener="#{agendaSindicoController.onEventSelect}"
+					update="eventDetails" oncomplete="eventDialog.show();" />
+				<p:ajax event="eventMove"
+					listener="#{agendaSindicoController.onEventMove}"
+					update="growlGeral" oncomplete="myschedule.update();" />
+				<p:ajax event="eventResize"
+					listener="#{agendaSindicoController.onEventResize}"
+					update="growlGeral" oncomplete="myschedule.update();" />
+			</p:schedule>
+			<!-- </p:panelGrid> -->
+
+			<p:dialog widgetVar="eventDialog" id="idEventDialog"
+				header="#{bundle['tit.agenda.evento']}" resizable="false"
+				modal="true" showEffect="clip" hideEffect="clip">
+				<h:panelGrid id="eventDetails" columns="2">
+					<h:outputLabel for="title" value="#{bundle['lbl.titulo']}" />
+					<p:inputText id="title"
+						value="#{agendaSindicoController.event.title}" />
+
+					<h:outputLabel for="from" value="#{bundle['lbl.data.inicio']}" />
+					<p:inputMask id="from"
+						value="#{agendaSindicoController.event.startDate}"
+						mask="99/99/9999 99:99">
+						<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+					</p:inputMask>
+
+					<h:outputLabel for="to" value="#{bundle['lbl.data.fim']}" />
+					<p:inputMask id="to"
+						value="#{agendaSindicoController.event.endDate}"
+						mask="99/99/9999 99:99">
+						<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+					</p:inputMask>
+
+					<p:outputLabel value="#{bundle['lbl.descricao']}: "
+						for="txtDescricao" styleClass="label_obr" />
+					<p:inputTextarea id="txtDescricao" rows="5" cols="30"
+						counter="counter"
+						value="#{agendaSindicoController.event.descricao}" maxlength="200"
+						counterTemplate="{0} caracteres restantes." autoResize="false" />
+
+					<h:outputText id="noneOutput" />
+					<h:outputText id="counter" />
+
+					<p:commandButton type="reset" value="#{bundle['btn.limpar']}" />
+					<p:commandButton id="addButton" value="#{bundle['btn.salvar']}"
+						actionListener="#{agendaSindicoController.gravarEvento}"
+						oncomplete="myschedule.update();eventDialog.hide();" />
+				</h:panelGrid>
+			</p:dialog>
+		</h:form>
+
+		<script type="text/javascript" src="../../resources/scripts/geral-min.js"></script>
+	</div>
+</h:body>
+</html>

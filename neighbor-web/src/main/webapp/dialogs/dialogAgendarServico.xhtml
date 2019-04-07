@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+<body>
+	<ui:composition>
+		<p:dialog header="Agendar Serviço" widgetVar="dlgAgendarServico"
+			width="560" modal="true" resizable="false" closable="false">
+			<h:form id="formAgendarServico">
+				<style>
+.ui-selectonemenu label.ui-selectonemenu-label {
+	padding-right: 28px;
+	text-align: left;
+}
+</style>
+				<h:panelGrid columns="2" id="pgAgendaServico">
+					<h:outputLabel value="Morador: " for="morador" />
+					<h:inputText
+						value="#{moradorPageController.servicoAgendado.morador.pessoa.nome}"
+						size="50" maxlength="50" id="morador" disabled="true" />
+
+					<h:outputLabel value="Nome Prestador: " for="nomePrestador" />
+					<h:inputText
+						value="#{moradorPageController.servicoAgendado.prestadorServico.pessoa.nome}"
+						size="50" maxlength="50" id="nomePrestador"
+						styleClass="toCapitalize"
+						readonly="#{not empty moradorPageController.servicoAgendado.prestadorServico.pessoa.nome}"
+						required="true"
+						requiredMessage="O Prestador de Serviços é obrigatório!" />
+
+					<h:outputLabel value="Tempo no Condomínio: " for="tempoPrestador" />
+					<p:selectOneMenu id="tempoPrestador" style="width: 166px;"
+						value="#{moradorPageController.tempoAcessoPrestador}">
+						<f:converter converterId="tempoAcessoConverter" />
+						<f:selectItems value="#{moradorPageController.tempoAcesso}"
+							var="tempo" itemValue="#{tempo}" itemLabel="#{tempo.descricao}" />
+						<p:ajax update="dataInicioServico,dataFimServico"
+							listener="#{moradorPageController.trocaTempoNoCondominio}" />
+					</p:selectOneMenu>
+
+					<h:outputLabel value="Data Início Serviço: "
+						for="dataInicioServico" />
+					<p:calendar
+						value="#{moradorPageController.servicoAgendado.inicioAgendamentoServico}"
+						id="dataInicioServico" navigator="true"
+						mindate="#{moradorPageController.dataInicial}" maxdate="1/1/2030"
+						locale="pt" pattern="dd/MM/yyyy"
+						disabled="#{moradorPageController.dataInicialBloqueada}" />
+
+					<h:outputLabel value="Data Fim Serviço: " for="dataFimServico" />
+					<p:calendar
+						value="#{moradorPageController.servicoAgendado.fimAgendamentoServico}"
+						id="dataFimServico" navigator="true"
+						mindate="#{moradorPageController.dataInicial}" maxdate="1/1/2030"
+						locale="pt" pattern="dd/MM/yyyy"
+						disabled="#{moradorPageController.dataFinalBloqueada}" />
+
+					<h:outputLabel value="Tipo Entrada: " for="tipoEntrada" />
+					<p:selectOneMenu id="tipoEntrada" style="width: 166px;"
+						value="#{moradorPageController.tipoAcessoPrestador}">
+						<f:converter converterId="tipoAcessoConverter" />
+						<f:selectItems value="#{moradorPageController.tiposAcesso}"
+							var="tipo" itemValue="#{tipo}" itemLabel="#{tipo.descricao}" />
+						<p:ajax update="testPanel1,testPanel2"
+							listener="#{moradorPageController.trocaTipoEntradaPrestador}" />
+					</p:selectOneMenu>
+
+					<p:outputPanel id="testPanel1">
+						<h:outputLabel id="lblDocumento" value="CNH: " for="documento"
+							rendered="#{moradorPageController.documentoVisivel}" />
+					</p:outputPanel>
+					<p:outputPanel id="testPanel2">
+						<h:inputText rendered="#{moradorPageController.documentoVisivel}"
+							value="#{moradorPageController.servicoAgendado.prestadorServico.pessoa.cnh}"
+							id="documento">
+							<f:validator
+								validatorId="br.com.lphantus.neighbor.component.validator.ValidatorCNH" />
+						</h:inputText>
+					</p:outputPanel>
+
+					<p:commandButton value="Registrar Serviço"
+						actionListener="#{moradorPageController.registrarServico}"
+						ajax="false" update=":formAgendarServico :paginaMoradorForm"
+						process=":formAgendarServico">
+					</p:commandButton>
+					<p:commandButton value="Cancelar"
+						action="#{moradorPageController.novoServicoPrestado}" ajax="true"
+						onsuccess="dlgAgendarServico.hide(); ajaxLoading.hide();">
+					</p:commandButton>
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+	</ui:composition>
+</body>
+</html>

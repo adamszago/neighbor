@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+<body>
+	<ui:composition>
+		<p:dialog header="Registrar Visita" widgetVar="dlgVisita"
+			resizable="false" modal="true" width="550">
+			<h:form id="formVisita">
+				<h:panelGrid columns="5" id="panelVisita">
+					<h:outputLabel value="Proprietario: " />
+					<h:outputText value="Casa"></h:outputText>
+					<p:inputText value="#{visitanteController.casa}" size="4"
+						styleClass="casaBusca" maxlength="4"
+						onblur="if(this.value=='')this.value='0'"
+						onfocus="if(this.value=='0')this.value=''" />
+					<p:commandLink action="#{visitanteController.buscarProprietario}"
+						ajax="true" update=":formVisita">
+						<p:graphicImage url="../../resources/images/lupa.png" width="24px"
+							height="24px" style="border:none;"></p:graphicImage>
+					</p:commandLink>
+					<p:inputText value="#{visitanteController.morador.pessoa.nome}"
+						size="30" maxlength="30" readonly="true" />
+
+				</h:panelGrid>
+				
+				<h:panelGrid columns="5" id="panelServico">
+					<h:outputText value="Data Fim Visita: " for="dtFim" />
+					<p:calendar id="dtFim"
+						value="#{visitanteController.visita.fimVisita}"
+						navigator="true" locale="pt" maxdate="1/1/2030"
+						mindate="#{visitanteController.dataInicial}"
+						pattern="dd/MM/yyyy" />
+
+					<p:outputLabel value="Placa: "
+						for="placa" />
+					<p:inputText id="placa" styleClass="toCapitalize"
+						value="#{visitanteController.visita.placaUtilizada}"
+						required="false" label="Placa" size="11" maxlength="9" />
+				</h:panelGrid>
+				
+				<br />
+				<br />
+
+				<p:commandButton
+					actionListener="#{visitanteController.registrarVisita}" ajax="true"
+					update=":listagemForm :formVisita"
+					onsuccess="dlgVisita.hide(); limparCampoCasa();" value="Registrar"
+					onerror="dlgVisita.hide();" onclick="pageLoading.show();"
+					oncomplete="pageLoading.hide();" />
+
+				<script>
+					function limparCampoCasa() {
+						jQuery('.casaBusca').val("");
+					}
+				</script>
+			</h:form>
+		</p:dialog>
+
+
+		<!-- Dialog a ser mostrado para o cliente automaticamente quando ele  cadastrar o visitante -->
+		<p:dialog header="Registrar Visita ?"
+			widgetVar="dlgVisitaVisitanteCadastrado" resizable="false"
+			modal="true" closable="false" width="550" visible="true"
+			rendered="#{visitanteController.visitanteCadastrado.pessoa.idPessoa != null}">
+
+			<h2>
+				Deseja registrar uma visita para <br /> <i>#{visitanteController.visitanteCadastrado.pessoa.nome}
+				</i> ?
+			</h2>
+
+			<h:form id="formVisitaVisitanteCadastrado">
+
+				<h:panelGrid columns="5" id="gridBuscaPropietario">
+					<h:outputLabel value="Proprietario: " />
+					<h:outputText value="Casa"></h:outputText>
+					<p:inputText value="#{visitanteController.casa}" size="4"
+						styleClass="casaBusca" maxlength="4"
+						onblur="if(this.value=='')this.value='0'"
+						onfocus="if(this.value=='0')this.value=''" />
+					<p:commandLink styleClass="btnBuscarPropietario"
+						action="#{visitanteController.buscarProprietario}" ajax="true"
+						update="nomeProprietario">
+						<p:graphicImage url="../../resources/images/lupa.png" width="24px"
+							height="24px" style="border:none;"></p:graphicImage>
+					</p:commandLink>
+					<p:inputText value="#{visitanteController.morador.pessoa.nome}"
+						size="30" maxlength="30" readonly="true" id="nomeProprietario" />
+
+					<script>
+						jQuery(document).ready(function() {
+							jQuery('.btnBuscarPropietario').click();
+						});
+					</script>
+				</h:panelGrid>
+
+				<h:panelGrid columns="5" id="panelServico">
+					<h:outputText value="Data Fim Visita: " for="dtFim" />
+					<p:calendar id="dtFim"
+						value="#{visitanteController.visita.fimVisita}"
+						navigator="true" locale="pt" maxdate="1/1/2030"
+						mindate="#{visitanteController.dataInicial}"
+						pattern="dd/MM/yyyy" />
+
+					<p:outputLabel value="Placa: "
+						for="placa" />
+					<p:inputText id="placa" styleClass="toCapitalize"
+						value="#{visitanteController.visita.placaUtilizada}"
+						required="false" label="Placa" size="11" maxlength="9" />
+				</h:panelGrid>
+				
+				<br />
+				<br />
+				
+				<h:panelGrid columns="2">
+					<p:commandButton
+						actionListener="#{visitanteController.registrarVisitaVisitanteCadastrado}"
+						ajax="true" update=":listagemForm :formVisitaVisitanteCadastrado"
+						onsuccess="dlgVisitaVisitanteCadastrado.hide();" value="Registrar"
+						onerror="dlgVisitaVisitanteCadastrado.hide();"
+						onclick="pageLoading.show();" oncomplete="pageLoading.hide();" />
+
+					<p:commandButton
+						actionListener="#{visitanteController.cancelarVisitaVisitanteCadastrado}"
+						ajax="true" update=":listagemForm :formVisitaVisitanteCadastrado"
+						onsuccess="dlgVisitaVisitanteCadastrado.hide();" value="Cancelar"
+						onerror="dlgVisitaVisitanteCadastrado.hide();"
+						onclick="pageLoading.show();" oncomplete="pageLoading.hide();" />
+
+				</h:panelGrid>
+			</h:form>
+
+		</p:dialog>
+	</ui:composition>
+</body>
+</html>

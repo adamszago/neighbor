@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings version="2.0"
+	xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_1_0.xsd">
+
+	<named-query name="TemplateLancamento.findAllDiaria">
+		<query>
+			<![CDATA[
+				SELECT t 
+				FROM TemplateLancamento t 
+				INNER JOIN t.condominio condominio 
+				LEFT JOIN t.centroCusto centroCusto 
+				WHERE t.ativo = true 
+				AND t.repeticao = '1'
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="TemplateLancamento.findAllSemanal">
+		<query>
+			<![CDATA[
+				SELECT t 
+				FROM TemplateLancamento t 
+				INNER JOIN t.condominio condominio 
+				LEFT JOIN t.centroCusto centroCusto 
+				WHERE t.ativo = true 
+				AND t.repeticao = '2'
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="TemplateLancamento.findAllMensal">
+		<query>
+			<![CDATA[
+				SELECT t 
+				FROM TemplateLancamento t 
+				INNER JOIN t.condominio condominio 
+				LEFT JOIN t.centroCusto centroCusto 
+				WHERE t.ativo = true 
+				AND t.repeticao = '3'
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="TemplateLancamento.findAllSemestral">
+		<query>
+			<![CDATA[
+				SELECT t 
+				FROM TemplateLancamento t 
+				INNER JOIN t.condominio condominio 
+				LEFT JOIN t.centroCusto centroCusto 
+				WHERE t.ativo = true 
+				AND t.repeticao = '4'
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="TemplateLancamento.findAllAnual">
+		<query>
+			<![CDATA[
+				SELECT t 
+				FROM TemplateLancamento t 
+				INNER JOIN t.condominio condominio 
+				LEFT JOIN t.centroCusto centroCusto 
+				WHERE t.ativo = true 
+				AND t.repeticao = '5'
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="TemplateLancamento.alterarStatus">
+		<query>
+			<![CDATA[
+				UPDATE TemplateLancamento template 
+				SET template.ativo = :status 
+				WHERE template.id = :id
+			]]>
+		</query>
+	</named-query>
+
+</entity-mappings>

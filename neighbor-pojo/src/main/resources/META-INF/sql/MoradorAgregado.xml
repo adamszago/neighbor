@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings version="2.0"
+	xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_1_0.xsd">
+
+	<named-query name="MoradorAgregado.listarAgregadosAtivosMorador">
+		<query>
+			<![CDATA[
+				SELECT moradorAgregado 
+				FROM MoradorAgregado moradorAgregado 
+				INNER JOIN moradorAgregado.agregado agregado 
+				INNER JOIN moradorAgregado.morador morador 
+				WHERE morador.idPessoa = :idPessoa 
+				AND CURRENT_DATE >= moradorAgregado.dataInicio 
+				AND (moradorAgregado.dataFim IS NULL OR moradorAgregado.dataFim >= CURRENT_DATE)
+			]]>
+		</query>
+	</named-query>
+
+</entity-mappings>

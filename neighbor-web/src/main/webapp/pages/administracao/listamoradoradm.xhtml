@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+	<ui:define name="content">
+		<h:form id="listagemForm" styleClass="innerContentFix">
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+			<p:contextMenu for="moradores">
+				<p:menuitem value="#{bundle['tit.visualiza.ocorrencias']}"
+					update=":listagemForm:moradores" icon="ui-icon-folder-collapsed" />
+				<p:menuitem value="#{bundle['tit.visualiza.visitantes.liv']}"
+					update=":listagemForm:moradores" icon="ui-icon-folder-collapsed" />
+			</p:contextMenu>
+			<p:dataTable id="moradores" var="morador"
+				value="#{moradorController.moradores}"
+				rowKey="#{morador.pessoa.idPessoa}" paginator="true" rows="10"
+				selection="#{moradorController.morador}" selectionMode="single"
+				rowStyleClass="#{morador.adimplente ? null : 'devedor'}"
+				emptyMessage="#{bundle['msg.sem.morador.cadastrado']}">
+				<f:facet name="header">
+					<h:outputText value="#{bundle['tit.moradores.cadastrados']}" />
+				</f:facet>
+				<p:column style="width:16px" exportable="false">
+					<p:rowToggler />
+				</p:column>
+				<!-- BOTAO ALTERAR STATUS DO MORADOR -->
+				<p:column style="width:16px"
+					rendered="#{sec:areAnyGranted('ROLE_ALTERAR_STATUS_MORADOR, ROLE_ROOT')}"
+					exportable="false">
+					<p:commandLink onclick="mostrarDglInativar(#{morador.ativo})"
+						update=":listagemForm">
+						<p:graphicImage id="imgStatus"
+							value="../../resources/images/ativo_#{morador.ativo}.png"
+							width="24px" height="24px">
+							<p:tooltip for="imgStatus" hideEffect="fade" showEffect="fade"
+								value="#{morador.ativo ? 'Morador Ativo' : 'Morador Inativo'}"></p:tooltip>
+						</p:graphicImage>
+						<f:setPropertyActionListener target="#{moradorController.morador}"
+							value="#{morador}" />
+					</p:commandLink>
+				</p:column>
+				<!-- BOTAO ALTERAR STATUS DO INTERFONE -->
+				<p:column style="width:16px"
+					rendered="#{sec:areAnyGranted('ROLE_ALTERAR_STATUS_INTERFONE, ROLE_ROOT')}"
+					exportable="false">
+					<h:commandLink action="#{moradorController.alterarStatusInterfone}"
+						update=":listagemForm">
+						<p:graphicImage id="imgInterfone"
+							value="../../resources/images/interfone_ok_#{morador.interfoneOk}.png"
+							width="24px" height="24px">
+							<p:tooltip for="imgInterfone" hideEffect="fade" showEffect="fade"
+								value="#{morador.interfoneOk ? 'Interfone Funcionando' : 'Interfone não está Funcionando'}"></p:tooltip>
+						</p:graphicImage>
+						<f:setPropertyActionListener target="#{moradorController.morador}"
+							value="#{morador}" />
+					</h:commandLink>
+				</p:column>
+				<p:column sortBy="pessoa.nome"
+					filterBy="pessoa.nome" exportable="true">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['lbl.nome']}" />
+					</f:facet>
+					<h:outputText value="#{morador.pessoa.nome}" />
+				</p:column>
+				<p:column sortBy="unidadeHabitacional.identificacao" filterBy="unidadeHabitacional.identificacao"
+					exportable="true">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['lbl.casa']}" />
+					</f:facet>
+					<h:outputText value="#{morador.casa}" />
+				</p:column>
+				<p:column sortBy="pessoa.mail"
+					filterBy="pessoa.mail" exportable="true">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['lbl.email']}" />
+					</f:facet>
+					<h:outputText value="#{morador.pessoa.mail}" />
+				</p:column>
+				<!-- BOTAO REGISTRAR OCORRENCIA -->
+				<p:column
+					rendered="#{sec:areAnyGranted('ROLE_CADASTRO_OCORRENCIA, ROLE_ROOT')}"
+					exportable="false">
+					<p:commandLink onclick="dlgOcorrencia.show()" id="ocorMorador">
+						<p:graphicImage value="../../resources/images/ico_apito.png"
+							style="text-align:center;" />
+						<f:setPropertyActionListener
+							target="#{ocorrenciaController.ocorrencia.moradorPenalizado}"
+							value="#{morador}" />
+					</p:commandLink>
+					<p:tooltip for="ocorMorador" value="Registrar Ocorrencia"
+						showEffect="slide" hideEffect="slide" />
+				</p:column>
+				<!-- BOTAO EDITAR MORADOR -->
+				<p:column
+					rendered="#{sec:areAnyGranted('ROLE_EDITAR_MORADOR, ROLE_ROOT')}"
+					exportable="false">
+					<!-- p:commandLink action="morador.jsf?faces-redirect=true&amp;includeViewParams=true" update=":painelCadastro"-->
+					<h:commandLink action="#{moradorController.editarMorador}"
+						id="editMorador" ajax="true" update=":cadastroMoradorForm"
+						onclick="pageLoading.show();" oncomplete="pageLoading.hide();">
+						<p:graphicImage value="../../resources/images/edit.png"
+							width="20px" height="20px" style="text-align:center;" />
+						<f:setPropertyActionListener target="#{moradorController.morador}"
+							value="#{morador}" />
+					</h:commandLink>
+					<p:tooltip for="editMorador" value="Editar Registro"
+						showEffect="slide" hideEffect="slide" />
+				</p:column>
+
+				<!-- DETALHES DO MORADOR -->
+				<p:rowExpansion
+					rendered="#{sec:areAnyGranted('ROLE_LISTA_DETALHES_MORADOR, ROLE_ROOT')}">
+					<p:commandLink action="#{veiculoController.listaVeiculosMorador}"
+						id="listaVeiculoMorador" oncomplete="dlgVeiculosMorador.show()"
+						ajax="true" update=":formVeiculosMorador">
+						<p:graphicImage url="../../resources/images/car.png" width="24"
+							height="24" />
+						<f:setPropertyActionListener target="#{veiculoController.morador}"
+							value="#{morador}" />
+					</p:commandLink>
+					<p:commandLink action="#{animalController.listaAnimaisMorador}"
+						id="listaAnimaisMorador" oncomplete="dlgAnimaisMorador.show()"
+						ajax="true" update=":formAnimaisMorador">
+						<p:graphicImage url="../../resources/images/dog.png" width="24"
+							height="24" />
+						<f:setPropertyActionListener target="#{animalController.morador}"
+							value="#{morador}" />
+					</p:commandLink>
+
+					<h4>
+						<h:outputText value="#{bundle['tit.agregados']}" />
+					</h4>
+					<p:dataList id="lAgregadosMorador" var="agr"
+						value="#{morador.agregadosList}" effectSpeed="fast">
+						<p:column rendered="#{morador.agregados != null}">
+							<h:outputText
+								value="#{agr.nome}, #{agr.parentesco}, #{agr.dataNascimento}" />
+						</p:column>
+						<p:column rendered="#{morador.agregados == null}">
+							<h:outputText
+								value="Sem agregados cadastrados para este morador!" />
+						</p:column>
+					</p:dataList>
+
+					<h4>
+						<h:outputText value="#{bundle['tit.telefones']}" />
+					</h4>
+					<p:dataList id="lTelefonesMorador" var="tlf"
+						value="#{morador.telefones}" effectSpeed="fast">
+						<p:column rendered="#{morador.telefones != null}">
+							<h:outputText value="#{tlf.numero}, #{tlf.tipoTelefone}" />
+						</p:column>
+						<p:column rendered="#{morador.telefones == null}">
+							<h:outputText
+								value="Sem telefones cadastrados para este morador!" />
+						</p:column>
+					</p:dataList>
+				</p:rowExpansion>
+			</p:dataTable>
+		</h:form>
+
+
+		<!-- /h:form -->
+		<ui:insert name="dialogOcorrencia">
+			<ui:include src="../../dialogs/dialogOcorrencia.xhtml" />
+			<ui:include src="../../dialogs/dialogVeiculosMorador.xhtml" />
+			<ui:include src="../../dialogs/dialogAnimaisMorador.xhtml" />
+		</ui:insert>
+
+		<p:confirmDialog message="testee" header="Inativar" severity="alert"
+			widgetVar="dglInativar" modal="true" closable="false">
+			<h:form>
+				<p:commandButton id="confirm" value="#{bundle['btn.sim']}"
+					update=":listagemForm" oncomplete="dglInativar.hide()"
+					action="#{moradorController.alterarStatus}" />
+				<p:commandButton id="decline" value="#{bundle['btn.nao']}"
+					oncomplete="dglInativar.hide()" update=":listagemForm"
+					actionListener="#{moradorController.limparMorador}" />
+			</h:form>
+		</p:confirmDialog>
+		<script>
+			function mostrarDglInativar(moradorEnable){
+				var men = '';
+				if(moradorEnable == true){
+					men = 'Desativar';
+				}else {
+					men = 'Ativar';
+				}
+				jQuery('#dglInativar p').html('Deseja <strong>'+men+'</strong> este morador ?');
+				
+				jQuery('#ui-dialog-title-dglInativar').html(men);
+				
+				dglInativar.show();	
+			}
+		</script>
+	</ui:define>
+</ui:composition>

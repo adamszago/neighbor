@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+<body>
+	<ui:composition>
+		<p:dialog header="Edição Agregado" widgetVar="dlgeditAgregado"
+			modal="true" resizable="true" width="500">
+			<h:form id="formEditaAgregado">
+				<ui:insert>
+					<ui:include src="../templates/growlGeral.xhtml" />
+				</ui:insert>
+				<h:inputHidden id="idAgregado"
+					value="#{agregadoController.agregado.pessoa.idPessoa}" />
+				<h:panelGrid columns="2">
+					<h:outputLabel value="Proprietário" for="proprietarioAgr" />
+					<p:inputText
+						value="#{agregadoController.agregado.morador.morador.pessoa.nome}"
+						size="50" maxlength="50" id="proprietarioAgr" readonly="true" />
+
+					<h:outputLabel value="Nome" for="nomeAgregado" />
+					<p:inputText
+						value="#{agregadoController.agregado.morador.agregado.pessoa.nome}"
+						size="50" maxlength="50" id="nomeAgregado" />
+
+					<h:outputLabel value="E-mail" for="mailAgregado" />
+					<p:inputText
+						value="#{moradorController.agregado.morador.pessoa.mail}"
+						size="50" maxlength="50" id="mailAgregado" required="true"
+						requiredMessage="#{bundle['msg.email.requerido']}">
+						<f:validator
+							validatorId="br.com.lphantus.neighbor.component.validator.ValidatorEmail" />
+					</p:inputText>
+
+					<h:outputLabel value="CNH" for="cnhAgregado" />
+					<p:inputText value="#{agregadoController.agregado.pessoa.cnh}"
+						size="19" maxlength="15" id="cnhAgregado" />
+
+					<h:outputLabel value="Data Nascimento" for="dataNascimentoAgregado" />
+					<p:calendar
+						value="#{agregadoController.agregado.morador.dataNascimento}"
+						id="dataNascimentoAgregado" navigator="true" mindate="1/1/1930"
+						maxdate="#{moradorController.dataMaximaNascimento}" locale="pt"
+						pattern="dd/MM/yyyy" readonlyInput="true" />
+
+					<h:outputLabel value="Parentesco" for="parentesco" />
+					<h:selectOneMenu
+						value="#{agregadoController.agregado.morador.parentesco}"
+						id="parentesco">
+						<f:selectItem itemLabel=":: Selecione ::" itemValue="" />
+						<f:selectItem itemLabel="Cônjuge" itemValue="CONJUGE" />
+						<f:selectItem itemLabel="Filho" itemValue="FILHO" />
+						<f:selectItem itemLabel="Outro" itemValue="OUTRO" />
+					</h:selectOneMenu>
+				</h:panelGrid>
+				<p:commandButton value="Alterar"
+					actionListener="#{agregadoController.alterar}" ajax="true"
+					rendered="#{sec:areAnyGranted('ROLE_EDITAR_AGREGADO, ROLE_ROOT')}"
+					update=":formEditaAgregado :listagemForm"
+					oncomplete="handleIncludeAgregadoRequest(args);" />
+			</h:form>
+			<script type="text/javascript">
+				function handleIncludeAgregadoRequest(args) {
+					if (args.failMail) {
+					} else {
+					}
+				}
+			</script>
+		</p:dialog>
+	</ui:composition>
+</body>
+</html>

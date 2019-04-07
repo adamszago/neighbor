@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings version="2.0"
+	xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_1_0.xsd">
+
+	<named-query name="DuplicataParcela.baixarParcela">
+		<query>
+			<![CDATA[
+				UPDATE DuplicataParcela parcela 
+				SET parcela.quitada = true 
+				WHERE parcela.duplicataParcelaPK.idDuplicata = :idDuplicata 
+				AND parcela.duplicataParcelaPK.numeroParcela = :numeroParcela 
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="DuplicataParcela.buscarPorDuplicata">
+		<query>
+			<![CDATA[
+				SELECT parcela 
+				FROM DuplicataParcela parcela 
+				INNER JOIN parcela.duplicata duplicata 
+				INNER JOIN duplicata.condominio condominio 
+				INNER JOIN duplicata.fatura fatura 
+				WHERE parcela.duplicataParcelaPK.idDuplicata = :idDuplicata 
+			]]>
+		</query>
+	</named-query>
+
+</entity-mappings>

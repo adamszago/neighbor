@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings version="2.0"
+	xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_1_0.xsd">
+
+	<named-query name="Permissao.buscaPorLabel">
+		<query>
+			<![CDATA[
+				SELECT p 
+				FROM Permissao p 
+				WHERE p.label = :label
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Permissao.buscaPorNome">
+		<query>
+			<![CDATA[
+				SELECT DISTINCT permissao 
+				FROM Permissao permissao 
+				LEFT JOIN permissao.grupo grupo 
+				WHERE permissao.nome = :nome
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Permissao.atualizaGrupo">
+		<query>
+			<![CDATA[
+				UPDATE Permissao 
+				SET grupo = :grupo 
+				WHERE idPermissao = :idPermissao
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Permissao.buscarTodas">
+		<query>
+			<![CDATA[
+				SELECT permissao 
+				FROM Permissao permissao 
+				LEFT JOIN permissao.grupo grupo 
+				LEFT JOIN permissao.planos plano 
+			]]>
+		</query>
+	</named-query>
+	
+	<named-query name="Permissao.findByPlano">
+		<query>
+			<![CDATA[
+				SELECT permissao 
+				FROM Permissao permissao 
+				LEFT JOIN permissao.grupo grupo 
+				INNER JOIN permissao.planos plano 
+				WHERE plano.idPlano = :idPlano 
+			]]>
+		</query>
+	</named-query>
+
+</entity-mappings>

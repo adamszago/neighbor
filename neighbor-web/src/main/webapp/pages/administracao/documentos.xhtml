@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+	<ui:define name="content">
+		<h3>
+			<h:outputText value="#{bundle['tit.cadastro.documento']}" />
+		</h3>
+
+		<h:form id="idForm" method="post" enctype="multipart/form-data">
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+
+			<style>
+				.content form table td label {
+					float: left !important;
+				}
+				
+				.layoutCadMorador td {
+					padding: 7px;
+					border: none;
+				}
+				
+				.layoutCadMorador tr {
+					border: none;
+				}
+			</style>
+
+			<p:dataGrid id="tableDocumentos" var="documento"
+				value="#{documentoController.documentos}" rowKey="#{documento.id}"
+				paginator="true" rows="10" columns="5"
+				emptyMessage="#{bundle['msg.sem.documentos.cadastrados']}"
+				rowStyleClass="#{documento.ativo ? null : 'inativo'}">
+
+				<p:panel style="text-align:center"
+					rendered="#{sec:areAnyGranted('ROLE_ROOT,ROLE_PAGINA_MORADOR')}">
+					<h:panelGrid columns="1" style="width:100%">
+						<p:graphicImage
+							value="../../resources/images/documento_#{documento.tipoDocumento}.png" />
+
+						<h:outputText id="nomeDoc" value="#{documento.nomeDocumento}" />
+
+						<p:tooltip for="downloadDoc"
+							value="#{documento.descricaoDocumento}" />
+						<p:commandLink id="downloadDoc"
+							action="#{documentoController.download}" ajax="false"
+							title="Download">
+							<p:graphicImage value="../../resources/images/download.png" />
+							<f:setPropertyActionListener value="#{documento}"
+								target="#{documentoController.entity}" />
+						</p:commandLink>
+					</h:panelGrid>
+				</p:panel>
+
+			</p:dataGrid>
+
+			<h:panelGrid columns="2" styleClass="layoutCadMorador"
+				rendered="#{sec:areAnyGranted('ROLE_ROOT,ROLE_DISPONIBILIZAR_ARQUIVOS')}">
+				<h:outputLabel value="#{bundle['lbl.arquivo']}: " for="arquivo" />
+				<p:fileUpload id="arquivo" value="#{documentoController.file}"
+					mode="simple" />
+
+				<h:outputLabel value="#{bundle['lbl.descricao']}: " for="descricao" />
+				<p:inputTextarea id="descricao"
+					value="#{documentoController.entity.descricaoDocumento}"
+					styleClass="toLowercase" label="#{bundle['lbl.descricao']}"
+					rows="5" cols="30" counter="counter" maxlength="255"
+					counterTemplate="{0} caracteres restantes." autoResize="false" />
+
+				<h:outputText value="" />
+				<h:outputText id="counter" />
+
+				<p:column colspan="2"
+					rendered="#{sec:areAnyGranted('ROLE_ROOT,ROLE_DISPONIBILIZAR_ARQUIVOS')}">
+					<p:commandButton value="#{bundle['btn.salvar']}"
+						action="#{documentoController.enviar}" ajax="false" />
+				</p:column>
+			</h:panelGrid>
+		</h:form>
+
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+	<ui:define name="content">
+		<h:form id="paginaMoradorForm" styleClass="innerContentFix">
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+
+			<h:inputHidden id="idMorador"
+				value="#{moradorPageController.morador.pessoa.idPessoa}" />
+
+			<h:panelGrid columns="2" cellpadding="5">
+				<h:outputLabel value="#{bundle['lbl.ativo']}: " for="ativo" />
+				<h:outputText id="ativo"
+					value="#{moradorPageController.morador.pessoa.ativo == true ? 'Sim' : 'Não'}" />
+
+				<h:outputLabel value="#{bundle['lbl.casa']}: " for="casa" />
+				<h:outputText id="casa"
+					value="#{moradorPageController.morador.unidadeHabitacional[0].unidadeHabitacional.identificacao}" />
+
+				<h:outputLabel value="#{bundle['lbl.tipo.morador']}:"
+					for="cmbTipoMorador" />
+				<h:outputText
+					value="#{moradorPageController.morador.unidadeHabitacional[0].tipoMorador}"
+					id="cmbTipoMorador" />
+
+				<h:outputLabel value="#{bundle['lbl.nome']}: " for="nome" />
+				<p:inputText id="nome"
+					value="#{moradorPageController.morador.pessoa.nome}"
+					styleClass="toCapitalize" required="true" label="Nome" size="60"
+					maxlength="80"
+					requiredMessage="#{bundle['msg.informe.nome.morador']}" />
+
+				<h:outputLabel value="#{bundle['lbl.tem.interfone']}: "
+					for="txtInterfone" id="lblInterfone" />
+				<h:selectBooleanCheckbox id="txtInterfone"
+					value="#{moradorPageController.morador.unidadeHabitacional[0].unidadeHabitacional.interfoneOk}" />
+
+				<h:outputLabel value="#{bundle['lbl.cnh']}: " for="cnh" />
+				<p:inputText id="cnh"
+					value="#{moradorPageController.morador.pessoa.cnh}"
+					required="false" label="CNH" size="15" maxlength="15" />
+
+				<h:outputLabel value="#{bundle['lbl.email']}: " for="mail" />
+				<h:panelGroup>
+					<p:inputText id="mail"
+						value="#{moradorPageController.morador.pessoa.mail}"
+						styleClass="toLowercase" required="true" label="E-mail" size="60"
+						maxlength="80" requiredMessage="#{bundle['msg.email.invalido']}">
+						<f:validateRegex pattern="[a-zA-Z0-9\-\_\.]+@[a-zA-Z0-9\-\_\.]+" />
+					</p:inputText>
+					<p:message for="mail" />
+				</h:panelGroup>
+
+				<h:outputLabel value="#{bundle['lbl.profissao']}: " for="profissao" />
+				<p:inputText id="profissao" styleClass="toCapitalize"
+					value="#{moradorPageController.morador.pessoa.profissao}"
+					required="false" label="Profissão" size="40" maxlength="40" />
+
+				<h:outputLabel value="#{bundle['lbl.cpf']}: " for="cpf" />
+				<p:inputMask id="cpf"
+					value="#{moradorPageController.morador.pessoa.cpf}" required="true"
+					label="CPF" mask="999.999.999-99">
+					<f:validator validatorId="br.com.lphantus.neighbor.component.validator.ValidatorCPF" />
+				</p:inputMask>
+
+				<h:outputLabel value="#{bundle['lbl.rg']}: " for="rg" />
+				<p:inputText id="rg"
+					value="#{moradorPageController.morador.pessoa.rg}" required="false"
+					label="RG" size="15" maxlength="15" styleClass="toUppercase" />
+			</h:panelGrid>
+			<p:panelGrid columns="1" id="pnlExtraMorador"
+				styleClass="layoutCadMorador">
+				<h:panelGroup width="100%">
+
+					<p:outputPanel autoUpdate="true">
+
+						<p:commandLink onclick="dlgAdicionarFone.show();"
+							id="adicionarTelefone" immediate="true" global="false">
+							<p:graphicImage value="../../resources/images/btns/add.png"
+								id="addTelefone" />
+							<span
+								style="margin-left: 5px; margin-top: 5px; position: absolute"><h:outputText
+									value="#{bundle['tit.add.telefone']}" /></span>
+						</p:commandLink>
+
+						<p:dataTable id="telefonesMorador"
+							value="#{moradorPageController.morador.telefones}" var="tel"
+							rows="4" emptyMessage="#{bundle['msg.sem.telefones.cad']}"
+							rowKey="#{tel.id}" style="width: 460px;"
+							styleClass="datatableHeaderPadrao2">
+							<f:facet name="header">
+								<h:outputText value="#{bundle['tit.telefones']}" />
+							</f:facet>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="#{bundle['tit.numero']}" />
+								</f:facet>
+								<h:outputText value="#{tel.numero}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="#{bundle['tit.tipo.telefone']}" />
+								</f:facet>
+								<h:outputText value="#{tel.tipoTelefone}" />
+							</p:column>
+							<p:column style="width:16px">
+								<p:commandLink onclick="dglRemoverTelefone.show()"
+									id="lnkRemoverTelefone" immediate="true" global="false">
+									<p:graphicImage value="../../resources/images/delete.png" width="20px"
+										height="20px" style="text-align:center;" />
+									<f:setPropertyActionListener
+										target="#{moradorPageController.telefone}" value="#{tel}" />
+								</p:commandLink>
+							</p:column>
+						</p:dataTable>
+					</p:outputPanel>
+				</h:panelGroup>
+			</p:panelGrid>
+			<p:panelGrid columns="1">
+				<p:commandButton value="#{bundle['btn.alterar']}"
+					action="#{moradorPageController.alterarMorador}" ajax="false"
+					update="paginaMoradorForm" onclick="pageLoading.show();"
+					oncomplete="pageLoading.hide();" />
+			</p:panelGrid>
+
+		</h:form>
+
+		<p:confirmDialog message="#{bundle['msg.remove.telefone']}"
+			header="Remover" severity="alert" widgetVar="dglRemoverTelefone"
+			modal="true" closable="false">
+			<h:form>
+				<p:commandButton id="confirm" value="#{bundle['btn.sim']}"
+					update=":paginaMoradorForm" oncomplete="dglRemoverTelefone.hide()"
+					action="#{moradorPageController.removerTelefone}">
+				</p:commandButton>
+				<p:commandButton id="decline" value="#{bundle['btn.nao']}"
+					onclick="dglRemoverTelefone.hide()" immediate="true" global="false" />
+			</h:form>
+		</p:confirmDialog>
+
+		<ui:insert name="dialogsExtras">
+			<ui:include
+				src="../../dialogs/dialogAdicionarTelefoneTelaMorador.xhtml" />
+			<ui:include src="../../dialogs/dialogLerMensagem.xhtml" />
+		</ui:insert>
+		<h:panelGroup rendered="#{usuarioController.sistemaIsDemo}">
+			<script type="text/javascript">
+				disponivelNosPlanos(0, 1, 1, 1);
+			</script>
+		</h:panelGroup>
+	</ui:define>
+</ui:composition>

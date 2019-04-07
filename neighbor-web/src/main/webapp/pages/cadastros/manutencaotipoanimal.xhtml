@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:sec="http://www.springframework.org/security/tags" >
+	<ui:define name="content">
+	<h:form id="mntipoAnimal">
+		<h3><h:outputText value="#{bundle['tit.manut.tipo.animal']}"/></h3>
+		<ui:insert   >
+			<ui:include src="../../templates/growlGeral.xhtml" />
+		</ui:insert>
+		<h:inputHidden id="idMntTipoAnimal" value="#{animalController.tipoAnimal.id}" />
+		<h:panelGrid columns="2" style="margin-bottom:10px">
+			<h:outputLabel value="#{bundle['lbl.tipo.animal']}: " for="tipoAnimal" />
+			<p:inputText id="tipoAnimal"
+				value="#{animalController.tipoAnimal.tipoAnimal}" required="true"
+				label="Tipo Animal" size="20" maxlength="20"
+				validatorMessage="#{bundle['msg.sel.tipo.animal']}" styleClass="toUppercase" />
+			<p:commandButton value="#{bundle['btn.gravar']}"
+				actionListener="#{animalController.gravarTipoAnimal}" ajax="true"
+				update=":mntipoAnimal :listaMntTipoAnimal"
+				process="mntipoAnimal"/>
+		</h:panelGrid>
+	</h:form>
+	<br/>
+	<h:form id="listaMntTipoAnimal">
+		<p:dataTable value="#{animalController.tipoAnimais}" var="tp" rendered="#{!empty animalController.tipoAnimais}" 
+					paginator="true" rows="10" selection="#{animalController.tipoAnimal}" styleClass="innerContentFix" emptyMessage="#{bundle['msg.sem.tipo.animais']}">
+		
+			<f:facet name="header">  
+				<h:outputLabel value="#{bundle['tit.tipo.animal.cadastrado']}"/>
+			</f:facet>  
+			<!-- <p:column sortBy="#{tp.id}" filterBy="#{tp.id}" >  
+         		<f:facet name="header">  
+                	ID  
+         		</f:facet>
+         		<h:outputText value="#{tp.id}"  />
+     		</p:column> -->
+     		<p:column sortBy="tipoAnimal" filterBy="tipoAnimal" >  
+         		<f:facet name="header">  
+                	<h:outputLabel value="#{bundle['tit.raca']}"/>
+         		</f:facet>
+         		<h:outputText value="#{tp.tipoAnimal}"  />
+     		</p:column>
+     		<p:column style="width:16px" rendered="#{sec:areAnyGranted('ROLE_EXCLUIR_TIPO_ANIMAL, ROLE_ROOT')}">  
+				<p:commandLink onclick="mostrarDglInativarTipoAnimal(#{tp.ativo})"  update=":mntipoAnimal :listaMntTipoAnimal">
+  					<p:graphicImage id="imgStatus" value="../../resources/images/ativo_#{tp.ativo}.png" width="24px" height="24px" >
+  						<p:tooltip for="imgStatus" hideEffect="fade" showEffect="fade" 
+  							value="#{tp.ativo ? 'Tipo Animal Ativo' : 'Tipo Animal Inativo'}"></p:tooltip>
+  					</p:graphicImage>
+  					<f:setPropertyActionListener target="#{animalController.tipoAnimal}" value="#{tp}" />
+ 					</p:commandLink>
+			</p:column>
+     		
+		</p:dataTable>
+	</h:form>
+	<p:confirmDialog message="#{bundle['msg.conf.ativacao']}"
+		header="Inativar" severity="alert" widgetVar="dglInativarTipoAnimal"
+		modal="true" closable="false">
+		<h:form>
+			<p:commandButton id="confirm" value="#{bundle['tit.sim']}"
+				update=":mntipoAnimal :listaMntTipoAnimal"
+				oncomplete="dglInativarTipoAnimal.hide()"
+				action="#{animalController.alterarTipo}" />
+			<p:commandButton id="decline" value="#{bundle['tit.nao']}"
+				onclick="dglInativarTipoAnimal.hide()" />
+		</h:form>
+	</p:confirmDialog>
+	<script>
+		function mostrarDglInativarTipoAnimal(tipoEnable){
+			var men = '';
+			if(tipoEnable == true){
+				men = 'Desativar';
+			}else {
+				men = 'Ativar';
+			}
+			jQuery('#dglInativarTipoAnimal p').html('Deseja <strong>'+men+'</strong> este tipo de animal ?');
+			
+			jQuery('#ui-dialog-title-dglInativarTipoAnimal').html(men);
+			
+			dglInativarTipoAnimal.show();	
+		}
+		
+	</script>
+	<h:panelGroup rendered="#{usuarioController.sistemaIsDemo}"> <script type="text/javascript">disponivelNosPlanos(1,1,1,1);</script></h:panelGroup>
+	</ui:define>
+</ui:composition>

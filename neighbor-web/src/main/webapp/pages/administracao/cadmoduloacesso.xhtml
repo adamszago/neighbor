@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+	<ui:define name="content">
+		<h3>
+			<h:outputText value="#{bundle['tit.cadastro.modulos']}" />
+		</h3>
+		<h:form id="cadastroModuloAcessoForm">
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+
+			<h:panelGrid columns="2">
+
+				<h:outputLabel value="#{bundle['lbl.nome.modulo.acesso']}: "
+					for="nome" />
+				<p:inputText id="nome"
+					value="#{moduloAcessoController.moduloAcesso.nome}"
+					styleClass="toCapitalize campo-onload" required="true" label="Nome"
+					size="30" maxlength="30"
+					requiredMessage="#{bundle['msg.informe.nome.morador']}]" />
+
+				<h:outputLabel value="#{bundle['lbl.descricao']}: " for="descricao" />
+				<p:inputText id="descricao"
+					value="#{moduloAcessoController.moduloAcesso.descricao}"
+					required="true" label="#{bundle['lbl.descricao']}" size="60"
+					maxlength="80" requiredMessage="#{bundle['msg.informe.descricao']}" />
+
+			</h:panelGrid>
+
+			<br />
+			<br />
+
+			<h:panelGrid columns="1" id="arvorePermissoes">
+				<h3>
+					<h:outputText value="#{bundle['tit.permissoes']}:" />
+				</h3>
+				<p:tree value="#{moduloAcessoController.treePermissoes}"
+					var="permissao" id="checkboxTree" selectionMode="checkbox"
+					expandAnim="FADE_IN" collapseAnim="FADE_OUT"
+					selection="#{moduloAcessoController.selectedPermissoes}"
+					expanded="TRUE" propagateSelectionUp="TRUE"
+					propagateSelectionDown="TRUE">
+
+					<p:treeNode>
+						<h:outputText value="#{permissao}" />
+					</p:treeNode>
+				</p:tree>
+			</h:panelGrid>
+
+			<br />
+			<br />
+
+			<h:panelGrid columns="2">
+				<p:commandButton value="#{bundle['btn.gravar']}"
+					actionListener="#{moduloAcessoController.gravarModuloAcesso}"
+					ajax="true" update=":cadastroModuloAcessoForm"
+					rendered="#{moduloAcessoController.moduloAcesso.idModuloAcesso == null || moduloAcessoController.moduloAcesso.idModuloAcesso == 0}"
+					onclick="pageLoading.show();" oncomplete="pageLoading.hide();" />
+
+				<p:commandButton value="#{bundle['btn.alterar']}"
+					actionListener="#{moduloAcessoController.alterarModuloAcesso}"
+					ajax="true" update=":cadastroModuloAcessoForm"
+					rendered="#{moduloAcessoController.moduloAcesso.idModuloAcesso > 0 }"
+					onclick="pageLoading.show();" oncomplete="pageLoading.hide();" />
+
+				<p:commandButton value="#{bundle['btn.limpar']}"
+					action="#{moduloAcessoController.novoModuloAcesso}" ajax="true"
+					process="@this" update=":cadastroModuloAcessoForm"
+					onclick="pageLoading.show();" oncomplete="pageLoading.hide();" />
+			</h:panelGrid>
+		</h:form>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+	<ui:define name="content">
+		<h:form id="paginaMoradorForm" styleClass="innerContentFix">
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+			<p:dataTable id="animais" var="animal"
+				value="#{moradorPageController.animaisEstimacao}"
+				rowKey="#{animal.nome}" paginator="true" rows="5"
+				selection="#{moradorPageController.animalEstimacao}"
+				selectionMode="single"
+				rowStyleClass="#{animal.vacinado ? null : 'devedor'}"
+				emptyMessage="Sem Animais Cadastrados para #{moradorPageController.morador.pessoa.nome}">
+				<f:facet name="header">
+					<h:outputText value="#{bundle['tit.animais.cadastrados']}" />
+				</f:facet>
+				<p:column sortBy="nome" filterBy="nome">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.nome']}" />
+					</f:facet>
+					<h:outputText value="#{animal.nome}" />
+				</p:column>
+				<p:column sortBy="raca" filterBy="raca">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.raca']}" />
+					</f:facet>
+					<h:outputText value="#{animal.raca}" />
+				</p:column>
+				<p:column sortBy="porte" filterBy="porte">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.porte']}" />
+					</f:facet>
+					<h:outputText value="#{animal.porte}" />
+				</p:column>
+				<p:column sortBy="tipoAnimal.tipoAnimal"
+					filterBy="tipoAnimal.tipoAnimal">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.tipo.animal']}" />
+					</f:facet>
+					<h:outputText value="#{animal.tipoAnimal.tipoAnimal}" />
+				</p:column>
+				<p:column sortBy="dataVistoriaCartao"
+					filterBy="dataVistoriaCartao">
+					<f:facet name="header">
+						<h:outputText value="#{bundle['tit.data.vacina']}" />
+					</f:facet>
+					<h:outputText value="#{animal.dataVistoriaCartao}">
+						<f:convertDateTime locale="pt" pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+		<h:panelGroup rendered="#{usuarioController.sistemaIsDemo}">
+			<script type="text/javascript">
+				disponivelNosPlanos(0, 1, 1, 1);
+			</script>
+		</h:panelGroup>
+	</ui:define>
+</ui:composition>

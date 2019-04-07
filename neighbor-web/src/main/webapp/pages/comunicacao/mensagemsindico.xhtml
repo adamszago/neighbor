@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<ui:define name="content">
+		<h3>
+			<h:outputLabel value="#{bundle['tit.msg.sindico']}" />
+		</h3>
+		<h:form id="cadastroMensagemSindicoForm">
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+
+			<h:inputHidden id="idMensagem"
+				value="#{mensagemController.mensagem.id}" />
+			<h:panelGrid columns="2" id="camposMensagemSindico">
+				<h:outputLabel value="#{bundle['lbl.de']}: " for="remetente" />
+				<p:inputText id="remetente"
+					value="#{mensagemController.mensagem.remetente.pessoa.nome}"
+					styleClass="toLowercase" required="true" label="E-mail" size="60"
+					maxlength="80" requiredMessage="Remetente inválido" readonly="true">
+				</p:inputText>
+
+				<h:outputLabel value="#{bundle['lbl.para']}: " for="destinatario" />
+				<p:inputText id="destinatario"
+					value="#{mensagemController.mensagem.destinatario.pessoa.nome}"
+					readonly="true" styleClass="toCapitalize" required="true"
+					label="Para" size="60" maxlength="80" minLength="4"
+					requiredMessage="O destinatário é obrigatório" />
+
+				<h:outputLabel value="#{bundle['lbl.assunto']}: " for="assunto" />
+				<p:inputText id="assunto"
+					value="#{mensagemController.mensagem.assunto}" size="60"
+					maxlength="80" styleClass="campo-onload" />
+			</h:panelGrid>
+
+			<h:outputLabel value="#{bundle['lbl.mensagem']}: " for="mensagem" />
+			<h:panelGrid id="mensagem">
+				<iframe src="#{request.contextPath}/pages/comunicacao/mensagem.jsf"
+					width="100%" height="200px" id="iframe1" marginheight="0"
+					frameborder="0" onLoad="autoResize('iframe1');"></iframe>
+			</h:panelGrid>
+
+			<h:panelGrid columns="2">
+				<p:commandButton value="#{bundle['btn.gravar']}"
+					actionListener="#{mensagemController.gravar}" ajax="true"
+					update=":cadastroMensagemSindicoForm"
+					disabled="#{mensagemController.mensagem.remetente == null and mensagemController.mensagem.destinatario == null}" />
+				<p:commandButton value="#{bundle['btn.limpar']}"
+					action="#{mensagemController.novo}" ajax="true" process="@this"
+					update=":cadastroMensagemSindicoForm" />
+			</h:panelGrid>
+		</h:form>
+		<h:panelGroup rendered="#{usuarioController.sistemaIsDemo}">
+			<script type="text/javascript">
+				disponivelNosPlanos(0, 1, 1, 1);
+			</script>
+		</h:panelGroup>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../../templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+	<ui:define name="content">
+		<h:form id="listagemMensagensForm" styleClass="innerContentFix"
+			style="width: 710px;">
+			<ui:insert>
+				<ui:include src="../../templates/growlGeral.xhtml" />
+			</ui:insert>
+			<p:tabView id="tabMensagens">
+				<p:tab title="#{bundle['tit.msg.recebidas']}">
+
+					<p:dataTable id="mensagensRecebidas" var="msg"
+						value="#{mensagemController.mensagensRecebidas}"
+						rowKey="#{msg.id}" paginator="true" rows="5"
+						selection="#{mensagemController.mensagem}" selectionMode="single"
+						emptyMessage="#{bundle['msg.sem.mensagens']}"
+						rowStyleClass="#{!msg.lido ? null : 'lida'}">
+
+						<f:facet name="header">
+							<h:outputLabel value="#{bundle['tit.msg.recebida.vc']}" />
+						</f:facet>
+						<p:column sortBy="dataEnvio" filterBy="dataEnvio">
+							<f:facet name="header">
+								<h:outputLabel value="#{bundle['tit.data']}" />
+							</f:facet>
+							<h:outputText value="#{msg.dataEnvio}" />
+						</p:column>
+						<p:column sortBy="remetente.pessoa.nome"
+							filterBy="remetente.pessoa.nome">
+							<f:facet name="header">
+								<h:outputLabel value="#{bundle['tit.remetente']}" />
+							</f:facet>
+							<h:outputText value="#{msg.remetente.pessoa.nome}" />
+						</p:column>
+						<p:column sortBy="destinatario.pessoa.nome"
+							filterBy="destinatario.pessoa.nome">
+							<f:facet name="header">
+								<h:outputLabel value="#{bundle['tit.destinatario']}" />
+							</f:facet>
+							<h:outputText value="#{msg.destinatario.pessoa.nome}" />
+						</p:column>
+						<p:column sortBy="assunto" filterBy="assunto">
+							<f:facet name="header">
+								<h:outputLabel value="#{bundle['tit.assunto']}" />
+							</f:facet>
+							<h:outputText value="#{msg.assunto}" />
+						</p:column>
+
+						<p:column
+							rendered="#{sec:areAnyGranted('ROLE_LISTA_MENSAGEM, ROLE_ROOT')}"
+							id="leituraMensagem">
+							<p:commandLink action="#{mensagemController.lerMensagem}"
+								id="lerMensagem" oncomplete="dlgLerMensagem.show()" ajax="true"
+								update=":listagemMensagensForm :formLerMensagem">
+
+								<p:graphicImage
+									url="../../resources/images/icons/ico_mail_#{msg.lido}.png" width="24"
+									height="24" />
+								<f:setPropertyActionListener
+									target="#{mensagemController.mensagem}" value="#{msg}" />
+							</p:commandLink>
+						</p:column>
+					</p:dataTable>
+
+				</p:tab>
+				<p:tab title="#{bundle['tit.msg.enviadas']}">
+
+					<p:dataTable id="mensagensEnviadas" var="msg"
+						value="#{mensagemController.mensagensEnviadas}" rowKey="#{msg.id}"
+						paginator="true" rows="5"
+						selection="#{mensagemController.mensagem}" selectionMode="single"
+						emptyMessage="#{bundle['msg.sem.mensagens']}"
+						rowStyleClass="#{!msg.lido ? null : 'lida'}">
+
+						<f:facet name="header">
+							<h:outputLabel value="#{bundle['tit.msg.enviada.vc']}" />
+						</f:facet>
+						<p:column sortBy="dataEnvio" filterBy="dataEnvio">
+							<f:facet name="header">
+								<h:outputLabel value="#{bundle['tit.data']}" />
+							</f:facet>
+							<h:outputText value="#{msg.dataEnvio}" />
+						</p:column>
+						<p:column sortBy="remetente.pessoa.nome"
+							filterBy="remetente.pessoa.nome">
+							<f:facet name="header">
+								<h:outputLabel value="#{bundle['tit.remetente']}" />
+							</f:facet>
+							<h:outputText value="#{msg.remetente.pessoa.nome}" />
+						</p:column>
+						<p:column sortBy="destinatario.pessoa.nome"
+							filterBy="destinatario.pessoa.nome">
+							<f:facet name="header">
+								<h:outputLabel value="#{bundle['tit.destinatario']}" />
+							</f:facet>
+							<h:outputText value="#{msg.destinatario.pessoa.nome}" />
+						</p:column>
+						<p:column sortBy="assunto" filterBy="assunto">
+							<f:facet name="header">
+								<h:outputLabel value="#{bundle['tit.assunto']}" />
+							</f:facet>
+							<h:outputText value="#{msg.assunto}" />
+						</p:column>
+
+						<p:column
+							rendered="#{sec:areAnyGranted('ROLE_LISTA_MENSAGEM, ROLE_ROOT')}"
+							id="leituraMensagem">
+							<p:commandLink action="#{mensagemController.lerMensagem}"
+								id="lerMensagem" oncomplete="dlgLerMensagem.show()" ajax="true"
+								update=":listagemMensagensForm :formLerMensagem">
+
+								<p:graphicImage
+									url="../../resources/images/icons/ico_mail_#{msg.lido}.png" width="24"
+									height="24" />
+								<f:setPropertyActionListener
+									target="#{mensagemController.mensagem}" value="#{msg}" />
+							</p:commandLink>
+						</p:column>
+					</p:dataTable>
+
+				</p:tab>
+			</p:tabView>
+		</h:form>
+
+		<ui:insert name="dialogsExtras">
+			<ui:include src="../../dialogs/dialogLerMensagem.xhtml" />
+		</ui:insert>
+		<h:panelGroup rendered="#{usuarioController.sistemaIsDemo}">
+			<script type="text/javascript">disponivelNosPlanos(0,1,1,1);</script>
+		</h:panelGroup>
+	</ui:define>
+</ui:composition>
