@@ -46,7 +46,7 @@
 		<!-- <org.aspectj-version>1.7.4</org.aspectj-version> -->
 		<org.springframework.batch.version>3.0.2.RELEASE</org.springframework.batch.version>
 		<org.springframework.webflow.spring-faces.version>2.4.0.RELEASE</org.springframework.webflow.spring-faces.version>
-		<spring.security.version>3.2.5.RELEASE</spring.security.version>
+		<spring.security.version>5.2.10.RELEASE</spring.security.version>
 
 		<!-- Util -->
 		<javax.validation.version>1.0.0.GA</javax.validation.version>
