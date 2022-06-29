@@ -55,7 +55,7 @@
 		<!-- Desabilitado cache -->
 		<!-- <net.sf.ehcache.version>2.9.0</net.sf.ehcache.version> -->
 		<org.jrimum.jrimum-bopepo.version>0.2.3-SNAPSHOT</org.jrimum.jrimum-bopepo.version>
-		<org.apache.commons.commons-email.version>1.1</org.apache.commons.commons-email.version>
+		<org.apache.commons.commons-email.version>1.5</org.apache.commons.commons-email.version>
 		<org.bluestemsoftware.open.maven.plugin.ftp-plugin.version>1.0.0.1</org.bluestemsoftware.open.maven.plugin.ftp-plugin.version>
 		<commons-fileupload.version>1.2.1</commons-fileupload.version>
 		<commons-io.version>2.0.1</commons-io.version>
