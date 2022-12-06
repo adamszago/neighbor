@@ -51,7 +51,7 @@
 		<!-- Util -->
 		<javax.validation.version>1.0.0.GA</javax.validation.version>
 		<com.google.guava.version>14.0.1</com.google.guava.version>
-		<commons-net.version>3.3</commons-net.version>
+		<commons-net.version>3.9.0</commons-net.version>
 		<!-- Desabilitado cache -->
 		<!-- <net.sf.ehcache.version>2.9.0</net.sf.ehcache.version> -->
 		<org.jrimum.jrimum-bopepo.version>0.2.3-SNAPSHOT</org.jrimum.jrimum-bopepo.version>
